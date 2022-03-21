@@ -1,0 +1,26 @@
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  color:rgb(47, 6, 29);
+ }
+
+
+
+  body {
+    font: arial;
+    background-color: rgba(0, 0, 0);
+    background-size: 100% 100%;
+    color:lightgray ;
+    font-size: 20px;
+  }
+  a {
+    color: rgb(100,149,237);
+    font-size: 25px;
+  }
+  h1 { color:goldenrod}
+  h2 {
+    color:goldenrod;
+  }
+
+ 
