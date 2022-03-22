@@ -1,64 +1,68 @@
-/*
- à voir l'intérêt du set par rapport à un patchConfigControlled
- par contre, on n'a pas de get interprété;
- peut-on faire directement un {disp.stroke.color[1]} dans une config ??
-*/
 
-var traffic_0; 
-var traffic_1;
-var scenario_2,traffic_2;
 
-function preload() {}
+var traffic_1, europeanScenario1;
+var traffic_2, europeanScenario2;
+var traffic_3
+var traffic_4
+
 
 function setup() {
   canvas = createCanvas(800, 800, WEBGL);
   canvas.position(0, 0);
-  traffic_0 = new TrafficLight();
-  // start the scenario 0 
-  europeanScenario.start();
-
-  // create another light this time using the internal embedded script in the object
-  traffic_1 = new TrafficLight();
-  traffic_1. startEuropeanScenario();
-
-  // create another scenario with another script, with parameters. We indicate to the scenario how to run it
-  traffic_2 = new TrafficLight();
-  scenario_2 = new Scenario({name: "with param", trace: true}, europeanScriptWithParameter);
-  // override the setProgram to change the way the generator is instanciated 
-  scenario_2.setProgram = function(){ 
-    this.program = this.script(traffic_2);
-  }
-  // start the scenario
-  scenario_2.start();
+  traffic_1 = new TrafficLight("pole 1");
+  traffic_2 = new TrafficLight("pole 2");
+  traffic_3 = new TrafficLight("pole 3");
+  traffic_4 = new TrafficLight("pole 4");
+// external scenarios
+   europeanScenario1 = new Scenario(
+    { scenarioName: "european lights 1", trace: true },
+    { scriptName: " lights tempo", instance: europeanScript(traffic_1) });
+   europeanScenario2 = new Scenario(
+    { scenarioName: "european lights 2", trace: true },
+    { scriptName: " lights tempo", instance: europeanScript(traffic_2)});
+// start all 
+  europeanScenario1.start();
+  europeanScenario2.start();
+  traffic_3.lightsScenario.start();
+  traffic_4.lightsScenarioBis.start();
 }
-
 
 function draw() {
- orbitControl(1,1,1)
- background(60);
- translate(-150,-100,0)
- traffic_0.draw();
- translate (100,0,0);
- traffic_1.draw();
- translate (100,0,0);
- traffic_2.draw();
+  orbitControl(1, 1, 1);
+  background(60);
+  translate(-150, -100, 0);
+  traffic_1.draw();
+  translate(100, 0, 0);
+  traffic_2.draw();
+  translate(100, 0, 0);
+  traffic_3.draw();
+  translate(100, 0, 0);
+  traffic_4.draw();
 
-// the scenarios run for ever. We stop it after some time to conclude this tuto
-if(millis()>60000){
-  if(!europeanScenario.isEnded) europeanScenario.stop();
-  traffic_0.active = false;
+  // the scenarios run for ever. We stop it after some time to conclude this tuto
+  if (millis() > 60000) {
+    if (!europeanScenario1.isEnded) {
+      europeanScenario1.stop();
+      traffic_1.config.active = false;
+    }
+  }
+
+  if (millis() > 70000) {
+    if (!europeanScenario2.isEnded) {
+      europeanScenario2.stop();
+      traffic_2.config.active = false;
+    }
+  }
+  if (millis() > 80000) {
+    if (!traffic_3.lightsScenario.isEnded) {
+      traffic_3.lightsScenario.stop();
+      traffic_3.config.active = false;
+    }
+  }
+  if (millis() > 100000) {
+    if (!traffic_4.lightsScenario.isEnded) {
+      traffic_4.lightsScenario.stop();
+      traffic_4.config.active = false;
+    }
+  }
 }
-if(millis()>80000){
-  if(! traffic_1.europeanScenario.isEnded) traffic_1.europeanScenario.stop();
-  traffic_0.active = false;
-}
-if(millis()>90000){
-  if(!scenario_2.isEnded) scenario_2.stop();
-  traffic_2.active = false;
-}
-
-}
-
-
-
-

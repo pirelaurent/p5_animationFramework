@@ -1,5 +1,5 @@
 Some tips to facilitate code organization using literal objects as configuration .
-# configuration structures : 
+# Literals as configuration structures : 
 ## principles
  - all useful parameters to construct a class instance are declared in a config structure 
  - a Static default config is associated to the class in order to : 

@@ -26,13 +26,12 @@ function copyConfig(originalConfig) {
  As soon as we use special objects in our literal, it cannot be serialized.   
  in a P5.js code, if we replace the previous position by a Vector:    
 ``` position: createVector(0,0,0)```  
-Despite this is allowed for a literal, it cannot be copied as P5.Vector is not JSON compatible.   
+Despite this is allowed for a literal, it cannot be copied as *P5.Vector* is not JSON compatible.   
 ### warning with specific code
-A sample with p5.js project : 
 Another drawback is the use of some P5 code <u>before</u> the full P5 lib was loaded.   
-We may think to use the color function in the config:    
+Ex: we may think to use the color function in the config:    
  ```fill: { active: false, color: color(200,100,100) }```   
- Everything is ok, included deep copy through json ( as Color object resulting from color function call is serialisable), but this cannot be used before P5 was fully loaded. This avoids to define static config in source code of external Classes: when parsed, function color could be unknown at this time.    
+ Everything is ok, included deep copy through json ( as Color object is serialisable), but need that P5 was already loaded. This avoids to define static config in source code of external Classes without some scrit order of loading.   
  ( One way to deal with is to furnish a static config at run time only, in main code.   )
 ### the more general => Use literal JSON compatible
 To define parameters (which become internal variables), structure must be JSON compatible.   

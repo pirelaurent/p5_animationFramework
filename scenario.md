@@ -1,22 +1,22 @@
-# A framework for p5.js animations 
-Coding: How to drive your animations with scripts that take care of timing & scheduling.   
-Samples are done in p5.js sketches, but code can run in any js environment.    
+# Scenario for p5.js animations 
+A scenario takes care of timing & scheduling to start, stop or wait for your code.   
+Samples are coded as p5.js sketches, but this code can run in any js environment.    
 ## scenario 
 A **scenario** plays a **script**, or a series of **scripts**, given at construction.    
-Once a script is finished, the scenario runs the next one in the list.  
-Cutting a long script in a list of smaller scripts helps maintain readable program.  
+Once a script is finished, the scenario runs the next one in its list.  
+Cutting a long script in a list of smaller scripts helps maintain readable animation's program.  
 ### script 
-A **script** is any javascript generator (function *)   
+A **script** is any instance of a javascript generator (function *)   
 A **generator** executes any javascript code up to the next **yield** instruction or its own end.   
 When a yield instruction is found, the generator code stops and returns to caller.   
-When caller calls it again, it continue its code after the yield where it stops.   
+When caller calls it again, it continues its code after the yield where it stops.   
 #### step 
-One step into a script is a part of code that run without stopping:  
+One step into a script is a part of code that run without being interrupted:  
 - from beginning to first yield
 - from yield to yield 
 - from last yield to end of code. 
 
-## how it works 
+## how a scenario works with scripts 
 When a scenario starts, it starts the first script which starts its first step.   
 The script returns either by : 
 - yield                 -> The scenario will wait the default *interval* ms of the scenario before calling again the script
@@ -24,239 +24,226 @@ The script returns either by :
 - a return instruction  -> The scenario will quit this script and take the following if any
 - the end of script.    -> Same as above. 
   
-The scenario has an *advance* function that calls the script and, on return, push itself in the js event loop at some timeout for later.  
-When awaked by this timeout, *advance* call the script again. 
+The scenario has an *advance* function that calls the next step of the script: ```script.instance.next()```   
+When the script return, *advance* push itself in the js event loop for later:    
+ ```this.timeoutId = setTimeout(this.advance.bind(this), nextEcheance);```  
+When awaked by this timeout, *advance* calls the script again. 
 ## how it stops 
-A scenario stops when the last script of its collection returns at the end of its code or by a *return* instruction anywhere.   
-A scenario can also be stopped at any time by its owner with the method ```scenario.stop()```
+A scenario stops when the last script of its collection is ended.   
+A scenario can also be stopped at any time with the method ```scenario.stop()```
 ## miscellaneous about scenarios 
 Several scenarios can be started and run in parallel with their own scheduling.  
 A scenario can start another scenario.  
 A scenario can wait the end of another scenario by pooling the status of the other :  ```while (!theOther.isEnded) yield 100```
 
 # A simple Example with traffic lights  
-We explore three ways to use scenario to understand what's behind the scene.  
+We explore several ways to use scenario to understand what's behind the scene.  
 The goal is to enlight a (european) traffic lights with defined durations  
 ## TrafficLight class
 
-<img src = "./img/forDoc/traffic_lights3.png" width = 300></img>   
-first we create a class with useful parameters in a literal object:    
-``` javascript 
+
+We create a class with useful parameters in a literal object *config*. (We just give a name in constructor for trace purpose):    
+
+``` javascript  
 class TrafficLight {
-  constructor() {
-    this.visible = true;  
-    this.active = false;  // lights stay all grey
-    this.lights = {
-      green:  { active: false, colors: { on: "#3ADF00", off: "#243B0B" } },
-      orange: { active: false, colors: { on: "#FFBF00", off: "#61380B" } },
-      red:    { active: false, colors: { on: "#FF0000", off: "#3B0B0B" } },
+  constructor(name) {
+    this.config = {
+      name: name,
+      visible: true,
+      active: false, // lights stay all grey
+      lights: {
+        green: { active: false, colors: { on: "#3ADF00", off: "#243B0B" } },
+        orange: { active: false, colors: { on: "#FFBF00", off: "#61380B" } },
+        red: { active: false, colors: { on: "#FF0000", off: "#3B0B0B" } },
+      },
     };
   }
-  ```
-  The method *draw* do the job of drawing itself using its current parameters.    
+  ```   
+  Note : the framework uses mainly literals to set parameters and hold data.  See the corresponding chapter.   
+  The method *draw* of the class do the job of drawing itself using its current parameters.   
+
   ``` javascript   
   draw() {
-    if (!this.visible) return;
-    push(); // protect others
-    this.drawHousing(); // draw the surrounding box
-    // add the three lights 
+    if (!this.config.visible) return;
+    push(); // P5 save of context
+    this.drawHousing();
+    // add three lights sphere
     noStroke();
-    translate(0, 50, 20);
-    this.drawLight("green");
-    translate(0, -50, 0);
-    this.drawLight("orange");
-    translate(0, -50, 0);
-    this.drawLight("red");
+    translate(0, 50, 20); this.drawLight("green");
+    translate(0, -50, 0); this.drawLight("orange");
+    translate(0, -50, 0); this.drawLight("red");
     pop();
   }
   // draw the named light
-  drawLight(name) {
-    let opt = this.lights[name];
-    if (opt.active && this.active) fill(opt.colors.on);
-    else fill(opt.colors.off);
+  drawLight(colorName) {
+    let opt = this.config.lights[colorName];
+    if (opt.active && this.config.active) fill(opt.colors.on); else fill(opt.colors.off);
     sphere(20);
   }
-  ```
-   ## scenario to animate lights
-The scenario refers to a unique script : *europeanScript* :  
-   ``` javascript   
-   var europeanScenario = new Scenario(
-  {
-      name: "european lights",
-      trace: true,
-  },
-  europeanScript
-);
+  ```   
+
+## script to animate lights
+First, be aware of the special notation ```function*``` which means this is a *generator* not a simple function.     
+Each yield can return the number of <u>milliseconds</u> to wait before coming back.   
+As we want a full time traffic_lights with this scenario, the script has an infinite loop ```while(true)```   
+and function *patchConfig* changes only the keys given as parameter. 
+
+``` javascript 
+function* europeanScript(oneTrafficLight) {
+  // activate the traffic lights red, green, orange and loop 
+  var lights = oneTrafficLight.config.lights; // simplify access path
+  while (true) {
+    patchConfig(lights, { green: { active: false }, orange: { active: false }, red: {active: true}});
+    yield 3000+random(5000)
+    patchConfig(lights,{ green: { active: true },red: { active: false }});
+    yield 2000 + random(2000);
+    patchConfig(lights, { green: { active: false },orange: { active: true }});
+    yield 1000 + random(1500); 
+  } // while
+} 
 ```
+## create the scenario to run the script  
+   ``` javascript   
+    let  europeanScenario1 = new Scenario(
+    { scenarioName: "european lights 1", trace: true },
+    { scriptName: " lights tempo", instance: europeanScript(traffic_1), }
+  );
+```
+If you look at the Scenario class, you'll find a constructor with two parts :    
+``` constructor(someConfig={}, generatorsToUse = []) ```   
+The first part config is for patching the default configuration of the class :   
+```javascript 
+  static defaultConfig = {
+    scenarioName: "Scenario default noname",
+    interval: 60, //ms of wait if yield don't return a specific value
+    trace: false,
+  };
+  ```
+ In our case we patch, for debug purpose, *scenarioName* and *trace*.   
 
-<small> 
-If several scripts are to be chained, constructor should have received an array of scripts.   
-The previous is the same as *[europeanScript]* if you prefer.</small> 
+### Array of generators instances 
+The second part indicates to the scenario a list of the scripts to chain in the declared order.  
+``` javascript 
+[
+  { scriptName: " my first", instance: myScript() },
+  { scriptName: " my second", instance: myScriptSecond(myParamA, myMaparamB) }
+]
+```
+To allow a less effort, if there is only one script, as in the example, we can omit the array borders [].
+```
+  { scriptName: " lights tempo", instance: europeanScript(traffic_1) }   
+```
+### understanding the two times of a generator 
+You declare a generator as a  ```function *```     
+The first time one call this function will instanciate the generator. **It doesn't run anything of the script at this time**.   
+Later, when started, the scenario will make the script advance by calling the generator ```next()``` method.     
+This way allows to have a agnostic scenario that can run any type of generators with or without params. 
+## external scenario vs internal scenario 
+### external 
+In the example, we draw 4 traffic lights.    
+<img src = "./img/forDoc/traffic_lights4.png" width = 200></img>   
+The first two one are animated by scenarios created in main code as seen previously.  
+The code of the associated script is the ```function* europeanScript(oneTrafficLight)```  described above.    
 
-One can observe that the literal in the constructor references only a part of the default config of the class Scenario.( *interval* is missing).The framework uses several functions around literal objects : copy, merge, control, etc. (in *utilConfig.js*)   
-Within the constructor, the *defaultconfig* of the class is first copied, then the literal given in new is used to patch the named entries .
+### internal  
+When thinkink about, the blinking is a dedicated traffic light behavior. So, it can be a good idea to make the scenario and the script part of the TrafficLights class.  
+That's what was done and what is used by traffic_3 ans traffic_4 to illustrate two ways to do it. 
+#### generator as a method 
+For traffic_3 we use an exact copy of the previous script except the declaration.   
+As a method we omit the *function* keyword but keep the star to indicate a generator : 
+    ``` *internalEuropeanScript(oneTrafficLight) { ```    
+The scenario is created at construct time by : 
+```javascript
+    // add on in constructor for example traffic_3 
+    this.lightsScenario = new Scenario(
+      { scenarioName: "lights Scenario ", trace: true },
+      { scriptName: "european ligths", instance: this.internalEuropeanScript(this)}
+    );
+```   
+And to start scenario : ```  traffic_3.lightsScenario.start(); ```   
+##### another way for a method
+For traffic_4 the initial idea was : "why still using a parameter as we know we are in the object ?"  
+A modified generator script, without parameter, uses *this* as the destination of actions.
+```javascript    
+  * _internalEuropeanScript_() {
+  var lights = this.config.lights; // Notice no parameter, using this
+  // etc 
+```   
+#### tip 
+There is a major drawback here : **a generator  is detached of the context** ( as can be an anonymous function ).   
+Like that, *this* is not known inside the generator and scenario will crash. 
+To relate the script to the context, we need to inform it by a special binding : 
+The associated scenario is the following :
+``` javascript
+    //-------------- relate to context ----------
+      this._internalEuropeanScript_.bind(this);
+    //-----------------------------------------
+      this.lightsScenarioBis = new Scenario(
+        { scenarioName: "lightsScenarioBis", trace: true },
+        { scriptName: "european ligths Bis", instance: this._internalEuropeanScript_()}
+      );
+```  
+Scenario can be started as: 
+```  traffic_4.lightsScenarioBis.start(); ```   
 
-In the main prog, in the setup function of P5, we create the lights and then we starts the scenario: 
+# P5 drawing in 3D 
+In the main prog, in the *setup* function of P5, we create the lights and we start the 4 scenarios.   
+In the draw method, we ask the traffic lights to draw themselves.   
 ``` javascript 
 function setup() {
   canvas = createCanvas(800, 800, WEBGL);
   canvas.position(0, 0);
-  traffic_0 = new TrafficLight();
-  // start the scenario 
-  europeanScenario.start();
+  traffic_1 = new TrafficLight("pole 1");
+  traffic_2 = new TrafficLight("pole 2");
+  traffic_3 = new TrafficLight("pole 3");
+  traffic_4 = new TrafficLight("pole 4");
+// external scenarios
+   europeanScenario1 = new Scenario(
+    { scenarioName: "european lights 1", trace: true },
+    { scriptName: " lights tempo", instance: europeanScript(traffic_1) });
+   europeanScenario2 = new Scenario(
+    { scenarioName: "european lights 2", trace: true },
+    { scriptName: " lights tempo", instance: europeanScript(traffic_2)});
+// start all 
+  europeanScenario1.start();
+  europeanScenario2.start();
+// using class scenario
+  traffic_3.lightsScenario.start();
+  traffic_4.lightsScenarioBis.start();
 }
-```
-In the draw loop of P5, we ask the traffic_light to draw itself:
-```javascript 
+
 function draw() {
- orbitControl(1,1,1)
- background(60);
- traffic_0.draw();
-} 
-```
-## The interesting part : the script in the scenario 
-First, be aware of the special  ```function*``` which means this is a *generator* not a simple function.     
-Each yield can return the number of <u>milliseconds</u> to wait before coming back.   
-As we want a full time traffic_lights with this scenario, the script has an infinite loop ```while(true)```
-
-``` javascript 
-function* europeanScript() {
-  console.log(" tuto: 2 seconds to wait before activating the lights");
-  yield 2000;
-  // activate the traffic light box
-  traffic_0.active = true;
-  console.log(" tuto: start an infinite loop ");
-  while (true) {
-    console.log("tuto: red light for 8 s");
-    patchConfig(traffic_0.lights, { green: { active: false }, orange: { active: false }, red: { active: true }});
-    yield 8000;  // code will be back here after 8 seconds 
-    console.log("tuto: green light for 5 s");
-    patchConfig(traffic_0.lights, {green: { active: true },orange: { active: false },red: { active: false }});
-    yield 5000;
-    console.log("tuto: orange light for 2 s");
-    patchConfig(traffic_0.lights, {green: { active: false },orange: { active: true },red: { active: false }});
-    yield 2000;
-  } // while
+  orbitControl(1, 1, 1);
+  background(60);
+  translate(-150, -100, 0);  traffic_1.draw();
+  translate(100, 0, 0);  traffic_2.draw();
+  translate(100, 0, 0);  traffic_3.draw();
+  translate(100, 0, 0);  traffic_4.draw();
 }
-
-```
-A question could be : how to stop this behaviour as we leave an infinite loop in the script ?  
-In the sketch, we will stop the scenario by the following : 
+```   
+#### stop the scenarios
+A question could be : how to stop these behaviour as we leave an infinite loop in the script ? 
+Any scenario has a stop method and we can check if it is already ended by a property. 
+In the scketch example, the scenarios are stopped after a while with code like this : 
 ```javascript 
 // the scenario runs for ever. We stop it after 1 mn to conclude this tuto
 if(millis()>60000){
-  if(!europeanScenario.isEnded) europeanScenario.stop();
+  if(!europeanScenario1.isEnded) europeanScenario1.stop();
   traffic_0.active = false;
 }
 ```
-
-Notice we have used here ```millis()```which is the elapsed time since the sketch is running.  
-We could use the exact elapsed time of the scenario :   
-```if( millis() - europeanScenario.startGlobalMs > 60000 )  ```
-    
-## some necessary enhancement  
-You may have noticed that the script uses a global variable *traffic_0* : ```traffic_0.active , traffic_0.lights,... ```  which is a bad way of programming: This script cannot be used 'as is' for another traffic_light!     
--> This was in order to simplify as a first script. Don't work like this.   
-## let the europeanScenario become a part of the class behavior
-It seems logic that the scenario and the script be a part of the *TrafficLight* class as one of its behavior.     
-First, we adapt the previous script to become an internal method of the class and rather than a named variable, we can use  *this* to access the current traffic lights.      
-(Note the special notation of the internal method starting with a star * to indicate a generator)
-``` javascript 
-// enhancement:  the script is a method generator
-* europeanInternalScript() {
-    console.log(" 1_tuto: start an internal script ");
-    // activate the traffic light box
-    this.active = true;
-    console.log(" 1_tuto: start an infinite loop ");
-    while (true) {
-      console.log("1_tuto: red light for 7 s");
-      patchConfig(this.lights, { green: { active: false }, orange: { active: false }, red: { active: true }});
-      yield 7000;
-      console.log("1_tuto: green light for 5 s");
-      patchConfig(this.lights, {green: { active: true },orange: { active: false },red: { active: false }});
-      yield 5000;
-      console.log("1_tuto: orange light for 2 s");
-      patchConfig(this.lights, {green: { active: false },orange: { active: true },red: { active: false }});
-      yield 2000;
-    } // while
-  }
-  ``` 
-The script is internal, make the scenario internal with a method to create and start it:   
-```javascript   
-// start the scenario, create it if necessary 
- startEuropeanScenario(){
-    if (!this.europeanScenario) this.europeanScenario = 
-        new Scenario({name: "internal", trace: true}, this.europeanInternalScript.bind(this))
-    this.europeanScenario.start();
-}   
-```  
-### an expert's tip  
-A generator is detached from current context, like could be any anonymous function.  
-In order to rely the generator to the object context, we add the ```.bind(this)``` that do the job.  
-Now, in the script ```this```is correctly binded.   
-
-=> We can now create as many traffic lights as we need, each will run their own private scenarios :)   
-As a use case example, i have this kind of internal scenario in a class Bird to make them flap their wings.  
-
-## anothere useful way to generalize a scenario 
-The use case is not all time a dedicated behaviour adapted to only one class.      
-It could be a very generic behaviour, like becoming transparent in time, or any other.   
-<small>If javascript allowed multiple inheritance , we could have used several specialized ancesters, but this is not the case...</small>   
-
-###  a generator may have parameters
-As any function, a script *myScript* can be defined with parameters :   
-``` javascript 
-function * myScript(myParameters)   
-```   
-### understanding the two times of a generator 
-To use a generator, you must first instanciate it. It doesn't run anything at this time.   
-Later you can call it on its 'next()' method to advance one step. Code looks like this:    
-``` javascript 
-// instanciate. No run
-  myEffectiveScript = myScript(myCurrentParameter); 
-// run next step 
-  myEffectiveScript.next();
-```
-### how to give parameter to a script inside a scenario 
-Scenario class receive generators'list in its constructor that are pure functions, not function call. No parameters are allowed at this time. 
-A scenario isolate the time of generator instanciation into the ```this.setProgram()``` method, which has this ancester code: 
-``` javascript 
-  setProgram() {
-    // instanciate script generator
-    this.program = this.script();
-    // later, it will be called by this.program.next 
-  }
-  ```
-  By externally changing the instanciation of the generator, we can use a scenario with any kind of parameters in the script: 
-
-```javascript 
-// standard constructor 
-  scenario_2 = new Scenario({name: "with param", trace: true}, europeanScriptWithParameter);
-  // But we override the setProgram of scenario to change the way the generator is instanciated 
-  scenario_2.setProgram = function(){ 
-    this.program = this.script(traffic_2);//<= here the parameter's value to use by the script
-  }
-  // start the scenario as usual 
-  scenario_2.start();
-}
-``` 
-On the script size, the function has declared a parameter and this parameter is used in its code:   
-```javascript 
-function* europeanScriptWithParameter(oneTrafficLight) {
-    console.log(" tuto: 2 seconds to wait before activating the lights");
-    yield 2000;
-    // activate the traffic light box
-    oneTrafficLight.active = true;
-    ...
-```
-The code is now reusable for any traffic lights in any number of patched scenarios. 
+#### scenario times 
+In the code above, we have used ```millis()```which is the elapsed time since the sketch is running.  
+We could have used another time : the exact elapsed time of the scenario since it starts :   
+```if( millis() - europeanScenario1.startGlobalMs > 60000 )  ```  
 
 # summary 
 - javascript generators are used to create code with defined steps, separated by yield.  
 - A scenario  activates the generator to advance one step. 
-- Generator returns some value by a *yield*. If no value a default is used by scenario. 
+- Generator returns some value by a *yield*. If no value a default value is used by scenario. 
 - Scenario waits the numer of ms (an asynchronous timeout) before calling again the generator.  
-- By this way the script advances step to step with mastered intervall times. 
+- Internal scenarios help to add embedded animated behavior to objects. 
+- External scenarios may pilot from simple animation to large strories. 
   
 
 
