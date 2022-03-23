@@ -1,5 +1,5 @@
 //-------------- sample of dérivation : add config option radius, overwrite drawModel
-class SimpleSphere extends SimpleObject {
+class SimpleSphere extends GraphicObject {
   // Default config of this level
   static config = {
     // a new property
@@ -17,7 +17,6 @@ class SimpleSphere extends SimpleObject {
     // apply variant if called with
     if(instanceConfigVariant != null ) this.patchConfig(instanceConfigVariant)
   }
-
 
   // overWrite for model
   drawModel() {

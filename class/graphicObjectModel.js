@@ -17,35 +17,21 @@ Same principle is retained for loading textures :
 - associate 
 */
 
-class SimpleObjectModel extends SimpleObject {
-  // can have more config to add or change against super class
+class GraphicObjectModel extends GraphicObject {
   static config = {
-    // new properties
-    model3D: null, // the shape to draw
-    texture: {active:false, image: null}, // optional texture
+    model: null, // the shape to draw
+    texture: { active:false, image: null } // optional texture
   };
-
-  // As usual :
   constructor(instanceConfigVariant) {
-    super();
+    super();  
     // add local default extension
-    this.extendConfig(copyConfig(SimpleObjectModel.config));
+    this.extendConfig(copyConfig(GraphicObjectModel.config));
     // apply variant if called with
     if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
   }
-
-  // new methods
-  associateModel(someModel) {
-    this.config.model3D = someModel;
-  }
-  associateTexture(someTexture) {
-    this.config.texture.image = someTexture;
-    this.config.texture.active = true;
-  }
-
   // overWritten methods
   drawModel() {
     if (this.config.texture.active) texture(this.config.texture.image);
-    model(this.config.model3D);
+    model(this.config.model);
   }
 }

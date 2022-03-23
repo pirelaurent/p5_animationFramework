@@ -1,36 +1,44 @@
 
 
 // ------------------- sample object to draw
-class SimpleObject {
+class GraphicObject {
   // Default config of this level 
   static config = {
     name: "no name", // to facilitate debug, give a name to your objects
-    visible: true, // if false object is not drawn
-    position: [0, 0, 0], // current location of object
-    rotation: [0, 0, 0], // ( degrees )current rotation of object. order is rotateX,then Y , then Z
+    visible: true, // if false, object is not drawn
+    position: [0, 0, 0], // current location of object to draw it
+    rotation: [20, 0, 0], // ( degrees )current rotation of object. order is rotateX, then Y , then Z
     scale: [1, 1, 1], // optional scale in the 3 directions
-    // design
+    // screen drawing
     stroke: { active: true, color: "white", weight: 1 },
     //fill: { active: false, color: "grey" },
-    fill: { active: false, color: [200,100,200]}
-  
+    fill: { active: true, color: [200,100,100,200]}
   };  
 
   constructor(instanceConfigVariant) {
-    this.extendConfig(copyConfig(SimpleObject.config))
+    this.config = copyConfig(GraphicObject.config);
+    //this.extendConfig(copyConfig(SimpleObject.config))
     // apply variant if constructor was called with 
     if(instanceConfigVariant != null ) this.patchConfig(instanceConfigVariant)
   }
    
- // local relay to util lib
+ // local relay to simplify coding
  patchConfig(someModifier){
   this.config = patchConfig(this.config,someModifier)
  }
 
  extendConfig(someExtent){
-   if (this.config==null) this.config ={}
-  this.config = extendConfig(this.config,someExtent)
+   this.config = extendConfig(this.config,someExtent)
  }
+
+ setData(somePath, newValue){
+  setDataConfig(this.config, somePath, newValue) 
+ }
+
+ getData(somePath){
+  return getDataConfig(this.config, somePath) 
+ }
+
 
   // use the config
   draw() {
@@ -66,6 +74,6 @@ class SimpleObject {
   }
   // to be overwriten . for test purpose draw a box
   drawModel() {
-    box(100, 100, 100);
+    box(100, 150, 50);
   }
 }

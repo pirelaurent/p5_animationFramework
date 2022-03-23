@@ -5,8 +5,7 @@
 let can;
 
 let myCups = [];
-let cola_cup;
-let textureWater;
+let cola_cup, textureWater;
 function preload() {
   // from a free obj on turbosquid.com author rozenkrantz
   cola_cup = loadModel("../../models/cola_cup.obj");
@@ -21,29 +20,29 @@ function setup() {
     multiplyGeometry(cola_cup,createVector(1,-1,1))
     console.debug('cola_cup vertices:'+cola_cup.vertices.length)
   // instanciate with modifier and associate preloaded model
-  let aCup = new SimpleObjectModel({
+  let aCup = new GraphicObjectModel({
+    model: cola_cup,
+    texture: { active: true, image: textureWater },
     name: "my favorite cup",
     fill: { active: true, color: "red" },
     stroke: { color: "darkred"}
   });
-  aCup.associateModel(cola_cup);
+  //aCup.associateModel(cola_cup);
   // add to collection
   myCups.push(aCup);
   // create another with a texture 
-  aCup = new SimpleObjectModel({
+  aCup = new GraphicObjectModel({
+    model: cola_cup,
+    texture: { active: true, image: textureWater},
     name: "my beautiful cup",
     stroke: { active: false},
     position: [100,100,0]
   });
-  // instance can share the geometry if the same 
-  aCup.associateModel(cola_cup);
-  aCup.associateTexture(textureWater);
   myCups.push(aCup);
 
 } // setup
 
 function draw() {
-
   background(20);
   orbitControl(1,1,5)
   for (let aCup of myCups) aCup.draw();
@@ -61,10 +60,5 @@ for (let aCup of myCups){
  
    This message is of level debug. Must set 'verboses' in the console levels. 
    Message appears at the first move of clic of the mouse on the canvas if there is an orbitcontrol in the draw loop . 
-
-
-
-
-
 
 */
