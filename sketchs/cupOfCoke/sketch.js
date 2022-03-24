@@ -6,6 +6,7 @@ let can;
 
 let myCups = [];
 let cola_cup, textureWater;
+
 function preload() {
   // from a free obj on turbosquid.com author rozenkrantz
   cola_cup = loadModel("../../models/cola_cup.obj");
@@ -44,7 +45,8 @@ function setup() {
 
 function draw() {
   background(20);
-  orbitControl(1,1,5)
+  orbitControl(1,1,5);
+  kbHelp();
   for (let aCup of myCups) aCup.draw();
 // animate a while 
 if(frameCount %10 == 0)

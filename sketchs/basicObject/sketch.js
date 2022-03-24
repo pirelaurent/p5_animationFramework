@@ -27,7 +27,7 @@ function setup(){
 function draw(){
     orbitControl(1,1,1);
     background(80);
-    if( kbGrid) debugMode(GRID, 800,80)
+    kbHelp();
     obj_1.draw();
     obj_2.draw();
     obj_3.draw();
@@ -35,21 +35,3 @@ function draw(){
 
 
 
-//-------------- some global to use with keyboard--------- 
-var kbShowAxes = false;
-var kbGrid = false;
-var kbObject = null;
-var kbMoveAxis = "x";
-var kbMoveOrRotate = "move";
-
-function keyTyped() {
-    console.log("*** keyTyped:" + key);
-    switch (key) {
-        case "a": kbShowAxes = !kbShowAxes; break;
-        case "g": kbGrid = !kbGrid;break;
-        case "x": kbMoveAxis ="x";break;
-        case "y": kbMoveAxis ="y";break;
-        case "z": kbMoveAxis ="z";break;
-        case "/":if (kbMoveOrRotate=="move")kbMoveOrRotate="rotate"; else kbMoveOrRotate="move";break;
-
-}}

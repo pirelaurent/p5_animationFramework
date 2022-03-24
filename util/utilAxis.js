@@ -1,26 +1,25 @@
 /*--------------------------------------------------------------
  helper to see axes on the canvas . 
- Default : long: 500 a tick each 10th 
- long is a branch
+ Default : long: 500 
+ a tick each 10th of long, ie 50 by default
+
 */
 // global to help toggle in debug 
 var showAxes = false;
 
-function axes(long = 500, weight = 2, version = 0) {
+function utilAxis(long = 500, weight = 2) {
     push();
     noFill();
     strokeWeight(weight);
     // test current angleMode to restore it at end 
     var isRadian = (sin(HALF_PI)==1);
     angleMode(RADIANS);
-    if (version == 0) {
         var colXplus = "crimson"; //red
         var colXmoins = "red";
         var colYplus = "green" //green
         var colYmoins = "lime";
         var colZplus = "blue"; // blue
         var colZmoins = "blue";
-    };
     ambientLight(100); // white light
     var hCone = long / 20;
     // X axis
