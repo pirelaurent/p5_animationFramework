@@ -9,7 +9,7 @@ Let's describe a basic journey whith several parameter travellers :
 
 ``` javascript 
 var journey = {
-  durationMs: 10000, // duration of the journey
+  duration_ms: 10000, // duration of the journey
   // array of parameters in this journey
   parameters: [
     {
@@ -67,13 +67,13 @@ The following script is a simplified one, just to see main blocks :
 function* scriptJourneyBase(journey, anObject) {
   ...
   // follow time until duration elapsed 
-  while (elapsedTime <= journey.durationMs) {
+  while (elapsedTime <= journey.duration_ms) {
     ...
     // loop on parameters
     for (var aParam of journey.parameters) {
       ...
       // calculate current proportion of time ( betwwen  0 and 1)
-      var t = elapsedTime / aParam.durationMs;  // t estimated elapsed = effective elapsed 
+      var t = elapsedTime / aParam.duration_ms;  // t estimated elapsed = effective elapsed 
       ...
       // calculate new values for parameter : v 
       ...
@@ -85,8 +85,8 @@ function* scriptJourneyBase(journey, anObject) {
   } //end while on time 
 ```
 Some remarks :  
-In the example, durationMs is 10000 and yield from scenario is 100 : the travel will be splitted in 100 little steps if nothing special happens, one step each 100 ms. If some hard work prevents from returning in time, the script will adapt the new position using the effective elapsed time.   
-Depending on your computing power, you can adjust the *durationMs* and the *yield value* to have smoother trips if necessary.   
+In the example, duration_ms is 10000 and yield from scenario is 100 : the travel will be splitted in 100 little steps if nothing special happens, one step each 100 ms. If some hard work prevents from returning in time, the script will adapt the new position using the effective elapsed time.   
+Depending on your computing power, you can adjust the *duration_ms* and the *yield value* to have smoother trips if necessary.   
 The methods *anObject.getData(name)* and *anObject.setData(name,value)* are explained in *literals.md* chapter.  
 => As long as an object has an internal *config* data to hold the parameters'value, a journey can be used.   
 We will see later how to wrap a camera to take advantage of journeys.  

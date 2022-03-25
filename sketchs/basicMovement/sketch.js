@@ -39,7 +39,7 @@ function draw() {
 }
 
 var journey = {
-  durationMs: 10000, // duration of the journey
+  duration_ms: 10000, // duration of the journey
   // array of parameters in this journey
   parameters: [
     {

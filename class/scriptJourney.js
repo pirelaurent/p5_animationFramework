@@ -1,60 +1,77 @@
-function* scriptJourney(journey, anObject) {
-    // add internal data to parameters list
+function* scriptJourney(journey, anObject) {  
+    // add internal data to complete parameters list
     for (var aParam of journey.parameters) {
       aParam.isStarted = false;
       aParam.isEnded = false;
-      aParam.durationMs = journey.durationMs;  // later can have their own different timing
+      // start later ? 
+      if (! aParam.wait_ms) aParam.wait_ms = 0;
+      // personal duration ? If none take the remaining time   
+      if (!aParam.duration_ms) aParam.duration_ms = journey.duration_ms - aParam.wait_ms; // later can have their own different timing
+      // Common errors i have done 
+      var errata = false; 
+      errata = errata ||(aParam.duration_ms+aParam.wait_ms)>journey.duration_ms;
+      errata = errata ||(aParam.duration_ms<=0)
+      if (errata){
+        console.warn(`parameter ${aParam.name} has wrong duration_ms: start at ${aParam.wait_ms} duration_ms: ${aParam.duration_ms}`);
+        aParam.isEnded = true;
+        continue;
+      }
+      if((journey.duration)||(aParam.duration)){
+        console.warn(`Use duration_ms not duration : param ${aParam.name} rejected `);
+        continue;
+      }
     }
-  
-    // on suit le temps
+    // the generator has done the upper only once , now continue
     var startTime = millis();
     var elapsedTime = 0;
     /*
-    main loop of this generator. It follows time until elapsed 
+    main loop of this generator. It follows time until full elapsed 
     */
-    while (elapsedTime <= journey.durationMs) {
+    while (elapsedTime <= journey.duration_ms) {
       elapsedTime = millis() - startTime;
       // loop on parameters
       for (var aParam of journey.parameters) {
+        // nothing to do conditions 
         if (aParam.isEnded) continue;
-        if (elapsedTime > aParam.durationMs) {
+        if (elapsedTime < aParam.wait_ms) continue; // too early 
+        if (elapsedTime > aParam.wait_ms+aParam.duration_ms) { // to late 
           aParam.isEnded = true;
           continue;
         }
-        // if first time, take the right values
+        // if first time in the flow
         if (!aParam.isStarted) {
-          // if no start in journey take current value
-          if (!aParam.start) aParam.start = anObject.getData(aParam.name);
           aParam.isStarted = true;
-          console.log(` param start ${aParam.name}: ${aParam.start}`);
+          // if no start value, take the current value of parameter 
+          if (!aParam.start) aParam.start = anObject.getData(aParam.name);
+          // calculate once the distance between end and start
+          if (Array.isArray(aParam.start)) {
+          aParam.delta = [];
+          for (var i = 0; i < aParam.end.length; i++) {
+            var delta =aParam.end[i] - aParam.start[i]
+            aParam.delta.push(delta);
+          }
+          // not array, simple value 
+        } else aParam.delta = (aParam.end - aParam.start)
         }
+
         // calculate current proportion of time from 0 to 1
-        var t = elapsedTime / aParam.durationMs;
+        var t = (elapsedTime - aParam.wait_ms)/ aParam.duration_ms;
+
         // is there a time function defined in the journey for this parameter 
         if( aParam.easingOnT) {
            t = aParam.easingOnT(t);
         }
 
-
-        //console.log(` param ${aParam.end} ${Array.isArray(aParam.end)}`);
         // add to start value(s) the proportion of distance . Array or simple value first :
         if (Array.isArray(aParam.start)) {
-          if (!aParam.delta) {
-            aParam.delta = [];
-            for (var i = 0; i < aParam.end.length; i++) {
-              var delta =aParam.end[i] - aParam.start[i]
-              //console.log(`delta on ${aParam.name}  ${delta}`)
-              aParam.delta.push(delta);
-            }
-          }
+          // calculate a new vector cell per cell 
           var newV=[];
           for (var i=0;i<aParam.start.length;i++){
            newV.push(aParam.start[i] + aParam.delta[i] * t);
           }
           anObject.setData(aParam.name, newV);
         } else {
-          var v = aParam.start + (aParam.end - aParam.start) * t;
-          anObject.setData(aParam.name, v);
+          anObject.setData(aParam.name, aParam.start + aParam.delta * t);
         }
       }
       yield  // return to caller for a pause using current interval of scenario

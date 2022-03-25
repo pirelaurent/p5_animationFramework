@@ -19,7 +19,7 @@ var kb ={
         kb.infoDone = true;
     }
     if(kb.showAxes) utilAxis();
-    if(kb.showGrid) debugMode(GRID, 800,80);
+    if(kb.showGrid) debugMode(GRID, 800,80); else noDebugMode()
    }
 
    function keyTyped() {

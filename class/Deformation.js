@@ -30,7 +30,7 @@ class Deformation extends Scenario {
   
   function* scriptDeformation(config, cameleon) {
     var debug = false;// more logs 
-    var durationMs = config.durationMs;
+    var duration_ms = config.duration_ms;
     var actions = config.actions;
     // transform actions data in vectors
     for (var anAction of actions) {
@@ -72,17 +72,17 @@ class Deformation extends Scenario {
         // console.log(v)
       }
       // on peut avoir des temps différents par paramètre, plus court que le total
-      if (anAction.durationMs) {
+      if (anAction.duration_ms) {
         // this duration can'be larger than the main one
-        var d = min(anAction.durationMs, durationMs);
-      } else anAction.durationMs = durationMs;
+        var d = min(anAction.duration_ms, duration_ms);
+      } else anAction.duration_ms = duration_ms;
       // si un retard à l'allumage en tenir compte
-      if (anAction.waitMs) {
-        anAction.durationMs = min(
-          anAction.durationMs + anAction.waitMs,
-          durationMs
+      if (anAction.wait_ms) {
+        anAction.duration_ms = min(
+          anAction.duration_ms + anAction.wait_ms,
+          duration_ms
         );
-      } else anAction.waitMs = 0;
+      } else anAction.wait_ms = 0;
       // if some defined start, set the cameleon parameter at this place
       if (anAction.start)
         cameleon.setParameter(anAction.parameter, anAction.startV);
@@ -91,7 +91,7 @@ class Deformation extends Scenario {
       // on calcule le vecteur de la trajectoire . second is substract from first
       //var directionV = p5.Vector.sub(anAction.endV, anAction.startV);
       // on le découpe en millisecondes de trajets, à chaque appel, on le multipliera par le temps écoulé
-      //anAction.directionVperMs = directionV.div(anAction.durationMs);
+      //anAction.directionVperMs = directionV.div(anAction.duration_ms);
       // amélioration des courbes de temps
       var easing = anAction.functionOnT ?? "t";
       //console.log(easing)
@@ -142,14 +142,14 @@ class Deformation extends Scenario {
     var startTime = millis();
     var elapsedTime = 0;
     // main loop of this generator. It follows time
-    while (elapsedTime <= durationMs) {
+    while (elapsedTime <= duration_ms) {
       elapsedTime = millis() - startTime;
   
       for (var anAction of actions) {
         // si elle est pas commencée, on passe à la suivante
-        if (elapsedTime < anAction.waitMs) continue;
+        if (elapsedTime < anAction.wait_ms) continue;
         // si elle est terminée, inutile de calculer pour rien
-        if (elapsedTime > anAction.durationMs) {
+        if (elapsedTime > anAction.duration_ms) {
           if(!anAction.isEnded){
           anAction.isEnded = true;
           if (debug)console.log('end of action : '+anAction.parameter+ ' at : '+elapsedTime)
@@ -157,12 +157,12 @@ class Deformation extends Scenario {
           continue;
         }
   
-        // -------------si c'est la première fois, on recale le début à cause des waitMs
+        // -------------si c'est la première fois, on recale le début à cause des wait_ms
         if (anAction.isStarted == false) {
           if (debug)console.log('start of action : '+anAction.parameter+ ' at : '+elapsedTime)
           anAction.isStarted = true;
           // recalage à la position courante si le départ n'est pas défini dans la config
-          if (anAction.waitMs != 0) {
+          if (anAction.wait_ms != 0) {
             // copier coller , berk . No time
             if (!anAction.start)
               anAction.startV = cameleon.getParameter(anAction.parameter);
@@ -178,8 +178,8 @@ class Deformation extends Scenario {
   
         // goes to 0..1 range
         var t =
-          (elapsedTime - anAction.waitMs) /
-          (anAction.durationMs - anAction.waitMs);
+          (elapsedTime - anAction.wait_ms) /
+          (anAction.duration_ms - anAction.wait_ms);
         // easing on
         t = anAction.easingOnT(t);
         // if beziers, elapsed is set to interval 0..1  to get trajectory positionq
@@ -204,10 +204,10 @@ class Deformation extends Scenario {
         cameleon.setParameter(anAction.parameter, directionV);
   
         // on le découpe en millisecondes de trajets,
-        //anAction.directionVperMs = directionV.div(anAction.durationMs);
+        //anAction.directionVperMs = directionV.div(anAction.duration_ms);
         //var v = p5.Vector.mult(anAction.directionVperMs, elapsedTime);
         // on ajoute le nouveau segment au départ
-        //if(elapsedTime<=anAction.durationMs) v.add(anAction.startV);
+        //if(elapsedTime<=anAction.duration_ms) v.add(anAction.startV);
         //cameleon.setParameter(anAction.parameter, v);
   
         // update parameter
