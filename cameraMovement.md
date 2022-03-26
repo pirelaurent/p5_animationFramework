@@ -126,8 +126,8 @@ function draw() {
   dragon.draw();
 }
 ``` 
-Some helps are available by striking some key ( focus mut be on html page, not in the console area ). 
-In the console, can see doc with 'h' key :    
+Some helps are available by striking some key ( focus mut be on html page, not in the console area ).    
+In the console, can see doc with 'h' key :      
 <img src = "./img/forDoc/keys_h_g.png" width = 500></img>
 
 These two kb keys add elements to the canvas :    

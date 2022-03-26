@@ -12,13 +12,14 @@ class GraphicObject {
     // screen drawing
     stroke: { active: true, color: "white", weight: 1 },
     //fill: { active: false, color: "grey" },
-    fill: { active: true, color: [200,100,100,200]}
+    fill: { active: true, color: [200,100,100,200]},
+    drawModel: null
   };  
 
   constructor(instanceConfigVariant) {
     this.config = copyConfig(GraphicObject.config);
     //this.extendConfig(copyConfig(SimpleObject.config))
-    // apply variant if constructor was called with 
+    // apply variant if constructor was called with . Warning : not a copy 
     if(instanceConfigVariant != null ) this.patchConfig(instanceConfigVariant)
   }
    
@@ -69,7 +70,8 @@ class GraphicObject {
     } else noFill();
 
     // draw the default shape (here a box) . to be overwritten by any
-    this.drawModel();
+   if (this.config.drawModel!=null) this.config.drawModel() ;
+   else  this.drawModel();
     pop();
   }
   // to be overwriten . for test purpose draw a box
