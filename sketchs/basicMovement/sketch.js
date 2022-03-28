@@ -25,8 +25,8 @@ function setup() {
   });
 
  scenario_0 = new Scenario(
-   {scenarioName: 'movement0 sample', trace: true},
-   {scriptName: " dragon move", instance: scriptJourney(journey, dragon) }
+   {scenarioName: "movement0 sample", trace: true},
+   {scriptName: " dragon move", generator: scriptJourney, arguments:[journey, dragon]}
   ) 
   scenario_0.start();
 }

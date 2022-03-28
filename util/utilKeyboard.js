@@ -7,7 +7,7 @@
 
 //-------------- some global to use with keyboard---------
 var kb = {
-  showAxes: false,
+  showAxis: false,
   showGrid: false,
   objectsToMove: [], // to set to a list of moveable objects
   toMove: null,
@@ -33,7 +33,7 @@ function kbHelp() {
     console.log(' type "h" to see helper functions with keyboard');
     kb.infoDone = true;
   }
-  if (kb.showAxes) utilAxis();
+  if (kb.showAxis) utilAxis();
   if (kb.showGrid) debugMode(GRID, 800, 80);
   else noDebugMode();
 }
@@ -46,7 +46,7 @@ function keyTyped() {
       kb.enter();
       break;
     case "a":
-      kb.showAxes = !kb.showAxes;
+      kb.showAxis = !kb.showAxis;
       break;
     case "g":
       kb.showGrid = !kb.showGrid;
@@ -64,6 +64,7 @@ function keyTyped() {
     case "/":
       if (kb.modeToMove == "position") kb.modeToMove = "rotation";
       else kb.modeToMove = "position";
+      console.log('move : '+kb.modeToMove);
       break;
     case ">":
       if (!kb.toMove) break;
@@ -74,6 +75,8 @@ function keyTyped() {
         pos = kb.toMove.config.rotation;
         pos[kb.axisToMove] += kb.stepToRotate;
       }
+      // special case for tripod : p5 don't know camera has changed , help it 
+      if(kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
       break;
 
     case "<":
@@ -85,6 +88,8 @@ function keyTyped() {
         pos = kb.toMove.config.rotation;
         pos[kb.axisToMove] -= kb.stepToRotate;
       }
+      // special case for tripod : p5 don't know camera has changed , help it 
+      if(kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
       break;
     case "0":
     case "1":
@@ -98,18 +103,24 @@ function keyTyped() {
         console.log(kb.toMove.config.name + " ready to move");
       } else kb.toMove = null;
       break;
+    case "?":
+      if(!kb.toMove) console.log('no element to move');
+      else console.log('config of: '+kb.toMove.config.name+'\n position:['+kb.toMove.config.position+']\n rotation['+kb.toMove.config.position+']');
+      break;
     // help
     case "h":
       var help = `
-               **** Keyboard option **** 
-               a: show axes 
-               g: show grid 
-               x,y,z : select axis for a deplacement 
-               > <  : advance , move back element to move one kb.stepToMove (default 20) 
-               / : toggle move vs rotate  
-               0..9 : element to move (index in objectsToMove array)
-
-               `;
+        **** Keyboard option **** 
+        a: show axes 
+        g: show grid 
+        / : toggle move (default) vs rotate  
+        x,y,z : select axis to move on 
+        > <  : advance or move back element
+        0..9 : element to move : `;
       console.log(help);
+      for (var i=0;i<kb.objectsToMove.length;i++) {
+        kb.toMove = kb.objectsToMove[i];
+        console.log('         '+i+':'+kb.toMove.config.name );
+      } 
   }
 }

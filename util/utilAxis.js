@@ -5,7 +5,7 @@
     step: a tick each 50 pix by default
 */
 // global to help toggle in debug
-var showAxes = false;
+var showAxis = false;
 
 function utilAxis(long = null, step = 50, weight = 2) {
   if (!long) long = min(width,height)/2 - 30;  

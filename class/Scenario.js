@@ -18,7 +18,7 @@ class Scenario {
     this.config = JSON.parse(JSON.stringify(Scenario.defaultConfig));
     // apply changes if any 
     this.config = patchConfig(this.config, someConfig);
-    this.generatorsToUse = generatorsToUse; // its an array of instanciated script 
+    this.generatorsToUse = generatorsToUse; // its an array of scripts 
     // but if just one accept it and make it an array 
     if(!(this.generatorsToUse instanceof Array))this.generatorsToUse =[this.generatorsToUse]
     // to follow 
@@ -38,6 +38,9 @@ class Scenario {
     this.currentGeneratorIndex = 0;
 
     this.script = this.generatorsToUse[this.currentGeneratorIndex];
+    this.createInstanceGenerator();
+
+
     this.isStarted = true;
     this.startTimeMs = millis();
     this.startGlobalMs = millis();
@@ -48,6 +51,15 @@ class Scenario {
     // first instruction is called asap
     this.advance();
   }
+
+  createInstanceGenerator(){
+    // instanciate this script generator with optional arguments using spread operator
+    if (!this.script.arguments)this.script.arguments=[];
+    if(this.config.trace)
+    console.log('instanciate:',this.script.scriptName+ ' with args:  '+this.script.arguments)
+    this.script.instance = this.script.generator(...this.script.arguments); 
+}
+
 
   // can restart a scenario when ended 
   restart() {
@@ -81,7 +93,7 @@ class Scenario {
     clearTimeout(this.timeoutId);
   }
 
-
+ 
   stopScript() {
     //console.log('index:'+this.currentGeneratorIndex+' '+this.generatorsToUse.length)
     if (this.config.trace)
@@ -98,6 +110,7 @@ class Scenario {
     else {
       this.currentGeneratorIndex += 1;
       this.script = this.generatorsToUse[this.currentGeneratorIndex];
+      this.createInstanceGenerator();
       this.startTimeMs = millis();
       if (this.config.trace)
         var elapsed = round(millis() - this.startTimeMs) / 1000;

@@ -21,16 +21,15 @@ class TrafficLight {
         red: { active: false, colors: { on: "#FF0000", off: "#3B0B0B" } },
       },
     };
-    //add on in constructor for example traffic_3 
+    //add on for example traffic_3 
     this.lightsScenario = new Scenario(
       { scenarioName: "lightsScenario", trace: true },
-      { scriptName: "european ligths", instance: this.internalEuropeanScript(this)}
+      { scriptName: "european ligths", generator: this.internalEuropeanScript, arguments:[this]}
     );
-    //add on in constructor for example traffic_4 
-      this._internalEuropeanScript_.bind(this);
+    //add on for example traffic_4 
       this.lightsScenarioBis = new Scenario(
         { scenarioName: "lightsScenarioBis", trace: true },
-        { scriptName: "european ligths Bis", instance: this._internalEuropeanScript_()}
+        { scriptName: "european ligths Bis", generator: this._internalEuropeanScript_.bind(this)}
       );
   }
 
@@ -126,7 +125,8 @@ class TrafficLight {
  another way is to use 'this' inside the script in place of oneTrafficLight parameter.
 */
   * _internalEuropeanScript_() {
-    var ms = 1000 + random(5000);
+
+    var ms = 1000 + random(5000);   console.log(this.config)
     console.log(
       this.config.name +
         " " +

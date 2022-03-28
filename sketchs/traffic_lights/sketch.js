@@ -16,10 +16,10 @@ function setup() {
 // external scenarios
    europeanScenario1 = new Scenario(
     { scenarioName: "european lights 1", trace: true },
-    { scriptName: " lights tempo", instance: europeanScript(traffic_1) });
+    { scriptName: " lights 1", generator: europeanScript, arguments: [traffic_1] });
    europeanScenario2 = new Scenario(
     { scenarioName: "european lights 2", trace: true },
-    { scriptName: " lights tempo", instance: europeanScript(traffic_2)});
+    { scriptName: " lights 2", generator: europeanScript, arguments: [traffic_2] });
 // start all 
   europeanScenario1.start();
   europeanScenario2.start();

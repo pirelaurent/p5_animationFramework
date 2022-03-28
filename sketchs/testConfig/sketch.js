@@ -18,13 +18,13 @@ function setup() {
 
 
   // use default config
-  myBox1 = new SimpleObject();
+  myBox1 = new GraphicObject();
 
 
 
 
   // use default config and apply some change with a config inline in constructor
-  myBox2 = new SimpleObject({
+  myBox2 = new GraphicObject({
     name:" box2",
     stroke: { color: color(10,10,200,200)}, // in code can use also color function 
     fill: {active: true },
@@ -41,7 +41,7 @@ function setup() {
   };
 
   // and use it later for new object of this kind
-  myBox3 = new SimpleObject(typeBoxYellow);
+  myBox3 = new GraphicObject(typeBoxYellow);
   
   //------------- subclass
   // create an object of subClass with default
@@ -56,7 +56,7 @@ function setup() {
     stroke: {color: "lightblue"}
   };
   // and use it for new object
-  myBowl2 = new SimpleSphere(configBowlPlus);
+  myBowl2 = new SimpleSphere (configBowlPlus);
   // for demo purpose set a tiny frameRate
   frameRate(2);
 } // setup

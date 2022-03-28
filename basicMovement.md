@@ -58,7 +58,7 @@ To apply the *journey* to the *dragon*, we define a scenario with an associated 
 ```javascript 
  scenario_0 = new Scenario(
    {scenarioName: 'movement0 sample', interval: 100, trace: true},
-   {scriptName: " dragon move", instance: scriptJourneyBase(journey, dragon) }
+   {scriptName: " dragon move", generator: scriptJourneyBase, arguments: [journey, dragon] }
   ) 
   ```
 ## a generic script for journeys 

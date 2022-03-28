@@ -1,21 +1,19 @@
  // future config part of a bezier in a journey 
  var conf = {
-  start: [260,130,230], 
-  end:   [70,-280,0], 
+  start: [220,-280,320], 
+  end:   [-270,-150,110], 
   bezier: {
-      inter1: [220,-340,120],
-      inter2: [380,160,-240] 
-  }
+    inter1: [40,-390,270], 
+    inter2: [-170,-40,270] 
+ }
 };
-
-
 
 var firstIndex01, lastIndex01; // used to change colors if beziers calculated outside 0..1
 var s_start, s_end, s_inter1, s_inter2; // sphere to see what happens
 var trajet = [];
-
-var from_t= -0.2;
-var to_t = 1.2; 
+// calculation from 0 to 1 
+var from_t= 0;
+var to_t = 1; 
 
 // a special trace to re create the previous format 
 function traceConf(){
@@ -27,48 +25,27 @@ function traceConf(){
 
 function setup() {
   var can = createCanvas(800, 800, WEBGL);
-
-  // create graphics to have sphere to move using conf
-  s_start = new GraphicObject(  {
-    name: "start point",
-    position: conf.start,
-    stroke: { active: true, color: "green" },
-    fill:{active:false},
-    drawModel:()=>sphere(20)
+// change a bit point of view with a tripod 
+  camera1 = createCamera();
+  tripod1 = new Tripod({
+    name: "tripod 1",
+    position: [0, -220, 1010], // point of view to see the grid
   });
+  tripod1.mountCamera(camera1);
+  
+  createBeziersSpheres()
 
-   s_end = new GraphicObject(  {
-    name: "end point",
-    position: conf.end,
-    stroke: { active: true, color: "red" },
-    fill:{active:false},
-    drawModel:()=>sphere(20)
-  });
-
-  s_inter1 = new GraphicObject(  {
-    name: "inter1 point",
-    position: conf.bezier.inter1,
-    stroke: { active: true, color: "yellow" },
-    fill:{active:false},
-    drawModel:()=>sphere(20)
-  });
-
-  s_inter2 = new GraphicObject(  {
-    name: "inter2 point",
-    position: conf.bezier.inter2,
-    stroke: { active: true, color: "orange" },
-    fill:{active:false},
-    drawModel:()=>sphere(20)
-  });
+  
  // change default help 
-  kb.showAxes = true; 
+  kb.showAxis = true; 
   kb.showGrid = true;
   kb.objectsToMove=[];
-  // 0 1 2 3
+  // 0 1 2 3 4
   kb.objectsToMove.push(s_start); 
   kb.objectsToMove.push(s_end);
   kb.objectsToMove.push(s_inter1);
   kb.objectsToMove.push(s_inter2);
+  kb.objectsToMove.push(tripod1);  //4
   // move default inter1
   kb.toMove = kb.objectsToMove[2];
   // change enter behavior 
@@ -118,16 +95,13 @@ function draw() {
       paint = "smoke";
       if (i < firstIndex01) paint = "green";
       if (i > lastIndex01) paint = "red";
-      sph(aPoint, paint, 5);
+      // materialize 
+     push();
+     stroke(paint); 
+     translate(aPoint.x, aPoint.y, aPoint.z);
+     sphere(5);
+     pop();
     }
-}
-
-function sph(v, color = "grey", size = 8) {
-  push();
-  stroke(color);
-  translate(v.x, v.y, v.z);
-  sphere(size);
-  pop();
 }
 
 function calculateBezier(startV, endV, inter1V, inter2V, t) {
@@ -138,6 +112,43 @@ function calculateBezier(startV, endV, inter1V, inter2V, t) {
   var e = p5.Vector.lerp(b, c, t);
   return p5.Vector.lerp(d, e, t);
 }
+
+function createBeziersSpheres(){
+  // create graphics to have sphere to move using conf
+  s_start = new GraphicObject(  {
+    name: "start point",
+    position: conf.start,
+    stroke: { active: true, color: "green" },
+    fill:{active:false},
+    drawModel:()=>sphere(20)
+  });
+
+   s_end = new GraphicObject(  {
+    name: "end point",
+    position: conf.end,
+    stroke: { active: true, color: "red" },
+    fill:{active:false},
+    drawModel:()=>sphere(20)
+  });
+
+  s_inter1 = new GraphicObject(  {
+    name: "inter1 point",
+    position: conf.bezier.inter1,
+    stroke: { active: true, color: "yellow" },
+    fill:{active:false},
+    drawModel:()=>sphere(20)
+  });
+
+  s_inter2 = new GraphicObject(  {
+    name: "inter2 point",
+    position: conf.bezier.inter2,
+    stroke: { active: true, color: "orange" },
+    fill:{active:false},
+    drawModel:()=>sphere(20)
+  });
+}
+
+
 
 //     //--------- chrome  Command Shift F pour virer le haut
 //     case "-": {

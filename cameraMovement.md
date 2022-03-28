@@ -45,6 +45,23 @@ function setup() {
   // start the scenario
   scenarioCamera.start();
 }
+
+function createTripods(){
+  // create a tripod with default values 
+  tripodA = new Tripod({
+    name:"in front",
+  })
+  // place this tripod under the current camera 
+  tripodA.mountUnderCamera(camera1);
+  // prepare another place for quick change of point of view 
+  tripodB = new Tripod({
+    name:"look behind",
+    position: [0, -200, -900],
+    lookAt: [-100,0,0]
+  })
+}
+
+
 ``` 
 #### scenario test 
 ```javascript 
@@ -58,8 +75,8 @@ function createScenariosAndJourneys(){
 scenarioCamera = new Scenario(
   { scenarioName: "demo camera", trace: true},
   [
-    { scriptName: "alternate", instance: alternate()},
-    { scriptName: "zoom and move", instance: scriptJourney(journeyCam,tripodA)},
+    { scriptName: "alternate", generator: alternate },
+    { scriptName: "zoom and move", generator: scriptJourney, arguments :[journeyCam,tripodA]},
   ])
 }
 ...

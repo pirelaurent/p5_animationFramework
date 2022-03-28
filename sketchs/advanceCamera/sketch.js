@@ -67,8 +67,8 @@ function createScenariosAndJourneys(){
 scenarioCamera = new Scenario(
   { scenarioName: "demo camera", trace: true},
   [
-    { scriptName: "alternate", instance: alternate()},
-    { scriptName: "zoom and move", instance: scriptJourney(journeyCam,tripodA)},
+    { scriptName: "alternate", generator: alternate},
+    { scriptName: "zoom and move", generator: scriptJourney, arguments : [journeyCam,tripodA]},
   ])
 }
 
