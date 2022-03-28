@@ -16,20 +16,20 @@ class TrafficLight {
       visible: true,
       active: false, // lights stay all grey
       lights: {
-        green: { active: false, colors: { on: "#3ADF00", off: "#243B0B" } },
-        orange: { active: false, colors: { on: "#FFBF00", off: "#61380B" } },
-        red: { active: false, colors: { on: "#FF0000", off: "#3B0B0B" } },
+        green: { active: false, colors: { on: "#3ADF00", off: "#243B0B" }, durationMs: 3000 },
+        orange: { active: false, colors: { on: "#FFBF00", off: "#61380B" }, durationMs: 1000 },
+        red: { active: false, colors: { on: "#FF0000", off: "#3B0B0B" }, durationMs: 4000 },
       },
     };
     //add on for example traffic_3 
     this.lightsScenario = new Scenario(
-      { scenarioName: "lightsScenario", trace: true },
-      { scriptName: "european ligths", generator: this.internalEuropeanScript, arguments:[this]}
+      { scenarioName: "lightsScenario3", trace: true },
+      { scriptName: "european ligths 3", generator: this.internalEuropeanScript, arguments:[this]}
     );
     //add on for example traffic_4 
       this.lightsScenarioBis = new Scenario(
-        { scenarioName: "lightsScenarioBis", trace: true },
-        { scriptName: "european ligths Bis", generator: this._internalEuropeanScript_.bind(this)}
+        { scenarioName: "lightsScenario4", trace: true },
+        { scriptName: "european ligths 4", generator: this._internalEuropeanScript_.bind(this)}
       );
   }
 
@@ -38,23 +38,20 @@ class TrafficLight {
     if (!this.config.visible) return;
     push(); // protect others
     this.drawHousing();
-    // add three lights sphere
+    // add three lights bulbs
     noStroke();
-    translate(0, 50, 20);
-    this.drawLight("green");
-    translate(0, -50, 0);
-    this.drawLight("orange");
-    translate(0, -50, 0);
-    this.drawLight("red");
+    translate(0, 50, 20);this.drawLight("green");
+    translate(0, -50, 0);this.drawLight("orange");
+    translate(0, -50, 0);this.drawLight("red");
     pop();
   }
-  // draw the named light
+  // draw the colored bulb
   drawLight(colorName) {
     let opt = this.config.lights[colorName];
     if (opt.active && this.config.active) fill(opt.colors.on);
     else fill(opt.colors.off);
     sphere(20);
-  }
+  }g
 
   // draw a box with a pole
   drawHousing() {
@@ -77,47 +74,31 @@ class TrafficLight {
 */
 
   *internalEuropeanScript(oneTrafficLight) {
-    var ms = 1000 + random(5000);
-    console.log(round(ms) + " ms to wait before activating the lights");
-    yield ms;
     // activate the traffic light box
     oneTrafficLight.config.active = true;
-    console.log(oneTrafficLight.config.name + " start an infinite loop ");
+    let lights = oneTrafficLight.config.lights;
     while (true) {
       //-------- set red
-      patchConfig(oneTrafficLight.config.lights, {
+      patchConfig(lights, {
         green: { active: false },
         orange: { active: false },
         red: { active: true },
       });
-      ms = 3000 + random(5000);
-      console.log(
-        oneTrafficLight.config.name + " green light for " + round(ms) + " ms"
-      );
-      yield ms;
+      yield lights.red.durationMs;
       //---------- set green
-      patchConfig(oneTrafficLight.config.lights, {
+      patchConfig(lights, {
         green: { active: true },
         orange: { active: false },
         red: { active: false },
       });
-      ms = 2000 + random(2000);
-      console.log(
-        oneTrafficLight.config.name + " green light for " + round(ms) + " ms"
-      );
-      yield ms;
+      yield lights.green.durationMs;
       //---------- set orange
-
-      patchConfig(oneTrafficLight.config.lights, {
+      patchConfig(lights, {
         green: { active: false },
         orange: { active: true },
         red: { active: false },
       });
-      ms = 1000 + random(1500);
-      console.log(
-        oneTrafficLight.config.name + " orange light for " + round(ms) + " ms"
-      );
-      yield ms;
+      yield lights.orange.durationMs;
     } // while
   }
 
@@ -125,46 +106,31 @@ class TrafficLight {
  another way is to use 'this' inside the script in place of oneTrafficLight parameter.
 */
   * _internalEuropeanScript_() {
-
-    var ms = 1000 + random(5000);   console.log(this.config)
-    console.log(
-      this.config.name +
-        " " +
-        round(ms) +
-        " ms to wait before activating the lights"
-    );
-    yield ms;
     // activate the traffic light box
     this.config.active = true;
-    console.log(this.config.name + " start an infinite loop ");
-    while (true) {
+    let lights = this.config.lights;
+    while (true) {  // infinite loop 
       //-------- set red
       patchConfig(this.config.lights, {
         green: { active: false },
         orange: { active: false },
         red: { active: true },
       });
-      ms = 3000 + random(5000);
-      console.log(this.config.name + " green light for " + round(ms) + " ms");
-      yield ms;
+      yield lights.red.durationMs;
       //---------- set green
       patchConfig(this.config.lights, {
         green: { active: true },
         orange: { active: false },
         red: { active: false },
       });
-      ms = 2000 + random(2000);
-      console.log(this.config.name + " green light for " + round(ms) + " ms");
-      yield ms;
+      yield lights.green.durationMs;
       //---------- set orange
       patchConfig(this.config.lights, {
         green: { active: false },
         orange: { active: true },
         red: { active: false },
       });
-      ms = 1000 + random(1500);
-      console.log(this.config.name + " orange light for " + round(ms) + " ms");
-      yield ms;
+      yield lights.orange.durationMs;
     } // while
   }
 }

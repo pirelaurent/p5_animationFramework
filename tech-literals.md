@@ -1,7 +1,72 @@
+# Literal objects
+ A literal object is a data structure using key-value pairs and curly braces in any combination.     
+ This avoid to create discrete variables and simplify generic behaviours.    
+ In the framework the holder of object's data is generally named *config*, short of *configuration*    
+ Despite a literal can hold any kind of value, including specific objects, here we stay in JSON compatible literals (ie with native js types) .  
+### declaration for a literal object
+```javascript 
+ let config = {
+    stroke: { active: true, color: "white", weight: 1 },
+    fill: { active: false, color: "grey" },
+  };
+  ```
+  Note : you can also use a JSON string to create a literal (in case of an external text file as example).
+  ```
+  let config = JSON.parse(
+  '{"stroke":{"active":true,"color":"white","weight":1},"fill":{"active":false,"color":"grey"}}')
+```
+## copy a literal to create a new one
+```javascript 
+function copyConfig(source) {
+  // the simplest way is to serialize then deserialize the structure
+  var newConfig = JSON.parse(JSON.stringify(source));
+  return newConfig;
+}
+```
+The framework uses *copyConfig* to share a unique structure in a static of class definition, structure which is copied into each new object to insure their independancy. 
+## patch a literal (with another literal)  : patchConfig
+This function *patch* an existing literal with another that holds any parts or subparts of the destination.      
+This allows to only describe the differences with the reference to update the config.     
+*patchConfig* checks that the keys already exist inside the destination to avoid errors (like common typo errors).   
+The control also indicates if the value of a key has changed of nature : real request or thoughtlessness? 
+Controls are sent to console at the debug level. 
+## extend a literal (with another literal) : extendConfig
+In some case, it is useful to add new properties not yet included in the previous structure.   
+*extendsConfig* works like *patchConfig* (can change values of named keys) but allow creation of new key-value pairs.        
+*extendConfig* is used to complete at each level of inheritance the default config of ancesters with the data of the new level. 
 
-# basic moveable object
+## accessing data  
+In code, any data of literal can be get or set with either a dot notation or an array notation : 
+``` javascript 
+ obj_1.config.fill.color = 'yellow'
+ obj_1.config["fill"]["color"]= 'orange' 
+ obj_2.config.stroke.active = false; 
+ obj_2.config["stroke"]["active"] = true;
+ console.log(obj_2.config);
+```
+### interpreted values 
+The framework introduces two methods using a textual dot notation to avoid to manipulate an array of strings keys: 
+- getData (name)
+- setData (name, value)
 
-## literals in a class hierarchy 
+As part of the basic class of framework, data are extracted from *object.config* 
+
+``` javascript    
+obj_1.setData("fill.color","yellow");
+obj_1.setData("position[0]",120);
+obj_2.setData("position",[120,0,200]);
+if (obj_2.getData("stroke.active")== false) 
+...etc. 
+```
+This kind of notation will be used in the framework to act on the values during a scenario externally configured.  
+
+#### learn more 
+see source code in *util/utilConfig.js*
+
+
+# basic moveable element 
+
+# literals in a class hierarchy 
 The framework uses **static literal** to define a default data structure for the future objects.   
 In the constructor call, an instance can precise what changes are needed for it.    
 ```javascript 

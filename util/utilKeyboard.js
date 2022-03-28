@@ -33,7 +33,7 @@ function kbHelp() {
     console.log(' type "h" to see helper functions with keyboard');
     kb.infoDone = true;
   }
-  if (kb.showAxis) utilAxis();
+  if (kb.showAxis) {push();utilAxis();pop();}
   if (kb.showGrid) debugMode(GRID, 800, 80);
   else noDebugMode();
 }
