@@ -1,81 +1,165 @@
+/*
+ Three classes to work with: 
 
+ MoveableObject dry ancester with position and rotation 
+  note: rotation will uses the current angleMode. It's up to you to give right values
+ GraphicObject  a moveable object with colors and stroke 
+ GraphicObjectModel a GraphicObject with optional .obj and texture 
+ 
+*/
 
-// ------------------- sample object to draw
-class GraphicObject {
-  // Default config of this level 
+// ------------------- sample object to move
+class MoveableObject {
+  // Default config of this level
   static config = {
-    name: "no name", // to facilitate debug, give a name to your objects
-    visible: true, // if false, object is not drawn
+    name: "moveableObject no name", // to facilitate debug, give a name to your objects
     position: [0, 0, 0], // current location of object to draw it
-    rotation: [20, 0, 0], // ( degrees )current rotation of object. order is rotateX, then Y , then Z
+    angleMode: null,  // what's the unit of angle . If not set use current angleMode 
+    rotation: [0, 0, 0], // current rotation of object. order is: rotateX, then Y , then Z
     scale: [1, 1, 1], // optional scale in the 3 directions
-    // screen drawing
-    stroke: { active: true, color: "white", weight: 1 },
-    //fill: { active: false, color: "grey" },
-    fill: { active: true, color: [200,100,100,200]},
-    drawModel: null
-  };  
+  };
 
   constructor(instanceConfigVariant) {
-    this.config = copyConfig(GraphicObject.config);
-    //this.extendConfig(copyConfig(SimpleObject.config))
-    // apply variant if constructor was called with . Warning : not a copy 
-    if(instanceConfigVariant != null ) this.patchConfig(instanceConfigVariant)
+    this.config = copyConfig(MoveableObject.config);
+    // apply variant if constructor was called with some parameters.
+    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
   }
-   
- // local relay to simplify coding
- patchConfig(someModifier){
-  this.config = patchConfig(this.config,someModifier)
- }
 
- extendConfig(someExtent){
-   this.config = extendConfig(this.config,someExtent)
- }
+  // local relay to simplify coding
+  patchConfig(someModifier) {
+    this.config = patchConfig(this.config, someModifier);
+  }
 
- setData(somePath, newValue){
-  setDataConfig(this.config, somePath, newValue) 
- }
+  extendConfig(someExtent) {
+    this.config = extendConfig(this.config, someExtent);
+  }
+  // local relay to get or set values using dot path
+  getData(someDotPath) {
+    return getDataConfig(this.config, someDotPath);
+  }
 
- getData(somePath){
-  return getDataConfig(this.config, somePath) 
- }
+  setData(someDotPath, newValue) {
+    setDataConfig(this.config, someDotPath, newValue);
+  }
+  // locate relative to current position . If protected everywhere must be 0,0,0 
+  locate(){
+    let pos = this.config.position;
+    translate(pos[0], pos[1], pos[2]);
+  }
 
+  rotate(){
+    var pushPopAngleMode; // p5 don't push/pop angleMode 
+    if(this.config.angleMode!=null){
+     pushPopAngleMode = _angleMode;
+     angleMode(this.config.angleMode);
+    }
+    let rot = this.config.rotation;
+    rotateX(rot[0]);
+    rotateY(rot[1]);
+    rotateZ(rot[2]);
+    if(this.config.angleMode!=null){
+     angleMode(pushPopAngleMode);
+    }
+  }
 
-  // use the config
+  movePosition([x, y, z]) {
+    this.position[0] += x;
+    this.position[1] += y;
+    this.position[2] += z;
+  }
+
+  moveRotation([x, y, z]) {
+    this.rotation[0] += x;
+    this.rotation[1] += y;
+    this.rotation[2] += z;
+  }
+}
+
+/*
+ A moveable object which is able to draw itself 
+*/
+class GraphicObject extends MoveableObject {
+  // Default config of this level
+  static config = {
+    name: "graphicObject no name ", // to facilitate debug, give a name to your objects
+    visible: true, // if false, object is not drawn
+    // screen drawing
+    stroke: { active: true, color: "white", weight: 1 },
+    fill: { active: true, color: [200, 100, 100, 200] },
+  };
+
+  constructor(instanceConfigVariant) {
+    super();
+    // add local default extension
+    this.extendConfig(copyConfig(GraphicObject.config));
+    // apply variant if called with
+    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+  }
+
+  // use the config to draw in p5 visual code
   draw() {
     // nothing to do if not visible
     if (!this.config.visible) return;
-    // apply config
     push();
     // locate
-    let pos = this.config.position;
-    translate(pos[0], pos[1], pos[2]);
+    this.locate();
     // rotate
-    let rot = this.config.rotation;
-    angleMode(DEGREES);
-    if (rot[0]) rotateX(rot[0]);
-    if (rot[1]) rotateY(rot[1]);
-    if (rot[2]) rotateZ(rot[2]);
+    this.rotate();
     // scale
     let scalexyz = this.config.scale;
     scale(scalexyz[0], scalexyz[1], scalexyz[2]);
-    // display
-    if (this.config.stroke.active){
-        stroke(this.config.stroke.color);
-        strokeWeight(this.config.stroke.weight)
+    // display painting 
+    if (this.config.stroke.active) {
+      stroke(this.config.stroke.color);
+      strokeWeight(this.config.stroke.weight);
     } else noStroke();
     //
-    if(this.config.fill.active){
-        fill(color(this.config.fill.color));
+    if (this.config.fill.active) {
+      fill(color(this.config.fill.color));
     } else noFill();
 
     // draw the default shape (here a box) . to be overwritten by any
-   if (this.config.drawModel!=null) this.config.drawModel() ;
-   else  this.drawModel();
+    if (this.config.drawModel != null) this.config.drawModel();
+    else this.drawModel();
     pop();
   }
-  // to be overwriten . for test purpose draw a box
+  //to be overwriten . for test purpose draw a box
   drawModel() {
     box(100, 150, 50);
   }
 }
+
+/*
+ this class associates a 'model' to the base oject. 
+ A 'model' can comes 
+ - from a 'loadModel for an .obj or .stl file' 
+ - from a GeometryObject designed by hand 
+ A 'texture' can also be set 
+ 
+ In p5 some pb can occurs if loadModel is outside of preload. 
+ Our advice : 
+  - code all loadModel and loadImage for texure in preload 
+  - construct GraphicsObject in setup 
+
+*/
+
+class GraphicObjectModel extends GraphicObject {
+  static config = {
+    model: null, // the shape to draw
+    texture: { active:false, image: null } // optional texture
+  };
+  constructor(instanceConfigVariant) {
+    super();  // will have created part of the config under ancester responsibility
+    // extend with a copy of local default config
+    this.extendConfig(copyConfig(GraphicObjectModel.config));
+    // apply variant if called with
+    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+  }
+  // overWritten methods
+  drawModel() {
+    if (this.config.texture.active) texture(this.config.texture.image);
+    model(this.config.model);
+  }
+}
+
+
