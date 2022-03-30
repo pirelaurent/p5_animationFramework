@@ -15,15 +15,13 @@ var kb = {
   stepToMove: 10, // default step for a deplacement
   stepToRotate: 15, // default step for a rotation DEGREES
   modeToMove: "position", // either rotation
-  enter: traceCurrentObject, // kb.enter can be overriden to do something else in context 
+  enter: traceCurrentObject, // kb.enter can be overriden to do something else in context
 };
-// set default trace 
+// set default trace
 function traceCurrentObject() {
   if (!kb.toMove) console.log("no object to trace");
   else {
-    console.log(`${kb.toMove.config.name}:`);
-    console.log(` position : [${kb.toMove.config.position.toString()}]`);
-    console.log(` rotation : [${kb.toMove.config.rotation.toString()}]`);
+    if (kb.toMove.logInfo) kb.toMove.logInfo();
   }
 }
 
@@ -33,7 +31,11 @@ function kbHelp() {
     console.log(' type "h" to see helper functions with keyboard');
     kb.infoDone = true;
   }
-  if (kb.showAxis) {push();utilAxis();pop();}
+  if (kb.showAxis) {
+    push();
+    utilAxis();
+    pop();
+  }
   if (kb.showGrid) debugMode(GRID, 800, 80);
   else noDebugMode();
 }
@@ -64,7 +66,7 @@ function keyTyped() {
     case "/":
       if (kb.modeToMove == "position") kb.modeToMove = "rotation";
       else kb.modeToMove = "position";
-      console.log('move : '+kb.modeToMove);
+      console.log("move : " + kb.modeToMove);
       break;
     case ">":
       if (!kb.toMove) break;
@@ -75,8 +77,8 @@ function keyTyped() {
         pos = kb.toMove.config.rotation;
         pos[kb.axisToMove] += kb.stepToRotate;
       }
-      // special case for tripod : p5 don't know camera has changed , help it 
-      if(kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
+      // special case for tripod : p5 don't know camera has changed , help it
+      if (kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
       break;
 
     case "<":
@@ -88,8 +90,8 @@ function keyTyped() {
         pos = kb.toMove.config.rotation;
         pos[kb.axisToMove] -= kb.stepToRotate;
       }
-      // special case for tripod : p5 don't know camera has changed , help it 
-      if(kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
+      // special case for tripod : p5 don't know camera has changed , help it
+      if (kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
       break;
     case "0":
     case "1":
@@ -97,6 +99,10 @@ function keyTyped() {
     case "3":
     case "4":
     case "5":
+    case "6":
+    case "7":
+    case "8":
+    case "9":
       var i = parseInt(key);
       if (i < kb.objectsToMove.length) {
         kb.toMove = kb.objectsToMove[i];
@@ -104,8 +110,17 @@ function keyTyped() {
       } else kb.toMove = null;
       break;
     case "?":
-      if(!kb.toMove) console.log('no element to move');
-      else console.log('config of: '+kb.toMove.config.name+'\n position:['+kb.toMove.config.position+']\n rotation['+kb.toMove.config.position+']');
+      if (!kb.toMove) console.log("no element to move");
+      else
+        console.log(
+          "config of: " +
+            kb.toMove.config.name +
+            "\n position:[" +
+            kb.toMove.config.position +
+            "]\n rotation[" +
+            kb.toMove.config.position +
+            "]"
+        );
       break;
     // help
     case "h":
@@ -118,9 +133,9 @@ function keyTyped() {
         > <  : advance or move back element
         0..9 : element to move : `;
       console.log(help);
-      for (var i=0;i<kb.objectsToMove.length;i++) {
+      for (var i = 0; i < kb.objectsToMove.length; i++) {
         kb.toMove = kb.objectsToMove[i];
-        console.log('         '+i+':'+kb.toMove.config.name );
-      } 
+        console.log("         " + i + ":" + kb.toMove.config.name);
+      }
   }
 }

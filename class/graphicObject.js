@@ -63,15 +63,21 @@ class MoveableObject {
   }
 
   movePosition([x, y, z]) {
-    this.position[0] += x;
-    this.position[1] += y;
-    this.position[2] += z;
+    this.config.position[0] += x;
+    this.config.position[1] += y;
+    this.config.position[2] += z;
   }
 
   moveRotation([x, y, z]) {
-    this.rotation[0] += x;
-    this.rotation[1] += y;
-    this.rotation[2] += z;
+    this.config.rotation[0] += x;
+    this.config.rotation[1] += y;
+    this.config.rotation[2] += z;
+  }
+
+  logInfo(){
+    console.log(`${this.config.name}:`);
+    console.log(` position : [${this.config.position.toString()}]`);
+    console.log(` rotation : [${this.config.rotation.toString()}]`);
   }
 }
 
@@ -123,6 +129,7 @@ class GraphicObject extends MoveableObject {
     else this.drawModel();
     pop();
   }
+
   //to be overwriten . for test purpose draw a box
   drawModel() {
     box(100, 150, 50);

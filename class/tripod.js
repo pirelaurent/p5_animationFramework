@@ -3,7 +3,7 @@
     In p5 a camera has a position to be (eye) and a position to look at(center)
 */
 
-class Tripod extends MoveAbleObject {
+class Tripod extends MoveableObject {
   // specific for this level
   static config = {
     position: [0,0,700],   // replace the default [0,0,0] to see something 
@@ -57,4 +57,10 @@ class Tripod extends MoveAbleObject {
     this.refreshCameraPosition();
   }
   // getData : leave standard
+
+  logInfo(){
+    super.logInfo();
+    console.log(` lookAt: [${this.config.lookAt.toString()}]`);
+  }
+
 }
