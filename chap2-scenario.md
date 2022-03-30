@@ -6,8 +6,8 @@ A **scenario** plays a **script**, or a series of **scripts**.
 Once a script is finished, the scenario runs the next one.    
 ### script vs  generator
 
-A **generator** is a special function characterized by  declaration with a star : ```myFunction*```    
-When this function is called directly,```myFunction()```, it instanciates a *script*, a kind of class holding the source code. 
+A **generator** is a special function characterized by a declaration with a star : ```myFunction*```    
+When this function is called directly,```myFunction()```, it instanciates an object, a kind of class holding the source code and internal variables.  
 =>a **script** in the framework holds the generator's function and an *instance* of this *generator*   
 
 To execute the code, one must call a method **next()** of the script.instance.   
@@ -83,7 +83,7 @@ class TrafficLight {
 First, be aware of the special notation ```function*``` which means this is a *generator* not a simple function.     
 Each yield can return a number of <u>milliseconds</u> to wait before coming back.   
 As we want a full time animation, the script has an infinite loop inside ```while(true)```    
-function *patchConfig* changes only the keys given as parameters. *(see chap2-literals)*
+function *patchConfig* changes only the keys given as variants. *(see chap2-literals)*
 
 ``` javascript 
 function* europeanScript(oneTrafficLight) {
@@ -106,7 +106,7 @@ function* europeanScript(oneTrafficLight) {
 }
 ```
 ## create the scenario  
-The constructor has two parameters, a config and an array of generators.   
+The constructor of a scenario has two parameters, a config for scenario itself and an array of generators.   
 ```constructor(someConfig = {}, generatorsToUse = []) ```   
 If you look at the Scenario class, you'll find a default configuration which can be used as is or patched:     
 ```javascript 
@@ -127,8 +127,8 @@ If you look at the Scenario class, you'll find a default configuration which can
 ### Array of scripts   
 To have a generic scenario , the generators are described in two separated entries : 
 - the generator: only the **function name**  DON'T PUT ANY PARENTHESIS AFTER : *europeanScript*   
-(despite the function is defined as  ```function* europeanScript(oneTrafficLight)``` ) 
-- an optional array of argument's values if their is.  Our has one : *arguments: [traffic_1] *    
+- an optional array of argument's values if their is.  
+  Our has one : *arguments: [traffic_1]*    
 This way allows to have a agnostic scenario with any kind of generators with or without params.   
 This way allows to reuse generators are they are instanciated inside the scenario in *start* or *restart*.   
 
@@ -160,7 +160,7 @@ to start scenario of traffic_3: ```  traffic_3.lightsScenario.start(); ```
 
 #### an internal generator without parameter using this 
 For traffic_4 the idea is : "why still using a parameter as we know we are in the object ?"  
-A modified generator script, without parameter, uses *this* as the destination of actions in place of the previous *oneTrafficLight* variable:
+A modified generator script *_internalEuropeanScript_()*, without parameter, uses *this* as the destination of actions in place of the previous *oneTrafficLight* variable:
 ```javascript    
   * _internalEuropeanScript_() {
         this.config.active = true; // was oneTrafficLight.config.active = true;
@@ -183,9 +183,9 @@ Binding the function with *this* allows to use *this* inside the script.
 
 
 # P5 drawing in 3D 
-In the main prog, in the *setup* function of P5, we create the lights with a bit more config to give positions and orientations.   
-Later, in the draw method, we ask the traffic lights to draw themselves.   
-A master scenario will be in charge to start each TrafficLight personal scenarios.
+In the main prog, in the *setup* function of P5, we create the lights.      
+Later, in the draw method, we ask the traffic lights to draw themselves at a given position.   
+Next, a master scenario will be in charge to start each TrafficLight's personal scenarios.
 ``` javascript 
 function setup() {
   canvas = createCanvas(800, 800, WEBGL);
@@ -225,14 +225,17 @@ function draw() {
 To have traffic_lights synchronized, the scenarios must start by pair and be out of step.   
 We use a master scenario whose script launches the other scenarios at the right time : 
 ```javascript 
-// starts a pair of traffic_lights then a second pair 
 function* launchScript() {
+  // start first pair on red
+  console.log('-->start first pair of lights')
   europeanScenario1.start();
   europeanScenario2.start();
-  // a light starts with red for 4000 . wait this amount then start the other pair
-  yield 4000;
+  // red is 7s, green 4s and orange 1s. To have both red overlapped:
+  yield 6000;
+  console.log('-->start second pair of lights')
   traffic_3.lightsScenario.start();
   traffic_4.lightsScenarioBis.start();
+  console.log('------ operational crossroads ------ ')
 }
 ```
 Now synchronized  running for ever   
@@ -246,37 +249,49 @@ A question could be : how to stop these behaviour as we leave an infinite loop i
 Any scenario has a *stop* method and we can check if it is already ended by the property *isEnded*.   
 ```javascript 
 // the scenario runs for ever. We stop it after 1 mn to close this tuto
-if(millis()>60000){
-  if(!europeanScenario1.isEnded) {
-    europeanScenario1.stop();
-    traffic_0.active = false;
+iif (!europeanScenario1.isEnded) { // avoid to redo once terminated
+    if (millis() > 60000) {
+      console.log("------ general stop ------")
+      europeanScenario1.stop(); // stop scenario
+      traffic_1.config.active = false; // turn off the lights
+
+      europeanScenario2.stop();
+      traffic_2.config.active = false;
+
+      traffic_3.lightsScenario.stop();
+      traffic_3.config.active = false;
+
+      traffic_4.lightsScenarioBis.stop();
+      traffic_4.config.active = false;
     }
+  }
 }
-... others
 ```
-#### tip : scenario internal times :
+####  scenario internal times : scenario.startGlobalMs
 In the code above, we have used ```millis()```which is the elapsed time since the sketch is running.   
 We could have used a more precise time related to scenario: the exact elapsed time since it was started :   
 ```if( millis() - europeanScenario1.startGlobalMs > 60000 )  ```     
 
 ### trace 
-As we start masterScenario with trace: true , we can follow the story on the console: 
-<img src= "./img/forDoc/masterTrace.png" width=300></img>
+As we start scenarios with *{trace: true}* , we can follow the story on the console: 
+<img src= "./img/forDoc/masterTrace
+.png" width=300></img>
 
 
 
 
 # summary 
-- javascript generators are used to create code with defined steps, separated by yield.  
-- A scenario  activates the generator to advance one step. 
-- Generator returns some value by a *yield*. If no value a default value is used by scenario. 
-- Scenario waits the numer of ms (an asynchronous timeout) before calling again the generator.  
-- Internal scenarios help to add embedded animated behavior to objects. 
-- External scenarios may pilot from independant animations up to large stories. 
+\- javascript generators are used to create code with defined steps, separated by *yield* :  
+\- A scenario  activates the generator to advance one step. 
+  \- Generator returns some value by a *yield*. If no value the default one of scenario is used. 
+\- Scenario waits the numer of ms (an asynchronous timeout) before calling again the generator.
+
+\- A scenario can give parameters to the underlying generators  
+\- A scenario can chain several successive generators   
+\- Several scenarios can run in parallel     
+\- A scenario defined as a class property can add embeded animated behavior to objects. 
+
   
-
-
-
 
 
 

@@ -1,5 +1,7 @@
 ///<reference path="../../p5/intellisense/p5.global-mode.d.ts" />
-
+/*
+ same as previous, but position is postponed after rotation 
+*/
 "use strict";
 var can;
 // ---------------------- mvt 2 
@@ -15,6 +17,7 @@ function preload() {
 
 function setup() {
   can = createCanvas(800, 800, WEBGL);
+  angleMode(DEGREES)
   dragon = new GraphicObjectModel({
     name: "dragon",
     model: dragonObj, //// from a free obj on turbosquid.com author rozenkrantz

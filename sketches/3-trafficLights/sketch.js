@@ -33,7 +33,7 @@ function setup() {
       arguments: [traffic_2],
     }
   );
-  // a general scenario to  synchonized the both sides of the road 
+  // a general scenario to  synchonized the both sides of the road
   masterScenario = new Scenario(
     { scenarioName: "master", trace: true },
     { scriptName: " launcher", generator: launchScript }
@@ -50,48 +50,36 @@ function draw() {
   background(90);
   kbHelp(); // some help with keyboard key and console
   push();
-    translate(-250, -100, 0);
-    rotateY(radians(-90));
-    traffic_1.draw();
+  translate(-250, -100, 0);
+  rotateY(radians(-90));
+  traffic_1.draw();
   pop();
   push();
-    translate(250, -100, -300);
-    rotateY(radians(90));
-    traffic_2.draw();
+  translate(250, -100, -300);
+  rotateY(radians(90));
+  traffic_2.draw();
   pop();
   push();
-    translate(-250, -100, -300);
-    rotateY(radians(-222));
-    traffic_3.draw();
+  translate(-250, -100, -300);
+  rotateY(radians(-222));
+  traffic_3.draw();
   pop();
   push();
-    translate(250, -100, 0);
-    rotateY(radians(-10));
-    traffic_4.draw();
+  translate(250, -100, 0);
+  rotateY(radians(-10));
+  traffic_4.draw();
   pop();
 
   // the scenarios run for ever. We stop it after some time to conclude this tuto
-  if (millis() > 60000) {
-    if (!europeanScenario1.isEnded) {
-      europeanScenario1.stop();
-      traffic_1.config.active = false;
-    }
-  }
-
-  if (millis() > 70000) {
-    if (!europeanScenario2.isEnded) {
+  if (!europeanScenario1.isEnded) { // avoid to redo once terminated
+    if (millis() > 60000) {
+      console.log("------ general stop ------")
+      europeanScenario1.stop(); // stop scenario
+      traffic_1.config.active = false; // turn off the lights
       europeanScenario2.stop();
       traffic_2.config.active = false;
-    }
-  }
-  if (millis() > 80000) {
-    if (!traffic_3.lightsScenario.isEnded) {
       traffic_3.lightsScenario.stop();
       traffic_3.config.active = false;
-    }
-  }
-  if (millis() > 100000) {
-    if (!traffic_4.lightsScenarioBis.isEnded) {
       traffic_4.lightsScenarioBis.stop();
       traffic_4.config.active = false;
     }
@@ -99,12 +87,16 @@ function draw() {
 }
 
 
-// Master scenarion script : starts a pair of traffic_lights then a second pair 
+// Master scenario script : starts a pair of traffic_lights then a second pair
 function* launchScript() {
+  // start first pair on red
+  console.log('-->start first pair of lights')
   europeanScenario1.start();
   europeanScenario2.start();
-  // a light starts with red for 4000 . wait this amount then start the other pair
-  yield 4000;
+  // red is 7s, green 4s and orange 1s. To have both red overlapped:
+  yield 6000;
+  console.log('-->start second pair of lights')
   traffic_3.lightsScenario.start();
   traffic_4.lightsScenarioBis.start();
+  console.log('------ operational crossroads ------ ')
 }

@@ -75,11 +75,11 @@ class GraphicObjectModel extends GraphicObject {
 ```
 in this default config, model and image are just placeholders to be filled in at object instanciation.  
  
- In p5 some pb can occur if *loadModel* is called outside of *preload*. 
+ In p5 some pb can occur if *loadModel* is called outside of *preload*.   
  Our advice : 
-  - code all loadModel and loadImage in preload 
-  - construct GraphicsObject in setup with variables set in preload. 
-### sample Two cups of coke 
+  - code all *loadModel* and *loadImage* in preload 
+  - construct *GraphicsObject* in setup with variables set previously in *preload*. 
+### sample: Two cups of coke 
 
 ```javascript 
 let cola_cup, textureWater;
@@ -94,7 +94,6 @@ function setup() {
     model: cola_cup,
     texture: { active: true, image: textureWater },
     name: "my favorite cup",
-    fill: { active: true, color: "red" },
     stroke: { color: "darkred"}
   });
   myCups.push(aCup);
@@ -117,7 +116,7 @@ function draw() {
 *see sketches/ 2-cupOfCoke//sketch.js*  
 Notice that the obj model (which results in a *p5.Geometry*) will be shared by all instances.The same for texture image.  
 #### for debug 
-Some messages are thrown at the debug level on console to follow what happens for the two object's construction through the hierarchy config replacement:    
+Some messages are thrown at the debug level on console to follow what happens for the two object's construction through the hierarchical config replacement:    
 <img src = "./img/forDoc/verboseSample.png" width = "400"></img>   
 ### Use of literals in a class hierarchy 
 To understand what is under the hood in the previous examples, especially with default config and inheritance, goto **chap1-Literals**

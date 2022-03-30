@@ -14,6 +14,7 @@ function preload() {
 
 function setup() {
   can = createCanvas(800, 800, WEBGL);
+  angleMode(DEGREES)
   dragon = new GraphicObjectModel({
     name: "dragon",
     model: dragonObj, //// from a free obj on turbosquid.com author rozenkrantz

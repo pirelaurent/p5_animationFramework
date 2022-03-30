@@ -55,11 +55,15 @@ class Scenario {
   createInstanceGenerator() {
     // instanciate this script generator with optional arguments using spread operator
     if (!this.script.arguments) this.script.arguments = [];
-    if (this.config.trace)
+    if (this.config.trace) {
       console.log(
-        "instanciate:",
-        this.script.scriptName + " with args:  " + this.script.arguments
+        "instanciate:" +
+          this.script.scriptName +
+          " with " +
+          this.script.arguments.length +
+          " args "
       );
+    }
     this.script.instance = this.script.generator(...this.script.arguments);
   }
 
@@ -114,8 +118,8 @@ class Scenario {
       this.createInstanceGenerator();
       this.script.startTimeMs = millis();
       if (this.config.trace)
-      //var elapsed = round(millis() - this.script.startTimeMs) / 1000;
-      var cumul = round(millis() - this.startGlobalMs) / 1000;
+        //var elapsed = round(millis() - this.script.startTimeMs) / 1000;
+        var cumul = round(millis() - this.startGlobalMs) / 1000;
       {
         console.log(
           "start of " +

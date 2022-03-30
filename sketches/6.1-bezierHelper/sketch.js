@@ -1,19 +1,19 @@
  // future config part of a bezier in a journey 
  var conf = {
-  start: [220,-280,320], 
-  end:   [-270,-150,110], 
+  start: [250, -160, -60],
+  end: [-220, 10, -290],
   bezier: {
-    inter1: [40,-390,270], 
-    inter2: [-170,-40,270] 
- }
+    inter1: [-190, 370, 240],
+    inter2: [-50, -460, -480],
+  }
 };
 
 var firstIndex01, lastIndex01; // used to change colors if beziers calculated outside 0..1
 var s_start, s_end, s_inter1, s_inter2; // sphere to see what happens
 var trajet = [];
 // calculation from 0 to 1 
-var from_t= 0;
-var to_t = 1; 
+var from_t= -0.2;
+var to_t = 1.2; 
 
 // a special trace to re create the previous format 
 function traceConf(){
@@ -29,10 +29,10 @@ function setup() {
   camera1 = createCamera();
   tripod1 = new Tripod({
     name: "tripod 1",
-    position: [0, -220, 1010], // point of view to see the grid
+    position: [0, -220, 800], // point of view to see the grid
   });
   tripod1.mountCamera(camera1);
-  
+
   createBeziersSpheres()
 
   
@@ -118,34 +118,34 @@ function createBeziersSpheres(){
   s_start = new GraphicObject(  {
     name: "start point",
     position: conf.start,
-    stroke: { active: true, color: "green" },
+    stroke: { active: true, color: "green", weight:0.3 },
     fill:{active:false},
-    drawModel:()=>sphere(20)
   });
+  s_start.drawModel= ()=>sphere(20)
 
    s_end = new GraphicObject(  {
     name: "end point",
     position: conf.end,
-    stroke: { active: true, color: "red" },
+    stroke: { active: true, color: "red", weight:0.3 },
     fill:{active:false},
-    drawModel:()=>sphere(20)
   });
+  s_end.drawModel= ()=>sphere(20)
 
   s_inter1 = new GraphicObject(  {
     name: "inter1 point",
     position: conf.bezier.inter1,
-    stroke: { active: true, color: "yellow" },
+    stroke: { active: true, color: "yellow",weight:0.3 },
     fill:{active:false},
-    drawModel:()=>sphere(20)
   });
+  s_inter1.drawModel= ()=>sphere(20)
 
   s_inter2 = new GraphicObject(  {
     name: "inter2 point",
     position: conf.bezier.inter2,
-    stroke: { active: true, color: "orange" },
+    stroke: { active: true, color: "orange", weight:0.3},
     fill:{active:false},
-    drawModel:()=>sphere(20)
   });
+  s_inter2.drawModel= ()=>sphere(20)
 }
 
 

@@ -6,6 +6,7 @@ let can;
 
 function setup() {
   can = createCanvas(500, 500);
+  angleMode(DEGREES)
 } // setup
 
 function draw() {
@@ -30,46 +31,48 @@ function draw() {
   text('Elapsed time',200,20)
   text('1',-10,-200)
   text('Estimated time',-40,-215)
+
   var t=0;
   while (t<=1){
     stroke('white')
     let tCalc = t;
     point(t*w,-tCalc*w)
-// //---------------------------    
-//     stroke('green')
-//     //tCalc = tPrime2(t); 
-//     tCalc = easingOnT_t2(t)
-//     point(t*w,-tCalc*w)
-//     tCalc = easingOnT_t3(t)
-//     point(t*w,-tCalc*w)
-//     tCalc = easingOnT_t4(t)
-//     point(t*w,-tCalc*w)
-//     //--------
-//     stroke('red')
-//     var tFlip = 1-t
 
-//     tCalc = easingOnT_flip_t2(t)
-//     point(t*w,-tCalc*w)
-//     tCalc = easingOnT_flip_t3(t)
-//      point(t*w,-tCalc*w)
+//---------------------------    
+    stroke('green')
+    //tCalc = tPrime2(t); 
+    tCalc = easingOnT_t2(t)
+    point(t*w,-tCalc*w)
+    tCalc = easingOnT_t3(t)
+    point(t*w,-tCalc*w)
+    tCalc = easingOnT_t4(t)
+    point(t*w,-tCalc*w)
+    //--------
+    stroke('red')
+    var tFlip = 1-t
 
-//      tCalc = easingOnT_flip_t4(t)
-//      point(t*w,-tCalc*w)
-// //-------------------------
-     stroke('magenta')
-
-    //  tCalc = t-t*t;
-    //  point(t*w,-tCalc*w)
-
-    //  tCalc = t-t*t*t;
-    //  point(t*w,-tCalc*w)
-
-    //  tCalc = t-t*t*t*t;
-    //  point(t*w,-tCalc*w)
-    angleMode(DEGREES)
-     tCalc =  sin(t*180)
+    tCalc = easingOnT_flip_t2(t)
+    point(t*w,-tCalc*w)
+    tCalc = easingOnT_flip_t3(t)
      point(t*w,-tCalc*w)
 
+     tCalc = easingOnT_flip_t4(t)
+     point(t*w,-tCalc*w)
+//-------------------------
+     stroke('orange')
+
+     tCalc = t-t*t;
+     point(t*w,-tCalc*w)
+
+     tCalc = t-t*t*t;
+     point(t*w,-tCalc*w)
+
+     tCalc = t-t*t*t*t;
+     point(t*w,-tCalc*w)
+
+     tCalc =  sin(t*180)
+     point(t*w,-tCalc*w)
+ stroke('magenta')
      tCalc =  abs(sin(t*180*5))
      point(t*w,-tCalc*w)
 

@@ -16,9 +16,9 @@ class TrafficLight {
       visible: true,
       active: false, // lights stay all grey
       lights: {
-        green: { active: false, colors: { on: "#3ADF00", off: "#243B0B" }, durationMs: 3000 },
+        green: { active: false, colors: { on: "#3ADF00", off: "#243B0B" }, durationMs: 4000 },
         orange: { active: false, colors: { on: "#FFBF00", off: "#61380B" }, durationMs: 1000 },
-        red: { active: false, colors: { on: "#FF0000", off: "#3B0B0B" }, durationMs: 4000 },
+        red: { active: false, colors: { on: "#FF0000", off: "#3B0B0B" }, durationMs: 7000 },
       },
     };
     //add on for example traffic_3 

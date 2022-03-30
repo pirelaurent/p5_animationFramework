@@ -3,12 +3,13 @@
     In p5 a camera has a position to be (eye) and a position to look at(center)
 */
 
-class Tripod extends GraphicObject {
+class Tripod extends MoveAbleObject {
   // specific for this level
   static config = {
-    position: [0,0,700],
-    lookAt: [0, 0, 0],
+    position: [0,0,700],   // replace the default [0,0,0] to see something 
+    lookAt: [0, 0, 0],     // new property 
   };
+  
   constructor(instanceConfigVariant) {
     super();
     this.extendConfig(copyConfig(Tripod.config));

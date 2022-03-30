@@ -3,6 +3,13 @@ function* scriptJourney(journey, anObject) {
   for (var aParam of journey.parameters) {
     aParam.isStarted = false;
     aParam.isEnded = false;
+    // if no f(t) , set simplest one 
+    if (!aParam.easingOnT) aParam.easingOnT = (t)=>t ; 
+    // check where f(t) ends to adjust real position at end of the travel 
+    if (aParam.easingOnT(1)!=1) aParam.adjust = false; else aParam.adjust = true; 
+
+
+
     // start later ?
     if (!aParam.wait_ms) aParam.wait_ms = 0;
     // personal duration ? If none take the remaining time
@@ -50,13 +57,16 @@ function* scriptJourney(journey, anObject) {
       // nothing to do conditions
       if (aParam.isEnded) continue;
       if (elapsedTime < aParam.wait_ms) continue; // too early
-      if (elapsedTime > aParam.wait_ms + aParam.duration_ms) {
-        // to late
+      if (elapsedTime > aParam.wait_ms + aParam.duration_ms) { // to late
+         // set to exact position on end in case time and step  don't adjust exactly 
+        if( aParam.adjust)  anObject.setData(aParam.name,aParam.end);
+        // done for this one 
         aParam.isEnded = true;
         continue;
       }
       // if first time in the flow
       if (!aParam.isStarted) {
+
         aParam.isStarted = true;
         // if no start value, take the current value of parameter
         if (!aParam.start) aParam.start = anObject.getData(aParam.name);
@@ -77,10 +87,8 @@ function* scriptJourney(journey, anObject) {
       // calculate current proportion of time from 0 to 1
       var t = (elapsedTime - aParam.wait_ms) / aParam.duration_ms;
 
-      // is there a time function defined in the journey for this parameter
-      if (aParam.easingOnT) {
+      // distinguish elapsed time and estimated time 
         t = aParam.easingOnT(t);
-      }
       // if trajectory is bezier, calculate with formula 
       if (aParam.bezier){
         var newV = calculateBezier(aParam.startV, aParam.endV, aParam.bezier.inter1V, aParam.bezier.inter2V,t);

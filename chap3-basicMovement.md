@@ -1,11 +1,14 @@
 # Basic animations 
-In this chapter, we will use scenarios to move any *graphicObject* .    
-( see previous chapters: graphicObject.md, literals.md, scenario.md )  
+In this chapter, we will use scenarios to move some *graphicObject* .    
+## a general script for journeys 
+For some classical uses like moving an element from place to place, a general script is available : *scriptJourneyBase*    
+This script uses a literal description of the journey, 
+This script uses a literal description of the path, for each of the parameters intended to evolve during the journey.  
 
-## journey of parameters 
-A parameter can "travel" from one value to another in a certain amount of time.    
+## description of a journey 
+Each parameter can "travel" from one value to another in a certain amount of time.    
 This can be a position, a rotation, a color, everything you want see changing during time.   
-Let's describe a basic journey whith several parameter travellers :   
+Sample of a basic journey whith several parameters as travellers :   
 
 ``` javascript 
 var journey = {
@@ -19,7 +22,7 @@ var journey = {
     },
     {
       name: "rotation", // the parameter involved in the journey
-      end: [150, 230, 0], // the destination value of parameter
+      end: [150, 230, 0], // the destination value of parameter (start is its current value)
     },
     {
       name: "fill.color", // the parameter involved in the journey
@@ -35,7 +38,7 @@ For the example, we will use a dragon model of class *GraphicObjectModel* with i
 ```javascript 
 dragon = new GraphicObjectModel({
     name: "dragon",
-    model: dragonObj, // from a free obj on turbosquid.com author rozenkrantz
+    model: dragonObj, // previously loaded in preload 
     fill: { active: true, color: [100, 255, 100, 100] },
     stroke: { color: "black" },
     scale: [3, 3, 3],
@@ -48,13 +51,15 @@ dragon = new GraphicObjectModel({
 
 ## standard mode of shift : linear interpolation  
 Without more information, the transport will be **linear interpolations** from start to end in the defined duration : 
-- linear interpolation of values :  value = (end - start)/duration * estimated elapsed time. 
-- linear interpolation of the time : estimated elapsed time = effective elapsed time
-We will see later that one can change estimated elapsed time with some functions to change speed during the travel for obtaining more elegant movements.   
-We will also see later that some values interpolation can use beziers curves (especially for better trajectories)  
-New values are calculated each time the journey is called  with care of the elapsed time since last call. 
+- linear interpolation of values : **value = (end - start)/duration \* estimated elapsed time**. 
+- linear interpolation of the time : **estimated elapsed time = effective elapsed time** 
+- New values are calculated at each interval defined for the scenario, with care of the elapsed time since last call. 
+  
+We will see later some functions to change estimated elapsed time  for more elegant movements.   
+We will also see later interpolation using beziers curves for better trajectories than linear.   
+
 ## a scenario to pilot the journey  
-To apply the *journey* to the *dragon*, we define a scenario with an associated script : 
+To apply the *journey* to the *dragon*, we define a scenario with the generic script *scriptJourneyBase* which take as parameters the configuration of the journey and the object to move :  
 ```javascript 
  scenario_0 = new Scenario(
    {scenarioName: 'movement0 sample', interval: 100, trace: true},
@@ -62,7 +67,7 @@ To apply the *journey* to the *dragon*, we define a scenario with an associated 
   ) 
   ```
 ## a generic script for journeys 
-The following script is a simplified one, just to see main blocks : 
+The following script is simplified one to see main blocks : 
 ```  javascript 
 function* scriptJourneyBase(journey, anObject) {
   ...
@@ -83,16 +88,25 @@ function* scriptJourneyBase(journey, anObject) {
     // end of parameters update loop
     yield   // return to caller for a pause using current interval of scenario
   } //end while on time 
-```
-Some remarks :  
-In the example, duration_ms is 10000 and yield from scenario is 100 : the travel will be splitted in 100 little steps if nothing special happens, one step each 100 ms. If some hard work prevents from returning in time, the script will adapt the new position using the effective elapsed time.   
-Depending on your computing power, you can adjust the *duration_ms* and the *yield value* to have smoother trips if necessary.   
-The methods *anObject.getData(name)* and *anObject.setData(name,value)* are explained in *literals.md* chapter.  
-=> As long as an object has an internal *config* data to hold the parameters'value, a journey can be used.   
-We will see later how to wrap a camera to take advantage of journeys.  
+``` 
+In the example, duration_ms is 10000 and yield from scenario is 100 : the travel will be splitted in 100 little steps.    
+Depending on your computing power, you can adjust the *duration_ms* and the *yield value* to have smoother trips if necessary.      
+The methods *anObject.getData(name)* and *anObject.setData(name,value)* are explained in *literals.md* chapter.     
+=> As long as an object has an internal *config* data with some name, a journey can modify it along the travel.        
+We will see later how to wrap a camera to take advantage of journeys.    
 
 ### at the end of this journey : dragon has moved and its aspect has changed 
 <img src = './img/forDoc/dragonEnd.png' width = 200></img>   
-In ten seconds, the dragon have move ( left, up and deeper ), rotate (turned head on its right) and varied of color and  (from some grey to some blue ), all this in a continuous coordinated manner.   
+In ten seconds, the dragon have move ( left, up and deeper ), rotate (turned head on its right) and varied of color  (from some grey to some blue ), all this in a continuous coordinated manner.   
 
-Next chapter : **advanced animations**
+#### warning on some parameters
+For instance, changing a value from  *start* to *end* suppose that the values are numbers.   
+These numbers can be simple value like  *radius:20* , or an array like *position: [10,20,30]*   
+A common error can come for color's values: you cannot go from '*green*' to '*blue*',   
+ but you can go from *color:[0,255,0]* to *color:[0,0,255]*    
+For any array of any size, interpolation is applied for all elements of the array.   
+For colors, you can interpolate from  start: [100,255,255,50] to end: [255,100,255,250] including rgb and alpha.   
+
+ 
+
+Next chapter : **advanced animations** 

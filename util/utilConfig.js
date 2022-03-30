@@ -46,9 +46,9 @@ function patchConfigControlled(
   if (reverse) verb = " will replace ";
 
   // allways starts with modifier keys
-  for (let key in modifier) { 
+  for (let key in modifier) {
     // check if key exists in config
-    let configValue = config[key];   
+    let configValue = config[key];           
     // unknown key in current config, WARNING some key can use null so test undefined  
     if (typeof configValue=="undefined" ) { 
       // extract : no change as not found, keep existing
@@ -68,7 +68,7 @@ function patchConfigControlled(
     }
 
     // The key exists on both sides . Several cases can occurs :
-    let modifValue = modifier[key];
+    let modifValue = modifier[key];            
     // the new value is an array : replace 
     // array replace array ?
     if (modifValue instanceof Array) {
@@ -87,8 +87,10 @@ function patchConfigControlled(
     }
     // both keys are composed objects (and modifier is not an array) , recurse
     if (configValue instanceof Object && modifValue instanceof Object) {
-      //debug console.log('recurse :::')
-      patchConfigControlled(configValue, modifValue, controlled, reverse);
+      // if still a literal with keys recurse ( could be special as a function )
+      if (Object.keys(modifValue).length!=0)
+        patchConfigControlled(configValue, modifValue, controlled, reverse);
+      else config[key] = modifValue;;
       continue;
     }
 
