@@ -113,7 +113,7 @@ The above function is: ```easingOnT: (t)=> -0.2+ (1.4*t)```
 In such a case, the element will not go from start to end but from a place far under start (at -0.2) and terminate far after normal end (at 1.2). A manner to have an escape effect.     
 
 #### view in action 
-The sketch *6-beziersTrajectory* show the following :   
+The sketch *6-bezierTrajectory* show the following :   
 A travel curve is factorized in order to be reused several times  : 
 ``` javascript 
 var travel = {

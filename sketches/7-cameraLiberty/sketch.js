@@ -90,7 +90,7 @@ function * jumpTripod(aCam, maxTurns){
   while (turns<maxTurns){
     console.log("Camera on tripod "+index)
     beltOfTripods[index].mountCamera(aCam);
-    yield 1500
+    yield 800
     beltOfTripods[index].movePosition([0,-200,0])
     index+=1;
     if( index==beltOfTripods.length) {
@@ -98,8 +98,8 @@ function * jumpTripod(aCam, maxTurns){
       turns+=1;
     }
   }// while 
-  console.log(' will lauch camera bezier movement in 5 seconds')
-  yield 5000
+  console.log(' will lauch camera bezier movement in 3 seconds')
+  yield 3000
   movingTripod.mountCamera(camera1);
   scenarioMoveUpDown.start();
   // wait the end of scenario . Check every s 
