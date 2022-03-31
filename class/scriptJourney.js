@@ -1,6 +1,6 @@
-function* scriptJourney(journey, anObject) {
+function* scriptJourney(journey, anObject) { console.log(anObject)
   // add internal data to complete parameters list
-  for (var aParam of journey.parameters) {
+  for (var aParam of journey.parameters) {  
     aParam.isStarted = false;
     aParam.isEnded = false;
     // if no f(t) , set simplest one 

@@ -6,8 +6,9 @@ var can;
 var liberty;
 var libertyObj; // model from free3D
 var camera1; 
-var initialTripod; 
-var beltOfTripods=[];  
+var debugTripod; 
+var beltOfTripods=[];
+var movingTripod, scenarioMoveUpDown;  
 var scenarioTurnAround;
 
 function preload() {
@@ -27,13 +28,12 @@ function setup() {
   });
 
   camera1 = createCamera();
-  initialTripod = new Tripod({name: "default camera"});
-  initialTripod.mountUnderCamera(camera1);
   createTripods();
   createScenariosAndJourneys();
+  // turn around will launch scenarioMoveUp at its end 
   scenarioTurnAround.start();
- // Once done can move the camera 
-  kb.objectsToMove.push(initialTripod); // slot 0
+  // Keyboard can be used to move this debugTripod as 0 
+  kb.objectsToMove.push(debugTripod); // slot 0
 }
 
 function draw() {
@@ -51,6 +51,12 @@ function draw() {
 create a beltOfTripods of tripods around liberty 
 */
 function createTripods(){
+  // a tripod to move with keyboard
+  debugTripod = new Tripod({name: "default camera"});
+  // create also the tripod for movement 
+  movingTripod = new Tripod({name: "moving tripod"}); // used in journey
+
+  // then  create a belt of tripods around liberty
  var angle = 0; 
  var distance = 300;
  while (angle <360){
@@ -71,15 +77,11 @@ function createScenariosAndJourneys(){
   /*
  turn around liberty by jumping tripod to tripod 
 */
-
 scenarioTurnAround = new Scenario(
   { scenarioName: "turn around Liberty", trace: true},
   [
-    { scriptName: "jump on tripods", generator: jumpTripod, arguments:[camera1, 1 ]},
+    { scriptName: "jump on tripods", generator: jumpTripod, arguments:[camera1, 3 ]},
   ])
-}
-
-
 
 
 function * jumpTripod(aCam, maxTurns){
@@ -88,7 +90,7 @@ function * jumpTripod(aCam, maxTurns){
   while (turns<maxTurns){
     console.log("Camera on tripod "+index)
     beltOfTripods[index].mountCamera(aCam);
-    yield 3000
+    yield 1500
     beltOfTripods[index].movePosition([0,-200,0])
     index+=1;
     if( index==beltOfTripods.length) {
@@ -96,6 +98,38 @@ function * jumpTripod(aCam, maxTurns){
       turns+=1;
     }
   }// while 
-   // once all done, set camera on the initial tripod to play with keyboard
- initialTripod.mountCamera(aCam)
+  console.log(' will lauch camera bezier movement in 5 seconds')
+  yield 5000
+  movingTripod.mountCamera(camera1);
+  scenarioMoveUpDown.start();
+  // wait the end of scenario . Check every s 
+  while (!scenarioMoveUpDown.isEnded) yield 1000
+  console.log(' set camera on debugTripod for keyboard movements') 
+   // once all done, set debugTripod at the last position 
+ debugTripod.mountUnderCamera(aCam)
 }
+
+/*
+ turn around liberty from up to down using a beziers trajectory 
+*/
+// an "elegant" camera movement 
+let journeyTripod ={
+  duration_ms: 20000,
+  parameters: [
+    {
+      name: "position", 
+      start: [200,-400,-200], 
+      end:   [20,50,350], 
+      bezier: {
+        inter1: [-380,-370,-240], 
+        inter2: [-450,250,310] 
+      },
+      easingOnT: (t)=>t*t
+    }]
+}
+// scenario to run the journey definition
+scenarioMoveUpDown = new Scenario({ scenarioName: " tripod journey ", trace: true},
+  { scriptName: "up to down",generator: scriptJourney, arguments: [journeyTripod, movingTripod] })
+// tip: if only one script, can omit the [] around
+}
+

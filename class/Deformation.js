@@ -182,7 +182,7 @@ class Deformation extends Scenario {
           (anAction.duration_ms - anAction.wait_ms);
         // easing on
         t = anAction.easingOnT(t);
-        // if beziers, elapsed is set to interval 0..1  to get trajectory positionq
+        // if bezier, elapsed is set to interval 0..1  to get trajectory positionq
         if (anAction.bezier) {
           var directionV = calculateBezier(
             anAction.startV,

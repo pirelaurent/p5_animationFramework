@@ -1,11 +1,11 @@
  // future config part of a bezier in a journey 
  var conf = {
-  start: [250, -160, -60],
-  end: [-220, 10, -290],
+  start: [200,-400,-200], 
+  end:   [20,50,350], 
   bezier: {
-    inter1: [-190, 370, 240],
-    inter2: [-50, -460, -480],
-  }
+    inter1: [-380,-370,-240], 
+    inter2: [-450,250,310] 
+ }
 };
 
 var firstIndex01, lastIndex01; // used to change colors if beziers calculated outside 0..1
@@ -33,7 +33,7 @@ function setup() {
   });
   tripod1.mountCamera(camera1);
 
-  createBeziersSpheres()
+  createBezierSpheres()
 
   
  // change default help 
@@ -113,7 +113,7 @@ function calculateBezier(startV, endV, inter1V, inter2V, t) {
   return p5.Vector.lerp(d, e, t);
 }
 
-function createBeziersSpheres(){
+function createBezierSpheres(){
   // create graphics to have sphere to move using conf
   s_start = new GraphicObject(  {
     name: "start point",

@@ -1,13 +1,10 @@
 ///<reference path="../../p5/intellisense/p5.global-mode.d.ts" />
-/*
- same as previous, but position is postponed after rotation 
-*/
+
 "use strict";
 var can;
-// ---------------------- mvt 2 
+
 var dragon;
 var dragonObj; // model from Ghostman56 on turboSquid.com
-//  ----- to see bezier 
 var scenario_0;
 
 function preload() {
@@ -28,12 +25,11 @@ function setup() {
     rotation: [150, 90, 0],
   });
 
-
  scenario_0 = new Scenario(
    {scenarioName: 'movement0 sample', trace: true},
-  [ {scriptName: " dragon move", generator: scriptJourney, arguments: [aJourney, dragon] },
-]
+   {scriptName: " dragon move", generator: scriptJourney, arguments: [journey, dragon] }
   ) 
+  console.log (" => movements of dragon will use easingOnT variations ")
   scenario_0.start();
 }
 
@@ -44,39 +40,25 @@ function draw() {
   dragon.draw();
 }
 
-var aJourney = {
+var journey = {
   duration_ms: 10000, // duration of the journey
+  // array of parameters in this journey
   parameters: [
     {
-      name: "position", 
-      wait_ms: 8000,
-      duration_ms: 1000, 
-      start: [0, 100, 0], 
-      end: [-50, -200, -600], 
+      name: "position", // the parameter involved in the journey
+      start: [0, 100, 0], // the start value of parameter. Optional.
+      end: [-50, -200, -600], // the destination value of parameter
       easingOnT: (t)=>t*t*t
     },
     {
-      name: "rotation", 
-      duration_ms: 6000,
-      end: [150, 230, 0], 
+      name: "rotation", // the parameter involved in the journey
+      end: [150, 230, 0], // the destination value of parameter
       easingOnT: easingOnT_flip_t2
     },
     {
-      name: "fill.color", 
-      duration_ms: 3000,
-      start: [50, 50, 50], 
-      end: [100, 200, 255],
-    },
-    {
-      name: "fill.color", 
-      wait_ms: 3500, 
-      duration_ms: 2000,
-      end: [255, 255, 255], 
-    },
-    {
-      name: "fill.color", 
-      wait_ms: 7000,
-      end: [0, 200, 200], 
+      name: "fill.color", // the parameter involved in the journey
+      start: [50, 50, 50], // the start value of parameter. Optional.
+      end: [100, 200, 255], // the destination value of parameter
     },
   ],
 };

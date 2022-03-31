@@ -133,6 +133,7 @@ function keyTyped() {
         > <  : advance or move back element
         0..9 : element to move : `;
       console.log(help);
+      if(kb.objectsToMove)
       for (var i = 0; i < kb.objectsToMove.length; i++) {
         kb.toMove = kb.objectsToMove[i];
         console.log("         " + i + ":" + kb.toMove.config.name);

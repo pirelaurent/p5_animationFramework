@@ -20,7 +20,7 @@ function setup() {
   camera1.move(0,-100,200);
  // preSet kb helper to see grid and be able to move ball with keyboard 
  kb.showGrid = true;
- kb.objectsToMove.push(ball); // slot 0
+
 
   // something to move : a ball with a radius parameter in config 
   ball = new SimpleSphere({
@@ -29,7 +29,8 @@ function setup() {
     stroke: { active: true, color: "white" },
     radius: 30,
   });
-
+  kb.objectsToMove.push(ball); // slot 0
+  
   // prepare two scenario for examples . Go, inflate, return 
   scenario_bz = new Scenario({ scenarioName: "movement bezier", trace: true }, [
     { scriptName: " ball move",   generator: scriptJourney,arguments: [outWardJourney, ball],   },
@@ -37,7 +38,7 @@ function setup() {
     {      scriptName: " ball move back", generator: scriptJourney, arguments: [returnJourney, ball],    },
   ]);
 
-  // same Go, inflate, return  out of 0..1 beziers curve 
+  // same Go, inflate, return  out of 0..1 Bezier curve 
   scenario_bzSpecial = new Scenario(
     { scenarioName: "special bezier", trace: true },[
       { scriptName: " ball move", generator: scriptJourney, arguments: [outWardJourneySpecial, ball],
@@ -49,13 +50,13 @@ function setup() {
 
   // generator for master scenario
   function* startAll() {
-    console.log('----- Beziers trajectory from start to end, inflate, then  return ----')
+    console.log('----- Bezier trajectory from start to end, inflate, then  return ----')
     scenario_bz.start();
     // wait end of previous 
     yield scenario_bz.durationMs;
     // in case some timing difference , verify 
     while (!scenario_bz.isEnded) yield 50;
-    console.log('----- Beziers trajectory out of scope 0..1 using start & end, inflate, then return ----')
+    console.log('----- Bezier trajectory out of scope 0..1 using start & end, inflate, then return ----')
     scenario_bzSpecial.start();
   }
 
@@ -97,7 +98,7 @@ var returnJourney = { duration_ms: 10000,
   ],
 };
 
-// reuse position movement and use beziers out of range 0..1 from -0.2 to 1.2  
+// reuse position movement and use Bezier out of range 0..1 from -0.2 to 1.2  
 var travelSpecial1 = copyConfig(travel);
 travelSpecial1.easingOnT = (t) => -0.2 + (1.2+0.2) * t;
 
