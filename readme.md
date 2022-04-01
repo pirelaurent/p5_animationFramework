@@ -67,7 +67,7 @@ sketches/7-cameraLiberty
 #### stay in touch 
 know-how from cyber-opera not yet documented :   
 - specific lighting per graphic object   
-- using an image as background in a webgl canvas 
+- using an image as background in a p5 webgl canvas 
 - Several ways to have a Video as background with P5 
 - code once and draw on several places ( canvas, graphics ) 
 - superimposed several layers of canvas and pilot them by scenario 
