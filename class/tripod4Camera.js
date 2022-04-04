@@ -3,16 +3,18 @@
     In p5 a camera has a position to be (eye) and a position to look at(center)
 */
 
-class Tripod extends MoveableObject {
+class Tripod4Camera extends MoveableObject {
   // specific for this level
   static config = {
+    name: "Tripod Camera no name",
     position: [0,0,700],   // replace the default [0,0,0] to see something 
     lookAt: [0, 0, 0],     // new property 
+    camera: null, // will be replaced by an effective camera
   };
   
   constructor(instanceConfigVariant) {
     super();
-    this.extendConfig(copyConfig(Tripod.config));
+    this.extendConfig(copyConfig(Tripod4Camera.config));
     if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
   }
 
@@ -52,8 +54,10 @@ class Tripod extends MoveableObject {
   }
 
   // think to update real camera when a journey change the values
+  // overwritten
   setData(somePath, newValue) {
     setDataConfig(this.config, somePath, newValue);
+    // for any value, we refresh whole camera 
     this.refreshCameraPosition();
   }
   // getData : leave standard

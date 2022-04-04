@@ -3,19 +3,25 @@ This work comes from a realization made for a cyber Opera where graphics animati
 P5 allows many primitives to animate objects, but a framework appears as imperative to stay in schedule.  
 This is a review of what was learned in this adventure.  
 
-## <a href = "./chapters/chap0-basicObjects.md">chapter 0 </a>: basic objects 
-To have something to move and draw, a hierarchy of three classes : 
-- **MoveableObject**    to hold basic elements like position or rotation.  
-- **GraphicObject**     to define some specific shape to draw itself in place
-- **GraphicObjectModel**  extended to use an external model (.obj, .stl) (or any p5 Geometry) with optional texture.    
+## two pilars 
+- Usage of **literals** to hold properties of objects  
+- A tandem between **generators** in charge of actions and **scenario** responsible for restarting generators in time. 
+
+## <a href = "./chapters/chap0-Literals.md">chapter 0 </a>: Literals and class hierarchy
+Properties in a class are hold as a literal object named *config*.   
+Mechanisms are provided to control class definition and instance variations.  
+
+## <a href = "./chapters/chap1-basicObjects.md">chapter 1 </a>: basic objects 
+To have something to draw and animate, a hierarchy of four classes : 
+- **BasicObject**:     a class that do nothing except implementing useful principles 
+- **MoveableObject**:    to hold properties for moving elements like position or rotation.
+   - Derived class : *GraphicObject, Tripod4Camera, Tripod4Light*  
+- **GraphicObject** :    object able to draw itself in place
+- **GraphicObjectModel**: previous extended to use an external model (.obj, .stl) (or any p5 Geometry) with optional texture.    
   <img src = "./img/forDoc/twoCups.png" width = 200> </img>
 #### code examples
 sketches/0-basicObject   
 sketches/1-cupOfCoke 
-
-## <a href = "./chapters/chap1-Literals.md">chapter 1 </a>: Literals and class hierarchy
-Documentation of the framework's functions around manipulation of literals objects with more security.   
-See file : **chap1-literals.md**
 
 ## <a href = "./chapters/chap2-scenario.md"> chapter 2 </a>: scenario 
 A scenario is a way to schedule steps of animation in a practical way.   
@@ -57,9 +63,16 @@ Defining a tripod as a moveable element and mounting a camera on this tripod all
 Sample shows a jump tripod to tripod  then a **smooth camera movement** using a Bezier curve.      
 <img src = "./img/forDoc/lib2.png" height = 200></a> <img src = "./img/forDoc/lib3.png" height = 200></a> 
 <img src = "./img/forDoc/libTripodGoosPlace.png" height = 200 ></img>  
+
 #### code example
 sketches/7-cameraLiberty    
 
+## <a href = "./chapters/chap8-specificLighting.md">chapter 8 </a>: enlightments  
+See where are your lights, move them , see result  
+<img src = "./img/forDoc/pointWhereMove0.png" height= "200">
+<img src = "./img/forDoc/pointWhereNotShowMe.png" height= "200">
+#### code example
+sketches/8-ligthingObject
 
 # Miscelleanous 
 <a href = "./chapters/tech0-environment.md">Dev environment notes</a> 

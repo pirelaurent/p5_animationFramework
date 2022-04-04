@@ -23,6 +23,12 @@ open -a /Applications/"Google Chrome.app" "http://localhost:8081"
 # start module http. Be aware port # be the same as chrome. I use to have a port # per project. 
 python3 -m http.server 8081
 ```
+### some troubles 
+When reloading full js ( with cmd shift R  on mac), as the order is not guarantee, sometime load fails.  
+Retry several times to go ahead.   
+One day, it will be packaged with a tool that respect dependancies... 
+
+
 ## others tools useful
 ### Gimp 
  Very useful for dealing with images and prepare textures 

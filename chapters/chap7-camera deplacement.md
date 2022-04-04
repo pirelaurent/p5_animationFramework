@@ -1,12 +1,12 @@
 # camera movements 
 Another use of journeys and literals is moving the camera.    
 As camera is already a component of p5, we define a class **Tripod** to hold cameras. 
-## Tripod class 
+## Tripod4Camera class 
 A tripod is a component localized in space like any other *MoveableObject* with some specific methods  and a *setData* overwritten : 
 
 ```javascript 
 
-class Tripod extends MoveAbleObject {
+class Tripod4Camera extends MoveAbleObject {
   // specific for this level
   static config = {
     position: [0,0,700],   // replace the default [0,0,0] to see something if not updated
@@ -46,7 +46,7 @@ function createTripods(){
   var x = 2*distance * sin(angle) ; 
   var z = 2*distance * cos (angle);
   var y = 0; 
-  var tripod = new Tripod(
+  var tripod = Tripod4Camera(
     { name:'at '+angle,
       position:[x,y,z],
       lookAt:[0,0,0]
@@ -91,7 +91,7 @@ scenarioTurnAround = new Scenario(
 ```  
 Just have to start it : ```  scenarioTurnAround.start(); ```  
 ### so what ? 
-For now, using Tripod is not a big step up from the native camera capabilities in p5.   
+For now, using Tripod4Camera is not a big step up from the native camera capabilities in p5.   
 ##### move camera with keyboard  
 As a first tip, a tripod is a *moveableObject* so it can be moved with the keyboard helper functionalities. You can search a good point of view by moving it around.   
 How to do:   

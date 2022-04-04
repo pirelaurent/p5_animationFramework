@@ -89,6 +89,15 @@ function draw() {
 
 // Master scenario script : starts a pair of traffic_lights then a second pair
 function* launchScript() {
+  // set all to red 
+  var onlyRed = { active: true, lights:{ green: { active: false }, orange: { active: false }, red: { active: true }}};
+  patchConfig(traffic_1.config,onlyRed );
+  patchConfig(traffic_2.config,onlyRed );
+  patchConfig(traffic_3.config,onlyRed );
+  patchConfig(traffic_4.config,onlyRed );
+
+
+  
   // start first pair on red
   console.log('-->start first pair of lights')
   europeanScenario1.start();

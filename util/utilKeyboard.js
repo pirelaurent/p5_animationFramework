@@ -78,7 +78,7 @@ function keyTyped() {
         pos[kb.axisToMove] += kb.stepToRotate;
       }
       // special case for tripod : p5 don't know camera has changed , help it
-      if (kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
+      if (kb.toMove.config.camera) kb.toMove.refreshCameraPosition();
       break;
 
     case "<":
@@ -91,7 +91,7 @@ function keyTyped() {
         pos[kb.axisToMove] -= kb.stepToRotate;
       }
       // special case for tripod : p5 don't know camera has changed , help it
-      if (kb.toMove instanceof Tripod) kb.toMove.refreshCameraPosition();
+      if (kb.toMove.config.camera) kb.toMove.refreshCameraPosition();
       break;
     case "0":
     case "1":

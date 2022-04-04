@@ -27,7 +27,7 @@ function setup() {
   var can = createCanvas(800, 800, WEBGL);
 // change a bit point of view with a tripod 
   camera1 = createCamera();
-  tripod1 = new Tripod({
+  tripod1 = new Tripod4Camera({
     name: "tripod 1",
     position: [0, -220, 800], // point of view to see the grid
   });

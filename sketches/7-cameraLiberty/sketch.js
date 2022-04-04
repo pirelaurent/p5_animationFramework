@@ -52,9 +52,9 @@ create a beltOfTripods of tripods around liberty
 */
 function createTripods(){
   // a tripod to move with keyboard
-  debugTripod = new Tripod({name: "default camera"});
+  debugTripod = new Tripod4Camera({name: "default camera"});
   // create also the tripod for movement 
-  movingTripod = new Tripod({name: "moving tripod"}); // used in journey
+  movingTripod = new Tripod4Camera({name: "moving tripod"}); // used in journey
 
   // then  create a belt of tripods around liberty
  var angle = 0; 
@@ -63,7 +63,7 @@ function createTripods(){
   var x = 2*distance * sin(angle) ; 
   var z = 2*distance * cos (angle);
   var y = 0; 
-  var tripod = new Tripod(
+  var tripod = new Tripod4Camera(
     { name:'at '+angle,
       position:[x,y,z],
       lookAt:[0,0,0]

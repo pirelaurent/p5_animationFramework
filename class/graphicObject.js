@@ -1,26 +1,21 @@
 /*
- Three classes to work with: 
-
- MoveableObject dry ancester with position and rotation 
-  note: rotation will uses the current angleMode. It's up to you to give right values
+ four classes to work with: 
+ - BasicObject is a common class to hold properties as Literal and some functions to work with.
+ - MoveableObject dry ancester with position, rotation , scale and a draw method
+  (note: rotation will uses the current angleMode. It's up to you to give right values)
  GraphicObject  a moveable object with colors and stroke 
  GraphicObjectModel a GraphicObject with optional .obj and texture 
  
 */
 
-// ------------------- sample object to move
-class MoveableObject {
-  // Default config of this level
-  static config = {
-    name: "moveableObject no name", // to facilitate debug, give a name to your objects
-    position: [0, 0, 0], // current location of object to draw it
-    angleMode: null,  // what's the unit of angle . If not set use current angleMode 
-    rotation: [0, 0, 0], // current rotation of object. order is: rotateX, then Y , then Z
-    scale: [1, 1, 1], // optional scale in the 3 directions
-  };
 
+
+class BasicObject{
+  static config ={
+    name: "BasicObject no name"
+  }
   constructor(instanceConfigVariant) {
-    this.config = copyConfig(MoveableObject.config);
+    this.config = copyConfig(BasicObject.config);
     // apply variant if constructor was called with some parameters.
     if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
   }
@@ -33,6 +28,7 @@ class MoveableObject {
   extendConfig(someExtent) {
     this.config = extendConfig(this.config, someExtent);
   }
+  
   // local relay to get or set values using dot path
   getData(someDotPath) {
     return getDataConfig(this.config, someDotPath);
@@ -41,6 +37,29 @@ class MoveableObject {
   setData(someDotPath, newValue) {
     setDataConfig(this.config, someDotPath, newValue);
   }
+}
+
+
+
+// ------------------- sample object to move
+class MoveableObject extends BasicObject{
+  // Default config of this level
+  static config = {
+    name: "moveableObject no name", // to facilitate debug, give a name to your objects
+    position: [0, 0, 0], // current location of object to draw it
+    angleMode: null,  // what's the unit of angle . If not set use current angleMode 
+    rotation: [0, 0, 0], // current rotation of object. order is: rotateX, then Y , then Z
+    scale: [1, 1, 1], // optional scale in the 3 directions
+  };
+
+  constructor(instanceConfigVariant) {
+    super();
+    // add local default extension
+    this.extendConfig(copyConfig(MoveableObject.config));
+    // apply variant if called with
+    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+  }
+  
   // locate relative to current position . If protected everywhere must be 0,0,0 
   locate(){
     let pos = this.config.position;
@@ -88,8 +107,8 @@ class GraphicObject extends MoveableObject {
   // Default config of this level
   static config = {
     name: "graphicObject no name ", // to facilitate debug, give a name to your objects
-    visible: true, // if false, object is not drawn
     // screen drawing
+    visible: true, // if false, object is not drawn
     stroke: { active: true, color: "white", weight: 1 },
     fill: { active: true, color: [200, 100, 100, 200] },
   };
