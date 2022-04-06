@@ -1,9 +1,9 @@
 /*
     The reuse of a common config for several objects will share the data with obviously side effects. 
-    The copyConfig ensure independancy of operational data against common definition 
+    The copyProperties ensure independancy of operational data against common definition 
 */
 
-function copyConfig(source) {
+function copyProperties(source) {
   // the simplest way is to serialize then deserialize the structure
   var newConfig = JSON.parse(JSON.stringify(source));
   return newConfig;
@@ -20,30 +20,27 @@ function traceConfig(source) {
         - change directly the config but also returned it to be used in static declaration 
              
     */
-function patchConfig(config, modifier) {
-  return patchConfigControlled(config, modifier, true, false); // controled not reverse 
+function patchProperties(config, modifier) {
+   patchPropertiesControlled(config, modifier, true); // controled not reverse 
 }
 
 // this time keys are not controlled, allows to add new specific entries without creating a new class
-function extendConfig(config, modifier) {
-  return patchConfigControlled(config, modifier, false, false);// not controlled, not reverse 
+function extendProperties(config, modifier) {
+   patchPropertiesControlled(config, modifier, false);// not controlled, not reverse 
 }
 
-// reverse between callers = extract data named in modifier
-function extractConfig(config, modifier) {
-  return patchConfigControlled(config, modifier, true, true);
-}
+
 
 // main function for update, controlled or not
-function patchConfigControlled(
+function patchPropertiesControlled(
   config,
   modifier,
   controlled = true,   // check key must exist 
-  reverse = false      // get data, not set 
+  //reverse = false      // get data, not set **** DEPRECATED ***
 ) {
   // prepare console message
   let verb = " replaced by ";
-  if (reverse) verb = " will replace ";
+  //if (reverse) verb = " will replace ";
 
   // allways starts with modifier keys
   for (let key in modifier) {
@@ -52,11 +49,11 @@ function patchConfigControlled(
     // unknown key in current config, WARNING some key can use null so test undefined  
     if (typeof configValue=="undefined" ) { 
       // extract : no change as not found, keep existing
-      if (reverse) continue;
+      //if (reverse) continue;
       // patch : controlled : error
       if (controlled) {
         // cannot be kept if not existing in control mode
-        console.error(`wrong key: ${key} not found into ${JSON.stringify(config)}`);
+        console.error(`wrong key: ${key} not found into ${Object.keys(config)}`); //into ${JSON.stringify(config)}`);
         continue;
       }
       // patch not controled : allow extension with new key. Trace in debug 
@@ -81,49 +78,55 @@ function patchConfigControlled(
           console.debug(`${key}:  ${JSON.stringify(configValue)}  not same length as  ${JSON.stringify(modifValue)}`);
         }
       }
-      if (reverse) modifier[key] = configValue;
-      else config[key] = modifValue;
+      // if (reverse) modifier[key] = configValue;
+      // else 
+      config[key] = modifValue;
       continue;
     }
     // both keys are composed objects (and modifier is not an array) , recurse
     if (configValue instanceof Object && modifValue instanceof Object) {
       // if still a literal with keys recurse ( could be special as a function )
       if (Object.keys(modifValue).length!=0)
-        patchConfigControlled(configValue, modifValue, controlled, reverse);
-      else config[key] = modifValue;;
+        patchPropertiesControlled(configValue, modifValue, controlled);
+      else config[key] = modifValue;
       continue;
     }
 
     // one is composed but not the other (due to upper if): replace but warn
     if (configValue instanceof Object || modifValue instanceof Object) {
-      if (reverse) modifier[key] = configValue;
-      else config[key] = modifValue;
+      // if (reverse) modifier[key] = configValue;
+      // else 
+      config[key] = modifValue;
       config[key] = modifValue;
       console.debug(`${key} : ${configJSONControlled(configValue)}${verb}${configJSONControlled(modifValue)} `);
       continue;
     }
     // both are simple data
-    if (reverse) modifier[key] = configValue;
-    else config[key] = modifValue;
+    // if (reverse) modifier[key] = configValue;
+    // else 
+    config[key] = modifValue;
   } // for
-  if (reverse) return modifier;
-  else return config;
+  // if (reverse) return modifier;
+  // else return config;
 }
+
+
+
 // same as patch but with a dot string path "stroke.color" instead of {stroke:{color:...}}
-function setDataConfig(someConfig, somePath, newValue) {
-  return getSetData(someConfig, somePath, true, newValue);
+function setProperties(someLiteral, somePath, newValue) {
+  return getSetData(someLiteral, somePath, true, newValue);
 }
 // same as extract but with a dot string path to get a value  
-function getDataConfig(someConfig, somePath) {
-  return getSetData(someConfig, somePath, false);
+function getProperties(someLiteral, somePath) {
+  return getSetData(someLiteral, somePath, false);
 }
 // give a path into an object literal as a string
 // get pointer on last named leaf
 // if an array allows to precise indice like .position[0]
-function getSetData(someConfig, somePath, set = false, newValue = null) {
+function getSetData(someLiteral, somePath, set = false, newValue = null) {
   let cut = somePath.split(".");
   // advance on chain in order starting at root
-  let wagon = someConfig;
+  let wagon = someLiteral;
   let lastIndice = cut.length - 1;
   for (let i = 0; i < cut.length; i++) {
     let name = cut[i];

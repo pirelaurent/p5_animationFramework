@@ -4,9 +4,9 @@ Some classes to develop more quickly in p5.
 ## class MoveableObject 
 A simple class to hold properties in a **literal object** as a default configuration: 
 ``` javascript 
-class MoveableObject {
+class MoveableObject extends BasicObject
   // Default config of this level
-  static config = {
+  static defaultProperties = {
     name: "moveableObject no name", // to facilitate debug, give a name to your objects
     position: [0, 0, 0], // current location of object to draw it
     angleMode: null,  // what's the unit of angles . If not set use current p5 angleMode 
@@ -15,14 +15,16 @@ class MoveableObject {
   };
   ```  
   The parameters speak for themselves.  
-  <small> *Just a word about **angleMode** : in some case (reuse of components) the expected *angleMode* to draw itself is no more the current one. In these rare cases, one can precise how to interpret the rotation values : DEGREES or RADIANS for this unique object . By default when null, it uses the current mode.*  </small>
+  <small> *Just a word about **angleMode** : in some case (reuse of components) the expected *angleMode* to draw itself is no more the current one. In these rare cases, one can precise how to interpret the rotation values : DEGREES or RADIANS for this unique object by setting this property.   
+  By default when null, it will use the current mode. 
+  In my sketches, i set frequently *angleMode(DEGREES)* in the setup*  </small>
 
 ## class GraphicObject
 An inherited class with new properties to be able to draw itself.  
 A default configuration to add to previous is also given as a static literal object:    
 ```javascript 
 class GraphicObject extends MoveableObject {
-  static config = {
+  static defaultProperties = {
     name: "graphicObject no name ", // to facilitate debug, give a name to your objects
     visible: true, // if false, object is not drawn
     stroke: { active: true, color: "white", weight: 1 },
@@ -51,7 +53,7 @@ function setup() {
         fill: { color: 'blue' }
     })
     obj_3 = new GraphicObject( {position: [0,-200,0]});
-    // apply some change by code ( or make a subclass )
+    // apply some overloading of method by code ( or make a subclass )
     obj_3.drawModel = () => sphere(50)
 }
 
@@ -64,19 +66,20 @@ function draw() {
 }
 ``` 
 ## class GraphicModelObject 
-This inherited class with new properties is able to draw itself with a model.  
+This inherited class has new properties to draw itself with a model and a texture.  
 A default configuration is also given as a static literal object:  
 ```javascript
 class GraphicObjectModel extends GraphicObject {
-  static config = {
+  static defaultProperties = {
     model: null, // the shape to draw
     texture: { active:false, image: null } // optional texture
   };
 ```
-In this default config, *model* and *image* are just placeholders to be filled later at object instanciation.  A static cannot hold something created later and  in p5 some pb can occur if *loadModel* or *loadImage* are called outside of *preload*.   
- Our advice : 
-  - code all *loadModel* and *loadImage* in preload 
-  - construct *GraphicsObject* in setup with variables set previously in *preload*. 
+In this default config, *model* and *image* are just placeholders to be filled later at object instanciation.   
+A static inline cannot hold something created later.   
+With p5 some pb can occur if *loadModel* or *loadImage* are called outside of *preload*.   
+  - code all *loadModel* and *loadImage* in **preload** 
+  - construct *GraphicsObject* in **setup** with variables set previously in *preload*. 
 ### sample: Two cups of coke 
 
 ```javascript 
@@ -89,16 +92,16 @@ function preload() {
 function setup() {
   can = createCanvas(800, 800, WEBGL);
   let aCup = new GraphicObjectModel({
+    name: "my favorite cup",
     model: cola_cup,
     texture: { active: true, image: textureWater },
-    name: "my favorite cup",
     stroke: { color: "darkred"}
   });
   myCups.push(aCup);
   aCup = new GraphicObjectModel({
+    name: "my beautiful cup",
     model: cola_cup,
     texture: { active: true, image: textureWater},
-    name: "my beautiful cup",
     stroke: { active: false},
     position: [100,100,0]
   });
@@ -112,10 +115,12 @@ function draw() {
 }
 ```
 <img src = "../img/forDoc/twoCups.png" width = "300"></img>   
-*see sketches/ 2-cupOfCoke//sketch.js*  
-Notice that the obj model (which results in a *p5.Geometry*) will be shared by all instances.The same for texture image.  
+*see sketches/ 2-cupOfCoke/sketch.js*  
+Notice that the obj model (which results in a *p5.Geometry*) will be shared by all instances.   
+The same for texture image.  
 #### for debug 
-Some messages are thrown at the **debug level** on console to follow what happens for the two object's construction through the hierarchical *config* replacement:    
+Some messages are thrown at the **debug level** on console to follow what happens for the two object's construction through the hierarchical extensions and replacement of properties :    
 <img src = "../img/forDoc/verboseSample.png" width = "400"></img>   
+
 ### Use of literals in a class hierarchy 
-To understand what is under the hood in the previous examples, especially with default config and inheritance, see **chap1-Literals**
+To understand what is under the hood in the previous examples, especially with default config and inheritance, see previous chapter. 

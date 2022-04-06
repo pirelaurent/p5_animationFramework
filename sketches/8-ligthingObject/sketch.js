@@ -35,24 +35,24 @@ function setup() {
 
   pointBlue = new MoveablePointLight({
     name: "blue light",
-    visible: true,
+    lit: true,
     color: "blue",
     position: [-300, -100, -250], // replace the default [0,0,0] to see something
-    showMe: true,
+    visible: true,
   });
   pointWhite = new MoveablePointLight({
     name: "white light",
-    visible: true,
+    lit: true,
     color: "white",
     position: [100, 100, 250], // replace the default [0,0,0] to see something
-    showMe: true,
+    visible: true,
   });
   pointRed = new MoveablePointLight({
     name: "red light",
-    visible: true,
+    lit: true,
     color: "red",
     position: [300, 0, 0], // replace the default [0,0,0] to see something
-    showMe: true,
+    visible: true,
   });
 
   // create a group with the three lights
@@ -60,7 +60,7 @@ function setup() {
     name: "3 lights",
   });
   // use extend as the keys are not in the controled class definition
-  threeLightsGroup.extendConfig({
+  extendProperties(threeLightsGroup,{
     blue: pointBlue,
     red: pointRed,
     white: pointWhite,
@@ -116,12 +116,12 @@ var journeyFor3Lights = {
   // array of parameters in this journey
   parameters: [
     { 
-      name: "blue.config.position", // the parameter involved in the journey
+      name: "blue.position", // the parameter involved in the journey
       start: [-100, 100, 200], // the start value of parameter. Optional.
       end: [100, -200, 100], // the destination value of parameter
     },
     {
-      name: "red.config.position", 
+      name: "red.position", 
       easingOnT: (t)=> (1-t),
       start: [200,-400,-200], 
       end:   [20,50,350], 
@@ -131,7 +131,7 @@ var journeyFor3Lights = {
       },
     },
     {
-      name: "white.config.position", 
+      name: "white.position", 
       start: [200,-400,-200], 
       end:   [20,50,350], 
       bezier: {

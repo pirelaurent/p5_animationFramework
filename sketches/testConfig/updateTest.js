@@ -8,7 +8,7 @@ function updateTest() {
       composed: { a: 10, b: "bb" },
     };
   
-    var resu = patchConfig(original, {
+    var resu = patchProperties(original, {
       simpleValue: 33,
       composed: { b: "baby" },
     });
@@ -22,7 +22,7 @@ function updateTest() {
       simpleValue: 10,
       composed: { a: 10, b: "bb" },
     };
-    var resu = patchConfig(original, {
+    var resu = patchProperties(original, {
       simplevalue: 33, // mispelling here 
       composed: { b: "baby" },
     });
@@ -35,7 +35,7 @@ function updateTest() {
       simpleValue: 10,
       composed: { a: 10, b: "bb" },
     };
-    var resu = extendConfig(original, {
+    var resu = extendProperties(original, {
       anotherValue: 100,
       composed: { d: true },
       anotherComposed: { x: 10, y: 20, z: 30 },
@@ -53,7 +53,7 @@ function updateTest() {
       simpleValue: 10,
       composed: { a: 10, b: "bb" },
     };
-    var resu = extendConfig(original, {
+    var resu = extendProperties(original, {
       simpleValue: { x: 10, y: 20, z: 30 },
       composed: { a: null },
     });
@@ -68,7 +68,7 @@ function updateTest() {
       simpleValue: 10,
       composed: { a: 10, b: "bb" },
     };
-    var resu = extendConfig(original, {
+    var resu = extendProperties(original, {
       composed: 33,
     });
     console.assert(resu.simpleValue == 10,'resu.simpleValue == 10');
@@ -79,7 +79,7 @@ function updateTest() {
       simpleValue: 10,
       composed: { a: 10, b: "bb" },
     };
-    var resu = extendConfig(original, {
+    var resu = extendProperties(original, {
     });
     console.assert(resu.simpleValue == 10,'resu.simpleValue == 10');
     console.assert(resu.composed.a == 10,'resu.composed.a == 10');
@@ -94,7 +94,7 @@ function updateTest() {
       color5: "white",
       color6: color(100,100,100) // function color can be used in code, not in static
     };
-  var resu = extendConfig(original,{
+  var resu = extendProperties(original,{
       color1: [0,0,0], 
       color2: "red", 
       color3: "blue",

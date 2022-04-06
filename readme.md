@@ -8,7 +8,7 @@ This is a review of what was learned in this adventure.
 - A tandem between **generators** in charge of actions and **scenario** responsible for restarting generators in time. 
 
 ## <a href = "./chapters/chap0-Literals.md">chapter 0 </a>: Literals and class hierarchy
-Properties in a class are hold as a literal object named *config*.   
+Properties in a class are hold as a literal object.  
 Mechanisms are provided to control class definition and instance variations.  
 
 ## <a href = "./chapters/chap1-basicObjects.md">chapter 1 </a>: basic objects 

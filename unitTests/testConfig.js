@@ -40,54 +40,54 @@ so use {parts:{0:head{color:"white"}}} to access an indice in an array
 */
 function testUpdates() {
   console.log("----- test update(config,subconfig) ------");
-  let config = copyConfig(configTest);
+  let config = copyProperties(configTest);
   let subConfig;
   // simple
   subConfig = { visible: false };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.assert(config.visible == false, traceConfig(subConfig));
   subConfig = { position: { y: 30 } };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.assert(config.position.y == 30, traceConfig(subConfig));
   // tests other unchanged
   console.assert(config.position.x == 0, traceConfig(subConfig));
 
   // composed
   subConfig = { stroke: { weight: 1 } };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.assert(config.stroke.weight == 1, traceConfig(subConfig));
   // composed with indice in array
   // cannot design a litteral as {stroke:color[0]:200} us {0:...}
   subConfig = { stroke: { color: { 0: 200 } } };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.assert(config.stroke.color[0] == 200, traceConfig(subConfig));
   console.assert(config.stroke.color[1] == 100, traceConfig(subConfig));
   console.assert(config.stroke.color[2] == 200, traceConfig(subConfig));
 
   console.log("--following test must rise a warning");
   subConfig = { stroke: { color: 10 } };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.assert(config.stroke.color == 10, traceConfig(subConfig));
 
   console.log("--following test must rise a warning");
   subConfig = { stroke: { color: color("red") } };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   // cannot compare two distinct returned objects by: config.stroke.color==color("red")
   // assuming it is a color, verify values
   console.assert(red(config.stroke.color) == 255, traceConfig(subConfig));
 
   console.log("----- test wrong update(config,subconfig) ------ ");
-  config = copyConfig(configTest);
+  config = copyProperties(configTest);
   console.log("--- typo errors ---");
   subConfig = { stroke: { Weight: 1 } };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.assert(config.stroke.weight == 1, traceConfig(subConfig));
   subConfig = { position: { x: 20, Y: 30, z: 40 } };
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.assert(config.position.y == 30, traceConfig(subConfig));
   console.log("--- unknow key for update ---");
   subConfig = { fill:{active:false, color:"yellow"}}
-  patchConfig(config, subConfig);
+  patchProperties(config, subConfig);
   console.log("-------------------------------")
 }
 
@@ -98,7 +98,7 @@ function testExtend(){
 
 function testCopy(){
     console.log("----- test copy(config)) ------");
-    let bis= copyConfig(configTest);
+    let bis= copyProperties(configTest);
     // verify serialisation-deserialisation 
     console.assert(JSON.stringify(bis)==JSON.stringify(configTest)," not same stringify ")
     // verify independancy of result 

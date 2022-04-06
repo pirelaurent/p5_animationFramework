@@ -5,37 +5,37 @@
 
 class Tripod4Camera extends MoveableObject {
   // specific for this level
-  static config = {
+  static defaultProperties = {
     name: "Tripod Camera no name",
     position: [0,0,700],   // replace the default [0,0,0] to see something 
     lookAt: [0, 0, 0],     // new property 
     camera: null, // will be replaced by an effective camera
   };
   
-  constructor(instanceConfigVariant) {
+  constructor(instanceProperties) {
     super();
-    this.extendConfig(copyConfig(Tripod4Camera.config));
-    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+    extendProperties(this,copyProperties(Tripod4Camera.defaultProperties));
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
 
   /*
    mounting a camera on a tripod will give the camera the tripod position 
   */
   mountCamera(someCamera) {
-    this.config.camera = someCamera;
+    this.camera = someCamera;
     this.refreshCameraPosition();
   }
   /*
    mountUnderCamera  : the tripod will take the current camera values 
   */
   mountUnderCamera(someCamera) {
-    this.config.camera = someCamera;
-    let cam = this.config.camera;
-    let lookAt = this.config.lookAt;
+    this.camera = someCamera;
+    let cam = this.camera;
+    let lookAt = this.lookAt;
     lookAt[0] = cam.centerX;
     lookAt[1] = cam.centerY;
     lookAt[2] = cam.centerZ;
-    let pos = this.config.position;
+    let pos = this.position;
     pos[0] = cam.eyeX;
     pos[1] = cam.eyeY;
     pos[2] = cam.eyeZ;
@@ -46,9 +46,9 @@ class Tripod4Camera extends MoveableObject {
  propagate the tripod position to the real camera 
 */
   refreshCameraPosition() {
-    let cam = this.config.camera;
-    let pos = this.config.position;
-    let lookAt = this.config.lookAt;
+    let cam = this.camera;
+    let pos = this.position;
+    let lookAt = this.lookAt;
     cam.setPosition(pos[0],pos[1],pos[2]);
     cam.lookAt(lookAt[0],lookAt[1],lookAt[2]);
   }
@@ -56,7 +56,7 @@ class Tripod4Camera extends MoveableObject {
   // think to update real camera when a journey change the values
   // overwritten
   setData(somePath, newValue) {
-    setDataConfig(this.config, somePath, newValue);
+    setProperties(this, somePath, newValue);
     // for any value, we refresh whole camera 
     this.refreshCameraPosition();
   }
@@ -64,7 +64,7 @@ class Tripod4Camera extends MoveableObject {
 
   logInfo(){
     super.logInfo();
-    console.log(` lookAt: [${this.config.lookAt.toString()}]`);
+    console.log(` lookAt: [${this.lookAt.toString()}]`);
   }
 
 }

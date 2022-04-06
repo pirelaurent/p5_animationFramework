@@ -5,37 +5,29 @@
   (note: rotation will uses the current angleMode. It's up to you to give right values)
  GraphicObject  a moveable object with colors and stroke 
  GraphicObjectModel a GraphicObject with optional .obj and texture 
- 
 */
 
 
 
 class BasicObject{
-  static config ={
+  // the config will create new properties into the class 
+  static defaultProperties ={
     name: "BasicObject no name"
   }
-  constructor(instanceConfigVariant) {
-    this.config = copyConfig(BasicObject.config);
+  constructor(instanceProperties) {
+    extendProperties(this,copyProperties(BasicObject.defaultProperties));
     // apply variant if constructor was called with some parameters.
-    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
 
-  // local relay to simplify coding
-  patchConfig(someModifier) {
-    this.config = patchConfig(this.config, someModifier);
-  }
 
-  extendConfig(someExtent) {
-    this.config = extendConfig(this.config, someExtent);
-  }
-  
   // local relay to get or set values using dot path
   getData(someDotPath) {
-    return getDataConfig(this.config, someDotPath);
+    return getProperties(this, someDotPath);
   }
 
   setData(someDotPath, newValue) {
-    setDataConfig(this.config, someDotPath, newValue);
+    setProperties(this, someDotPath, newValue);
   }
 }
 
@@ -44,7 +36,7 @@ class BasicObject{
 // ------------------- sample object to move
 class MoveableObject extends BasicObject{
   // Default config of this level
-  static config = {
+  static defaultProperties = {
     name: "moveableObject no name", // to facilitate debug, give a name to your objects
     position: [0, 0, 0], // current location of object to draw it
     angleMode: null,  // what's the unit of angle . If not set use current angleMode 
@@ -52,51 +44,49 @@ class MoveableObject extends BasicObject{
     scale: [1, 1, 1], // optional scale in the 3 directions
   };
 
-  constructor(instanceConfigVariant) {
+  constructor(instanceProperties) {
     super();
-    // add local default extension
-    this.extendConfig(copyConfig(MoveableObject.config));
-    // apply variant if called with
-    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+    extendProperties(this,copyProperties(MoveableObject.defaultProperties));
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
   
   // locate relative to current position . If protected everywhere must be 0,0,0 
   locate(){
-    let pos = this.config.position;
+    let pos = this.position;
     translate(pos[0], pos[1], pos[2]);
   }
 
   rotate(){
     var pushPopAngleMode; // p5 don't push/pop angleMode 
-    if(this.config.angleMode!=null){
+    if(this.angleMode!=null){
      pushPopAngleMode = _angleMode;
-     angleMode(this.config.angleMode);
+     angleMode(this.angleMode);
     }
-    let rot = this.config.rotation;
+    let rot = this.rotation;
     rotateX(rot[0]);
     rotateY(rot[1]);
     rotateZ(rot[2]);
-    if(this.config.angleMode!=null){
+    if(this.angleMode!=null){
      angleMode(pushPopAngleMode);
     }
   }
 
   movePosition([x, y, z]) {
-    this.config.position[0] += x;
-    this.config.position[1] += y;
-    this.config.position[2] += z;
+    this.position[0] += x;
+    this.position[1] += y;
+    this.position[2] += z;
   }
 
   moveRotation([x, y, z]) {
-    this.config.rotation[0] += x;
-    this.config.rotation[1] += y;
-    this.config.rotation[2] += z;
+    this.rotation[0] += x;
+    this.rotation[1] += y;
+    this.rotation[2] += z;
   }
 
   logInfo(){
-    console.log(`${this.config.name}:`);
-    console.log(` position : [${this.config.position.toString()}]`);
-    console.log(` rotation : [${this.config.rotation.toString()}]`);
+    console.log(`${this.name}:`);
+    console.log(` position : [${this.position.toString()}]`);
+    console.log(` rotation : [${this.rotation.toString()}]`);
   }
 }
 
@@ -105,7 +95,7 @@ class MoveableObject extends BasicObject{
 */
 class GraphicObject extends MoveableObject {
   // Default config of this level
-  static config = {
+  static defaultProperties = {
     name: "graphicObject no name ", // to facilitate debug, give a name to your objects
     // screen drawing
     visible: true, // if false, object is not drawn
@@ -113,38 +103,38 @@ class GraphicObject extends MoveableObject {
     fill: { active: true, color: [200, 100, 100, 200] },
   };
 
-  constructor(instanceConfigVariant) {
+  constructor(instanceProperties) {
     super();
     // add local default extension
-    this.extendConfig(copyConfig(GraphicObject.config));
+    extendProperties(this,copyProperties(GraphicObject.defaultProperties));
     // apply variant if called with
-    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
 
   // use the config to draw in p5 visual code
   draw() {
     // nothing to do if not visible
-    if (!this.config.visible) return;
+    if (!this.visible) return;
     push();
     // locate
     this.locate();
     // rotate
     this.rotate();
     // scale
-    let scalexyz = this.config.scale;
+    let scalexyz = this.scale;
     scale(scalexyz[0], scalexyz[1], scalexyz[2]);
     // display painting 
-    if (this.config.stroke.active) {
-      stroke(this.config.stroke.color);
-      strokeWeight(this.config.stroke.weight);
+    if (this.stroke.active) {
+      stroke(this.stroke.color);
+      strokeWeight(this.stroke.weight);
     } else noStroke();
     //
-    if (this.config.fill.active) {
-      fill(color(this.config.fill.color));
+    if (this.fill.active) {
+      fill(color(this.fill.color));
     } else noFill();
 
     // draw the default shape (here a box) . to be overwritten by any
-    if (this.config.drawModel != null) this.config.drawModel();
+    if (this.drawModel != null) this.drawModel();
     else this.drawModel();
     pop();
   }
@@ -170,21 +160,21 @@ class GraphicObject extends MoveableObject {
 */
 
 class GraphicObjectModel extends GraphicObject {
-  static config = {
+  static defaultProperties = {
     model: null, // the shape to draw
     texture: { active:false, image: null } // optional texture
   };
-  constructor(instanceConfigVariant) {
+  constructor(instanceProperties) {
     super();  // will have created part of the config under ancester responsibility
     // extend with a copy of local default config
-    this.extendConfig(copyConfig(GraphicObjectModel.config));
+    extendProperties(this,copyProperties(GraphicObjectModel.defaultProperties));
     // apply variant if called with
-    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
   // overWritten methods
   drawModel() {
-    if (this.config.texture.active) texture(this.config.texture.image);
-    model(this.config.model);
+    if (this.texture.active) texture(this.texture.image);
+    model(this.model);
   }
 }
 

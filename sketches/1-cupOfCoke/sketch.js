@@ -50,8 +50,8 @@ function draw() {
   // animate a while
   if (frameCount % 10 == 0)
     for (let aCup of myCups) {
-      aCup.config.position[0] += random(-2, 2);
-      aCup.config.rotation[2] += random(-5, 5);
+      aCup.position[0] += random(-2, 2);
+      aCup.rotation[2] += random(-5, 5);
     }
 }
 

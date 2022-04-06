@@ -5,41 +5,41 @@
 */
 
 class MoveablePointLight extends MoveableObject {
-  static config = {
+  static defaultProperties = {
     name: 'pointLight no name',
-    visible: false,
+    lit: false,
     color: [255, 200, 100],
     position: [0, 0, 700], // a bit far for default
-    showMe: false,
+    visible: false,
   };
 
-  constructor(instanceConfigVariant) {
+  constructor(instanceProperties) {
     super();
     // add local default extension
-    this.extendConfig(copyConfig(MoveablePointLight.config));
+    extendProperties(this,copyProperties(MoveablePointLight.defaultProperties));
     // apply variant if called with
-    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
 
   // equivalent of draw , act on canvas :
   enlight() {
-    if (!this.config.visible) return;
-    var c = this.config.color;
-    var p = this.config.position;
-    var d = this.config.direction;
+    if (!this.lit) return;
+    var c = this.color;
+    var p = this.position;
+    var d = this.direction;
     pointLight(color(c), p[0], p[1], p[2]);
-    if (this.config.showMe) this.showMe();
+    if (this.visible) this.draw();
   }
 
-  showMe() {
+  draw() {
     push();
     ambientLight(200)
     translate(
-      this.config.position[0],
-      this.config.position[1],
-      this.config.position[2]
+      this.position[0],
+      this.position[1],
+      this.position[2]
     );
-    fill(color(this.config.color));
+    fill(color(this.color));
     noStroke();
     sphere(20);
 
@@ -52,28 +52,28 @@ class MoveablePointLight extends MoveableObject {
 */
 class MoveableSpotLight extends MoveableObject {
   // specific for this level
-  static config = {
+  static defaultProperties = {
     name:"Spot Light no name",
     direction: [0, 0, -1], //  define a vector x,y,z for light direction . default for z to -z
     angle: 60, // DEGREES
     concentration: 100,
   };
 
-  constructor(instanceConfigVariant) {
+  constructor(instanceProperties) {
     super();
     // add local default extension
-    this.extendConfig(copyConfig(MoveableSpotLight.config));
+    this.extendProperties(copyProperties(MoveableSpotLight.config));
     // apply variant if called with
-    if (instanceConfigVariant != null) this.patchConfig(instanceConfigVariant);
+    if (instanceProperties != null) this.patchProperties(instanceProperties);
   }
 
   enlight() {
-    if (!this.config.visible) return;
-    var c = this.config.color;
-    var p = this.config.position;
-    var d = this.config.direction;
-    spotLight(color(c), p[0], p[1], p[2], d[0],d[1],d[2], this.config.angle, this.config.concentration);
-    if (this.config.showMe) this.showMe();
+    if (!this.lit) return;
+    var c = this.color;
+    var p = this.position;
+    var d = this.direction;
+    spotLight(color(c), p[0], p[1], p[2], d[0],d[1],d[2], this.angle, this.concentration);
+    if (this.visible) this.visible();
   }
 
   // setData : standard

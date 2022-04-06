@@ -75,13 +75,13 @@ function draw() {
     if (millis() > 60000) {
       console.log("------ general stop ------")
       europeanScenario1.stop(); // stop scenario
-      traffic_1.config.active = false; // turn off the lights
+      traffic_1.active = false; // turn off the lights
       europeanScenario2.stop();
-      traffic_2.config.active = false;
+      traffic_2.active = false;
       traffic_3.lightsScenario.stop();
-      traffic_3.config.active = false;
+      traffic_3.active = false;
       traffic_4.lightsScenarioBis.stop();
-      traffic_4.config.active = false;
+      traffic_4.active = false;
     }
   }
 }
@@ -91,13 +91,11 @@ function draw() {
 function* launchScript() {
   // set all to red 
   var onlyRed = { active: true, lights:{ green: { active: false }, orange: { active: false }, red: { active: true }}};
-  patchConfig(traffic_1.config,onlyRed );
-  patchConfig(traffic_2.config,onlyRed );
-  patchConfig(traffic_3.config,onlyRed );
-  patchConfig(traffic_4.config,onlyRed );
+  patchProperties(traffic_1,onlyRed );
+  patchProperties(traffic_2,onlyRed );
+  patchProperties(traffic_3,onlyRed );
+  patchProperties(traffic_4,onlyRed );
 
-
-  
   // start first pair on red
   console.log('-->start first pair of lights')
   europeanScenario1.start();

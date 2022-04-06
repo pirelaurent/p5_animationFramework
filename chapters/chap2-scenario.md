@@ -17,22 +17,23 @@ To continue, caller must call again *next()*
 
 We call a **step** a part of generator's code that run without being interrupted   
 *beginning*-----step 0-----**yield**--step 1---**yield**--- etc---**yield**--- last step ---*end*
+
 ## how a scenario interacts with the underlaying generators
 When a scenario starts, it get the first *generator* of its list and create an instance.   
-Once started, scenario call the generator to run the next step.    
+Once started, scenario call the generator to run a *next step*.    
 The generator executes the step then returns either by : 
-- **yield** -> The scenario will wait the default *interval* ms of the scenario before calling again the script
+- **yield** -> The scenario will wait the default *interval_ms*, a property of the scenario, before calling again the script
 - **yield** xxxxx   -> The scenario will wait the number xxxxx of ms before calling the next step   
 - a **return** instruction  -> The scenario will stop this script . 
 - the *end* of generator's code.    -> Same as above. 
     
 When the script returns to the scenario *advance* method, **this method push itself in the js event loop for later**:    
  ``` javascript 
- advance() {
+   advance() {
     var step = this.script.instance.next();
     if (!step.done) {
       var nextEcheance =
-        step.value == undefined ? this.config.interval : step.value;
+        step.value == undefined ? this.interval_ms : step.value;
       // postpone its job , but wants to be recalled with its scenario context
       this.timeoutId = setTimeout(this.advance.bind(this), nextEcheance);
     } else {
@@ -84,7 +85,7 @@ class TrafficLight {
 First, be aware of the special notation ```function*``` which means this is a *generator* not a simple function.     
 Each yield can return a number of <u>milliseconds</u> to wait before coming back.   
 As we want a full time animation, the script has an infinite loop inside ```while(true)```    
-function *patchConfig* changes only the keys given as variants. *(see chap1-literals)*
+function *patchProperties* changes only the keys given as variants. *(see chap1-literals)*
 
 ``` javascript 
 function* europeanScript(oneTrafficLight) {
@@ -93,14 +94,14 @@ function* europeanScript(oneTrafficLight) {
  let lights = oneTrafficLight.config.lights;// local relay for readability
  while (true) {
    //-------- set red
-   patchConfig(lights, {green: {active: false }, orange: {active: false }, red: {active: true },});
+   patchProperties(lights, {green: {active: false }, orange: {active: false }, red: {active: true },});
    yield lights.red.duration_ms;
    //---------- set green
-   patchConfig(lights, {
+   patchProperties(lights, {
      green: {active: true },orange: {active: false },red: {active: false },});
    yield lights.green.duration_ms;
    //---------- set orange
-   patchConfig(lights, {
+   patchProperties(lights, {
      green: {active: false },orange: {active: true },red: {active: false },});
    yield lights.orange.duration_ms;
  } // while
@@ -108,7 +109,7 @@ function* europeanScript(oneTrafficLight) {
 ```
 ## create the scenario  
 The constructor of a scenario has two parameters, a config for scenario itself and an array of generators.   
-```constructor(someConfig = {}, generatorsToUse = []) ```   
+```constructor(someLiteral = {}, generatorsToUse = []) ```   
 If you look at the Scenario class, you'll find a default configuration which can be used as is or patched:     
 ```javascript 
   static defaultConfig = {

@@ -29,7 +29,7 @@ class Tripod4Camera extends MoveAbleObject {
     setData is overwritten to propagate changes automatically 
   */
   setData(somePath, newValue) {
-    setDataConfig(this.config, somePath, newValue);
+    setProperties(this.config, somePath, newValue);
     this.refreshCameraPosition();
   }
 }

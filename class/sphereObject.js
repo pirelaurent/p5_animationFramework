@@ -9,17 +9,17 @@ class SimpleSphere extends GraphicObject {
   };
 
   // // let do the job of super
-  constructor(instanceConfigVariant) {
+  constructor(instanceProperties) {
     // get parent config in this.config without applying variant 
     super();
     // add local default extension
-    this.extendConfig(copyConfig(SimpleSphere.config))
+    extendProperties(this,copyProperties(SimpleSphere.config))
     // apply variant if called with
-    if(instanceConfigVariant != null ) this.patchConfig(instanceConfigVariant)
+    if(instanceProperties != null ) patchProperties(this,instanceProperties)
   }
 
   // overWrite for model
   drawModel() {
-    sphere(this.config.radius);
+    sphere(this.radius);
   }
 }

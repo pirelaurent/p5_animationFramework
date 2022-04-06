@@ -12,7 +12,7 @@ var myBox1, myBox2, myBox3;
 var myBowl1, myBowl2;
 
 function setup() {
-    // launch test of library with assertions to test using copyCOnfig, patchConfig, extendConfig. 
+    // launch test of library with assertions to test using copyCOnfig, patchProperties, extendProperties. 
     updateTest();
 
   can = createCanvas(800, 800, WEBGL);

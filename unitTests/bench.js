@@ -45,10 +45,10 @@ console.log(elapsed+' getSetData(config, "fill.color[2]",false)result is :'+ res
 console.log('---------------------:')
  var start = millis();
  for (i=1; i<tours;i++){
-    patchConfig(config, {fill:{color:{2:10}}})
+    patchProperties(config, {fill:{color:{2:10}}})
  }
  var elapsed = millis()-start;
-console.log(elapsed+' patchConfig(config, {fill:{color:{2:10}}}) result is :'+ resu)
+console.log(elapsed+' patchProperties(config, {fill:{color:{2:10}}}) result is :'+ resu)
  console.log('---------------------')
 
 }

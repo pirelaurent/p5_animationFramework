@@ -131,24 +131,24 @@ var travel = {
 The sketch define 4 reuses for demonstration :    
 - the outward journey , that will use implicit f(t) = t to go from start to end. 
 ```javascript 
-var travel1 = copyConfig(travel);
+var travel1 = copyProperties(travel);
 var outWardJourney = { duration_ms: 10000, parameters: [travel1]};
 ```
 - the return journey , that will use  ```f(t) = 1-t``` to go from end to start (white route) 
 ```javascript 
-var travel2 = copyConfig(travel);
+var travel2 = copyProperties(travel);
 travel2.easingOnT= (t) => 1 - t;
 var returnJourney = { duration_ms: 10000, parameters: [travel2]}
 ```
 - Then the same round trip but far away by overriding the 0..1 limits of Bezier definition 
 ```javascript 
 // reuse position movement and use beziers out of range 0..1 from -0.2 to 1.2  
-var travelSpecial1 = copyConfig(travel);
+var travelSpecial1 = copyProperties(travel);
 travelSpecial1.easingOnT = (t) => -0.2 + (1.2+0.2) * t;
 ```
 - Same as above but travel back by 1- f(t)   
 ```javascript 
-var travelSpecial2 = copyConfig(travel);
+var travelSpecial2 = copyProperties(travel);
 travelSpecial2.easingOnT = (t) => 1 - (-0.2 + 1.4 * t);
 ```
 <img src = "../img/forDoc/bezierBaloon.png" width = 300></img>

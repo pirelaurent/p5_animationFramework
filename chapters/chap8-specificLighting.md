@@ -125,13 +125,13 @@ To respect this model, we can set a new object holding the others :
     name: "3 lights",
   });
   // use extend as the keys are not in the controled class definition
-  threeLightsGroup.extendConfig({
+  threeLightsGroup.extendProperties({
     blue: pointBlue,
     red: pointRed,
     white: pointWhite,
   });
 ```
-Notice we use *extendConfig* to avoid errors as the new properties are not in the class definition.   
+Notice we use *extendProperties* to avoid errors as the new properties are not in the class definition.   
 Notice that the objects pointBlue, pointRed, pointLight must be known when the group is created.   
 ### parameters of an element in a higher level group 
 At the first level, the *getData* method of BasicObject knows that it has to find a key in the config of the threeLightsGroup. So "blue" whill give access to the *pointBlue* object.   
