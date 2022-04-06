@@ -30,9 +30,9 @@ class Scenario {
 
   start() {
     // avoid successive call error
-    if (this.isStarted) return;
+    if (this.isStarted) return "already started";
     // avoid to start while ended is not cleared. Use restart
-    if (this.isEnded) return;
+    if (this.isEnded) return "already ended - use restart";
     // prepare the script call with a method that can be externally overriden
     // why that : some script can claim some specific parameters unknown of scenario
 
@@ -50,6 +50,7 @@ class Scenario {
     }
     // first instruction is called asap
     this.advance();
+    return "scenario started"
   }
 
   createInstanceGenerator() {

@@ -1,4 +1,4 @@
-function* scriptJourney(journey, anObject) { console.log(anObject)
+function* scriptJourney(journey, anObject) { 
   // add internal data to complete parameters list
   for (var aParam of journey.parameters) {  
     aParam.isStarted = false;

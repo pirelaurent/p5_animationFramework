@@ -15,11 +15,12 @@ var journey = {
   duration_ms: 10000, // duration of the journey
   // array of parameters in this journey
   parameters: [
-    {
+    { 
       name: "position", // the parameter involved in the journey
       start: [0, 100, 0], // the start value of parameter. Optional.
       end: [-50, -200, -600], // the destination value of parameter
     },
+
     {
       name: "rotation", // the parameter involved in the journey
       end: [150, 230, 0], // the destination value of parameter (start is its current value)
@@ -35,7 +36,7 @@ var journey = {
 This 'journey' can be used with any kind of objects, as long as they have the named parameters in their *config* structure.  
 It will make a move, a rotation and a variation of color in 10 s.   
 
-Below, we use a dragon model (of class *GraphicObjectModel*) with initial variants to set for this instance against the defaults:    
+Below, we use a dragon model (of class *GraphicObjectModel*) with initial variants for this instance that overwrite the defaults:    
 ```javascript 
 dragon = new GraphicObjectModel({
     name: "dragon",
@@ -78,7 +79,7 @@ function* scriptJourneyBase(journey, anObject) {
     // loop on parameters
     for (var aParam of journey.parameters) {
       ...
-      // calculate current proportion of time ( betwwen  0 and 1)
+      // calculate current proportion of time ( between  0 and 1)
       var t = elapsedTime / aParam.duration_ms;  // t estimated elapsed = effective elapsed 
       ...
       // calculate new values for parameter : v 
