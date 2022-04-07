@@ -67,8 +67,8 @@ function setup() {
 
 function draw() {
   // play with visibility
-  if (frameCount == 5) myBox1.config.visible = false;
-  if (frameCount == 10) myBox1.config.visible = true;
+  if (frameCount == 5) myBox1.visible = false;
+  if (frameCount == 10) myBox1.visible = true;
 
   background(20);
   //background(pppp); //la couleur existe bien et est reconnue ici.
@@ -82,20 +82,20 @@ function draw() {
   if (frameCount >= 20) return;
 
   // to prove independancies, apply some change to objects
-  myBox1.config.position[0] += frameCount / 2;
+  myBox1.position[0] += frameCount / 2;
   // move, rotate and enlarge box2
-  myBox2.config.position[1] -= frameCount;
-  myBox2.config.rotation[1] += frameCount;
-  myBowl1.config.radius += frameCount;
+  myBox2.position[1] -= frameCount;
+  myBox2.rotation[1] += frameCount;
+  myBowl1.radius += frameCount;
   // change bowl2 transparency
-  var coule = color(myBowl2.config.fill.color);
+  var coule = color(myBowl2.fill.color);
   coule.setAlpha(alpha(coule) + frameCount * 2);
-  myBowl2.config.fill.color = coule;
+  myBowl2.fill.color = coule;
   // and position 0,1,2: x,y,z
-  myBowl2.config.position[2] -= frameCount * 4;
-  myBowl2.config.position[0] -= frameCount;
+  myBowl2.position[2] -= frameCount * 4;
+  myBowl2.position[0] -= frameCount;
   // change scale 
-  myBowl2.config.scale[0]*=0.95;
+  myBowl2.scale[0]*=0.95;
 }
 
 

@@ -17,8 +17,8 @@ var to_t = 1.2;
 
 // a special trace to re create the previous format 
 function traceConf(){
-  var s = `start: [${s_start.config.position}], \n end:   [${s_end.config.position}], \n`;
-  s+= ` bezier: {\n   inter1: [${s_inter1.config.position}], \n   inter2: [${s_inter2.config.position}] \n}`;
+  var s = `start: [${s_start.position}], \n end:   [${s_end.position}], \n`;
+  s+= ` bezier: {\n   inter1: [${s_inter1.position}], \n   inter2: [${s_inter2.position}] \n}`;
   console.log(s);
 }
 
@@ -78,13 +78,13 @@ function draw() {
 
 // calcul of a series of points that will be drawn later 
  // change to vectors 
- var p = s_start.config.position;
+ var p = s_start.position;
  var startV = createVector(p[0], p[1], p[2]);
-  p = s_end.config.position;
+  p = s_end.position;
   var endV = createVector(p[0], p[1], p[2]);
-  p = s_inter1.config.position;
+  p = s_inter1.position;
   var inter1V = createVector(p[0], p[1], p[2]);
-  p = s_inter2.config.position;
+  p = s_inter2.position;
   var inter2V = createVector(p[0], p[1], p[2]);
   // calculate a series of points 
   calculateTrajet(from_t,to_t, startV,endV,inter1V, inter2V);

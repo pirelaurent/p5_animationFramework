@@ -2,41 +2,50 @@
 Some classes to develop more quickly in p5. 
 (In *graphicObject.js* source code )
 ## class MoveableObject 
-A simple class to hold properties in a **literal object** as a default configuration: 
+A simple class to hold properties with a **literal object** as a default properties: 
 ``` javascript 
-class MoveableObject extends BasicObject
-  // Default config of this level
-  static defaultProperties = {
-    name: "moveableObject no name", // to facilitate debug, give a name to your objects
-    position: [0, 0, 0], // current location of object to draw it
-    angleMode: null,  // what's the unit of angles . If not set use current p5 angleMode 
-    rotation: [0, 0, 0], // current rotation of object. order applied is: rotateX, then Y , then Z
-    scale: [1, 1, 1], // optional scale in the 3 directions
-  };
-  ```  
-  The parameters speak for themselves.  
-  <small> *Just a word about **angleMode** : in some case (reuse of components) the expected *angleMode* to draw itself is no more the current one. In these rare cases, one can precise how to interpret the rotation values : DEGREES or RADIANS for this unique object by setting this property.   
-  By default when null, it will use the current mode. 
-  In my sketches, i set frequently *angleMode(DEGREES)* in the setup*  </small>
+class MoveableObject extends BasicObject{
+  constructor(instanceProperties) {
+    super();
+    extendProperties(this,
+    {
+      name: "moveableObject no name", // to facilitate debug, give a name to your objects
+      position: [0, 0, 0], // current location of object to draw it
+      angleMode: null,  // unit in P5(DEGREES or RADIANS) if object don't use current one 
+      rotation: [0, 0, 0], // current rotation of object. order is: rotateX, then Y , then Z
+      scale: [1, 1, 1], // optional scale in the 3 directions
+    });
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
+  }
+  ```   
+   **angleMode** : in some case (reuse of components) the expected *angleMode* for object to draw itself is not the current one. One can change it on the fly only for this object and restore default after.    
+  In the examples, i use to set *angleMode(DEGREES)* in the setup* (and don't use *angleMode*.) 
 
 ## class GraphicObject
 An inherited class with new properties to be able to draw itself.  
-A default configuration to add to previous is also given as a static literal object:    
+The default properties to be added are also given as a literal object:    
 ```javascript 
 class GraphicObject extends MoveableObject {
-  static defaultProperties = {
-    name: "graphicObject no name ", // to facilitate debug, give a name to your objects
-    visible: true, // if false, object is not drawn
-    stroke: { active: true, color: "white", weight: 1 },
-    fill: { active: true, color: [200, 100, 100, 200] },
-  };
+  constructor(instanceProperties) {
+    super();
+    extendProperties(this,{
+      name: "graphicObject no name ", 
+      // screen drawing
+      visible: true, // if false, object is not drawn
+      stroke: { active: true, color: "white", weight: 1 },
+      fill: { active: true, color: [200, 100, 100, 200] },
+    });
+    // apply variant if called with
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
+  }
 ``` 
-The class has a default method *drawModel* for debug to see something, this will be overriden to draw specific shapes.  
+The class has a default method *drawModel* for debug to see something
 ``` javascript   
   drawModel() {
     box(100, 150, 50);
   }   
 ```
+This method will be overwritten as required
 ### simplest sample 
   
 <img src = "../img/forDoc/threeObjects.png"  width = 160></img>   
@@ -45,13 +54,15 @@ See *sketches/ 1-basicObject/sketch.js* :
 ```javascript 
 function setup() {
     can = createCanvas(800, 800, WEBGL)
+    // an object with all default properties
     obj_1 = new GraphicObject();
-    // constructor with some patch to apply to default config:
+    // constructor with some patch to apply :
     obj_2 = new GraphicObject({
         position: [-200, 0, 0], // current location of object to draw it
         rotation: [30, 45, 0], // in degrees
         fill: { color: 'blue' }
     })
+    // another 
     obj_3 = new GraphicObject( {position: [0,-200,0]});
     // apply some overloading of method by code ( or make a subclass )
     obj_3.drawModel = () => sphere(50)
@@ -67,19 +78,33 @@ function draw() {
 ``` 
 ## class GraphicModelObject 
 This inherited class has new properties to draw itself with a model and a texture.  
-A default configuration is also given as a static literal object:  
+A default configuration is also given as a  literal object:  
 ```javascript
 class GraphicObjectModel extends GraphicObject {
-  static defaultProperties = {
-    model: null, // the shape to draw
-    texture: { active:false, image: null } // optional texture
-  };
+  constructor(instanceProperties) {
+    // create properties of ancesters 
+    super(); 
+    // new properties 
+    extendProperties(this,{
+      model: null, // the shape to draw
+      texture: { active:false, image: null } // optional texture
+    });
+    // apply variant if any for the instance
+    if (instanceProperties != null) patchProperties(this,instanceProperties);
+  }
+  // overWritten methods
+  drawModel() {
+    if (this.texture.active) texture(this.texture.image);
+    model(this.model);
+  }
+}
 ```
-In this default config, *model* and *image* are just placeholders to be filled later at object instanciation.   
-A static inline cannot hold something created later.   
-With p5 some pb can occur if *loadModel* or *loadImage* are called outside of *preload*.   
+In these default properties, *model* and *image* are just placeholders to be filled later at object instanciation.   
+##### p5 good practice  
+With p5, some problems can occur if *loadModel* or *loadImage* are called outside of *preload*.   
   - code all *loadModel* and *loadImage* in **preload** 
   - construct *GraphicsObject* in **setup** with variables set previously in *preload*. 
+  
 ### sample: Two cups of coke 
 
 ```javascript 
@@ -91,14 +116,16 @@ function preload() {
 
 function setup() {
   can = createCanvas(800, 800, WEBGL);
-  let aCup = new GraphicObjectModel({
+  let aCup = new GraphicObjectModel(
+  {
     name: "my favorite cup",
     model: cola_cup,
     texture: { active: true, image: textureWater },
     stroke: { color: "darkred"}
   });
   myCups.push(aCup);
-  aCup = new GraphicObjectModel({
+  aCup = new GraphicObjectModel(
+  {
     name: "my beautiful cup",
     model: cola_cup,
     texture: { active: true, image: textureWater},
@@ -116,11 +143,8 @@ function draw() {
 ```
 <img src = "../img/forDoc/twoCups.png" width = "300"></img>   
 *see sketches/ 2-cupOfCoke/sketch.js*  
-Notice that the obj model (which results in a *p5.Geometry*) will be shared by all instances.   
+Notice that the obj model (which results in an internal *p5.Geometry*) will be shared by all instances.   
 The same for texture image.  
 #### for debug 
 Some messages are thrown at the **debug level** on console to follow what happens for the two object's construction through the hierarchical extensions and replacement of properties :    
 <img src = "../img/forDoc/verboseSample.png" width = "400"></img>   
-
-### Use of literals in a class hierarchy 
-To understand what is under the hood in the previous examples, especially with default config and inheritance, see previous chapter. 

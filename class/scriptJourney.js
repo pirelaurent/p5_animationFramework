@@ -1,5 +1,6 @@
 function* scriptJourney(journey, anObject) { 
   // add internal data to complete parameters list
+  
   for (var aParam of journey.parameters) {  
     aParam.isStarted = false;
     aParam.isEnded = false;
@@ -7,9 +8,6 @@ function* scriptJourney(journey, anObject) {
     if (!aParam.easingOnT) aParam.easingOnT = (t)=>t ; 
     // check where f(t) ends to adjust real position at end of the travel 
     if (aParam.easingOnT(1)!=1) aParam.adjust = false; else aParam.adjust = true; 
-
-
-
     // start later ?
     if (!aParam.wait_ms) aParam.wait_ms = 0;
     // personal duration ? If none take the remaining time
@@ -59,8 +57,10 @@ function* scriptJourney(journey, anObject) {
       if (elapsedTime < aParam.wait_ms) continue; // too early
       if (elapsedTime > aParam.wait_ms + aParam.duration_ms) { // to late
          // set to exact position on end in case time and step  don't adjust exactly 
-        if( aParam.adjust)  anObject.setData(aParam.name,aParam.end);
-        // done for this one 
+        if( aParam.adjust) {  
+          if (anObject.setData) anObject.setData(aParam.name,aParam.end); 
+          else setProperties(anObject, aParam.name,aParam.end);
+        }// done for this one 
         aParam.isEnded = true;
         continue;
       }
@@ -69,7 +69,7 @@ function* scriptJourney(journey, anObject) {
 
         aParam.isStarted = true;
         // if no start value, take the current value of parameter
-        if (!aParam.start) aParam.start = anObject.getData(aParam.name);
+        if (!aParam.start) aParam.start = getProperties(anObject, aParam.name);
         // in case of bezier, prepare a vector
         let p = aParam.start;
         aParam.startV = createVector(p[0], p[1], p[2]);
@@ -92,7 +92,9 @@ function* scriptJourney(journey, anObject) {
       // if trajectory is bezier, calculate with formula 
       if (aParam.bezier){
         var newV = calculateBezier(aParam.startV, aParam.endV, aParam.bezier.inter1V, aParam.bezier.inter2V,t);
-        anObject.setData(aParam.name, [newV.x,newV.y,newV.z]);
+          
+          if (anObject.setData) anObject.setData(aParam.name,[newV.x,newV.y,newV.z]); 
+          else setProperties(anObject, aParam.name, [newV.x,newV.y,newV.z]);
         continue;
       }
       // add to start value(s) the proportion of distance . Array or simple value first :
@@ -102,11 +104,15 @@ function* scriptJourney(journey, anObject) {
         for (var i = 0; i < aParam.start.length; i++) {
           newA.push(aParam.start[i] + aParam.delta[i] * t);
         }
-        anObject.setData(aParam.name, newA);
+        if (anObject.setData) anObject.setData(aParam.name,newA); 
+          else  setProperties(anObject,aParam.name, newA);
+        //anObject.setData(aParam.name, newA);
         continue;
       } 
       // at least simple value
+      if (anObject.setData)
         anObject.setData(aParam.name, aParam.start + aParam.delta * t);
+        else setProperties(anObject, aParam.name,aParam.start + aParam.delta * t)
       
     } // for loop 
     yield; // return to caller for a pause using current interval of scenario

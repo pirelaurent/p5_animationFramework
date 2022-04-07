@@ -71,27 +71,27 @@ function keyTyped() {
     case ">":
       if (!kb.toMove) break;
       if (kb.modeToMove == "position") {
-        pos = kb.toMove.config.position;
+        pos = kb.toMove.position;
         pos[kb.axisToMove] += kb.stepToMove;
       } else {
-        pos = kb.toMove.config.rotation;
+        pos = kb.toMove.rotation;
         pos[kb.axisToMove] += kb.stepToRotate;
       }
       // special case for tripod : p5 don't know camera has changed , help it
-      if (kb.toMove.config.camera) kb.toMove.refreshCameraPosition();
+      if (kb.toMove.camera) kb.toMove.refreshCameraPosition();
       break;
 
     case "<":
       if (!kb.toMove) break;
       if (kb.modeToMove == "position") {
-        pos = kb.toMove.config.position;
+        pos = kb.toMove.position;
         pos[kb.axisToMove] -= kb.stepToMove;
       } else {
-        pos = kb.toMove.config.rotation;
+        pos = kb.toMove.rotation;
         pos[kb.axisToMove] -= kb.stepToRotate;
       }
       // special case for tripod : p5 don't know camera has changed , help it
-      if (kb.toMove.config.camera) kb.toMove.refreshCameraPosition();
+      if (kb.toMove.camera) kb.toMove.refreshCameraPosition();
       break;
     case "0":
     case "1":
@@ -106,7 +106,7 @@ function keyTyped() {
       var i = parseInt(key);
       if (i < kb.objectsToMove.length) {
         kb.toMove = kb.objectsToMove[i];
-        console.log(kb.toMove.config.name + " ready to move");
+        console.log(kb.toMove.name + " ready to move");
       } else kb.toMove = null;
       break;
     case "?":
@@ -114,11 +114,11 @@ function keyTyped() {
       else
         console.log(
           "config of: " +
-            kb.toMove.config.name +
+            kb.toMove.name +
             "\n position:[" +
-            kb.toMove.config.position +
+            kb.toMove.position +
             "]\n rotation[" +
-            kb.toMove.config.position +
+            kb.toMove.position +
             "]"
         );
       break;
@@ -136,7 +136,7 @@ function keyTyped() {
       if(kb.objectsToMove)
       for (var i = 0; i < kb.objectsToMove.length; i++) {
         kb.toMove = kb.objectsToMove[i];
-        console.log("         " + i + ":" + kb.toMove.config.name);
+        console.log("         " + i + ":" + kb.toMove.name);
       }
   }
 }

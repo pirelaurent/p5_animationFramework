@@ -129,7 +129,8 @@ let journeyTripod ={
 }
 // scenario to run the journey definition
 scenarioMoveUpDown = new Scenario({ scenarioName: " tripod journey ", trace: true},
-  { scriptName: "up to down",generator: scriptJourney, arguments: [journeyTripod, movingTripod] })
+  { scriptName: "up to down",generator: scriptJourney, arguments: [journeyTripod, movingTripod] 
+})
 // tip: if only one script, can omit the [] around
 }
 

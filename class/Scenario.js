@@ -4,19 +4,19 @@
 */
 
 class Scenario {
-  static defaultConfig = {
-    scenarioName: "Scenario noname",
-    interval_ms: 60, //ms of wait if yield don't return a specific value
-    trace: false,
-  };
 
-  // create a scenario with one or several instanciated scripts in an array of :
-  //{ name: "nameOfScript",generator: f() }
+  // create a scenario with an array of one or several scripts to chain  :
+  //[{ name: "nameOfScript",generator },{ name: "nameOfScript",generator }...]
   //
   constructor(instanceProperties, generatorsToUse = []) {
-    // copy default to separate instances config
-    extendProperties(this,copyProperties(Scenario.defaultConfig));
+    extendProperties(this,
+      {
+        scenarioName: "Scenario noname",
+        interval_ms: 60, //ms of wait if yield don't return a specific value
+        trace: false,
+      } );
     if (instanceProperties != null) patchProperties(this,instanceProperties);
+
     this.generatorsToUse = generatorsToUse; // its an array of scripts
     // but if just one accept it and make it an array
     if (!(this.generatorsToUse instanceof Array))

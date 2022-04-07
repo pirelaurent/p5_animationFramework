@@ -27,7 +27,7 @@ function setup() {
   });
 
  scenario_0 = new Scenario(
-   {scenarioName: "movement0 sample", trace: true},
+   {scenarioName: "movement0 sample", interval_ms: 100, trace: true},
    {scriptName: " dragon move", generator: scriptJourney, arguments:[journey, dragon]}
   ) 
   scenario_0.start();
@@ -48,18 +48,18 @@ var journey = {
       name: "position", // the parameter involved in the journey
       start: [0, 100, 0], // the start value of parameter. Optional.
       end: [-50, -200, -600], // the destination value of parameter
-      easingOnT: (t)=>t*t*t
+      //easingOnT: (t)=>t*t*t
     },
     {
       name: "rotation", // the parameter involved in the journey
       end: [150, 230, 0], // the destination value of parameter
-      easingOnT: easingOnT_flip_t2
+      //easingOnT: easingOnT_flip_t2
       //easingOnT:  (t) =>  abs(sin(t*180*5))
     },
     {
       name: "fill.color", // the parameter involved in the journey
-      start: [50, 50, 50], // the start value of parameter. Optional.
-      end: [100, 200, 255], // the destination value of parameter
+      start: [100, 255, 100,100], // the start value of parameter. Optional.
+      end: [100, 200, 255,255], // the destination value of parameter
     },
   ],
 };

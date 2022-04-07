@@ -3,8 +3,8 @@
 ### elapsed time vs estimated time 
 The *scriptJourney* interpolates values based on *elapsed time* in order to be at *end* after the defined duration.  
 This time *t* is calculated as a linear fraction between 0 and 1 : *elapsed time / duration*  
-and this proportion is applied to the distance to travel *(end - start)* to calculate exact position. 
-### functions to give to journey an estimated time different of the elapsed time 
+and this proportion is applied to the distance to travel *(end - start)* to calculate exact new position. 
+### give to journey an estimated time different of the elapsed time 
 Let see the following plottings:   
 <img src = "../img/forDoc/sevenPlots.png" width = 300></img>   
 The white diagonal is the default linear function : **estimated time = elapsed time** :  **(t) => t**  
@@ -18,22 +18,22 @@ The red ones are the symetrical functions :
 (t)=> 1-(1-t) * (1-t) * (1-t)   
 (t)=> 1-(1-t) * (1-t) * (1-t) * (1-t)   
 All these functions allways stay between 0 and 1.   
-These one starts with 0 and end with 1.   
+These one starts all at 0 and end at 1.   
 Any function staying between 0 and 1 can be used for other funny effects.    
 
 ## what are the effects ? 
 Look at the 0.5 vertical line when half time is elapsed :  
-For standard, estimated = elapsed : half time.    
+For standard, estimated = elapsed : at half time, half the distance.    
 For the green curves, the estimated time is below, not yet at the half:   
 => **The green curves start slowly and accelerate at the end**  
 For the red curves, the estimated time is greater than the elapsed.   
 => **The red curves start quickly and slow down at the end**   
 For green or red functions : => **More the power, more the speed difference.**   
 For animation, these kinds of variations give more elegant transitions than the basic one. 
-## easyOnT function 
-The framework uses a reserved name ```easyOnT``` which is checked by the journey script for an optional calculation of estimated time.
+## easingOnT function 
+The framework uses a reserved name ```easingOnT``` which is checked by the journey script for an optional calculation of estimated time.
 ### how to set a time variation in a journey's parameter configuration 
-You can give directly an anonymous function in the literal defining a journey or use a already defined function.   
+You can give directly an anonymous function in the literal defining a journey or use an already defined function.   
 **Remember this is a function not a function call.**    
  
 ```javascript   
@@ -61,7 +61,7 @@ The following function names are predefined in *scriptJourney.js* code to facili
   ```
 #### more funny effects 
 ##### back in the middle of the trip
-Note :  supposing your default anglemode is ```angleMode(DEGREES)```  
+(supposed your default anglemode is ```angleMode(DEGREES)``` )   
 You can try the function ```(t)=> sin(t*180)``` :  
 <img src = "../img/forDoc/sinusPlot.png" width = 200></img>      
 As the estimated time is used to calculate the distance from start, using this function will reach the end in half time then go back to origin in the second half of time.
@@ -76,3 +76,5 @@ As the rotation is applied to the vertical y in the example journey with dragon,
 ``` easingOnT:  (t) =>  abs(sin(t*180*5)) ``` for the rotation parameter (here degrees).    
 <img src = "../img/forDoc/nonono.png" width = 200></img>  
 
+### sample 
+the sketch in *advanceMovement* is the same as the sketch in *basicMovement*, except the use of function on time *easingOnT*.You can observe some subtiles differences.   

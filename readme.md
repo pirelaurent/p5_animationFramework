@@ -7,7 +7,7 @@ This is a review of what was learned in this adventure.
 - Usage of **literals** to hold properties of objects  
 - A tandem between **generators** in charge of actions and **scenario** responsible for restarting generators in time. 
 
-## <a href = "./chapters/chap0-Literals.md">chapter 0 </a>: Literals and class hierarchy
+## <a href = "./chapters/chap0-Literals.md">chapter 0 </a>: Literals and class properties
 Properties in a class are hold as a literal object.  
 Mechanisms are provided to control class definition and instance variations.  
 
@@ -15,9 +15,9 @@ Mechanisms are provided to control class definition and instance variations.
 To have something to draw and animate, a hierarchy of four classes : 
 - **BasicObject**:     a class that do nothing except implementing useful principles 
 - **MoveableObject**:    to hold properties for moving elements like position or rotation.
-   - Derived class : *GraphicObject, Tripod4Camera, Tripod4Light*  
+   - Main derived classes : *GraphicObject, Tripod4Camera, MoveablePointLight, MoveableSpotLight*  
 - **GraphicObject** :    object able to draw itself in place
-- **GraphicObjectModel**: previous extended to use an external model (.obj, .stl) (or any p5 Geometry) with optional texture.    
+- **GraphicObjectModel**: the previous extended to use an external model (.obj, .stl) (or any p5 Geometry) with optional texture.    
   <img src = "./img/forDoc/twoCups.png" width = 200> </img>
 #### code examples
 sketches/0-basicObject   
@@ -68,21 +68,11 @@ Sample shows a jump tripod to tripod  then a **smooth camera movement** using a 
 sketches/7-cameraLiberty    
 
 ## <a href = "./chapters/chap8-specificLighting.md">chapter 8 </a>: enlightments  
-See where are your lights, move them , see result  
+See and move your lights, see where they are, choose right places with keyboard, organize trajectories, etc.  
 <img src = "./img/forDoc/pointWhereMove0.png" height= "200">
 <img src = "./img/forDoc/pointWhereNotShowMe.png" height= "200">
+<img src = "./img/forDoc/spotPositionning.png" height = 200 >
 #### code example
-sketches/8-ligthingObject
-
-# Miscelleanous 
-<a href = "./chapters/tech0-environment.md">Dev environment notes</a> 
+sketches/8-ligthingObject   
+sketches/8-ligthingObjectSpot
  
-#### stay in touch 
-know-how from cyber-opera not yet documented :   
-- specific lighting per graphic object   
-- using an image as background in a p5 webgl canvas 
-- Several ways to have a Video as background with P5 
-- code once and draw on several places ( canvas, graphics ) 
-- superimposed several layers of canvas and pilot them by scenario 
-- working with two external screens and a 1920x3840 canvas
-- ...

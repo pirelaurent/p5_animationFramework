@@ -11,11 +11,11 @@
 
 class BasicObject{
   // the config will create new properties into the class 
-  static defaultProperties ={
-    name: "BasicObject no name"
-  }
+
   constructor(instanceProperties) {
-    extendProperties(this,copyProperties(BasicObject.defaultProperties));
+    extendProperties(this,{
+      name: "BasicObject no name"
+    });
     // apply variant if constructor was called with some parameters.
     if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
@@ -35,18 +35,16 @@ class BasicObject{
 
 // ------------------- sample object to move
 class MoveableObject extends BasicObject{
-  // Default config of this level
-  static defaultProperties = {
-    name: "moveableObject no name", // to facilitate debug, give a name to your objects
-    position: [0, 0, 0], // current location of object to draw it
-    angleMode: null,  // what's the unit of angle . If not set use current angleMode 
-    rotation: [0, 0, 0], // current rotation of object. order is: rotateX, then Y , then Z
-    scale: [1, 1, 1], // optional scale in the 3 directions
-  };
 
   constructor(instanceProperties) {
     super();
-    extendProperties(this,copyProperties(MoveableObject.defaultProperties));
+    extendProperties(this,{
+      name: "moveableObject no name", // to facilitate debug, give a name to your objects
+      position: [0, 0, 0], // current location of object to draw it
+      angleMode: null,  // what's the unit of angle . If not set use current angleMode 
+      rotation: [0, 0, 0], // current rotation of object. order is: rotateX, then Y , then Z
+      scale: [1, 1, 1], // optional scale in the 3 directions
+    });
     if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
   
@@ -94,19 +92,16 @@ class MoveableObject extends BasicObject{
  A moveable object which is able to draw itself 
 */
 class GraphicObject extends MoveableObject {
-  // Default config of this level
-  static defaultProperties = {
-    name: "graphicObject no name ", // to facilitate debug, give a name to your objects
-    // screen drawing
-    visible: true, // if false, object is not drawn
-    stroke: { active: true, color: "white", weight: 1 },
-    fill: { active: true, color: [200, 100, 100, 200] },
-  };
-
   constructor(instanceProperties) {
     super();
-    // add local default extension
-    extendProperties(this,copyProperties(GraphicObject.defaultProperties));
+    // // add local default extension
+    extendProperties(this,{
+      name: "graphicObject no name ", // to facilitate debug, give a name to your objects
+      // screen drawing
+      visible: true, // if false, object is not drawn
+      stroke: { active: true, color: "white", weight: 1 },
+      fill: { active: true, color: [200, 100, 100, 200] },
+    });
     // apply variant if called with
     if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
@@ -160,14 +155,13 @@ class GraphicObject extends MoveableObject {
 */
 
 class GraphicObjectModel extends GraphicObject {
-  static defaultProperties = {
-    model: null, // the shape to draw
-    texture: { active:false, image: null } // optional texture
-  };
   constructor(instanceProperties) {
     super();  // will have created part of the config under ancester responsibility
     // extend with a copy of local default config
-    extendProperties(this,copyProperties(GraphicObjectModel.defaultProperties));
+    extendProperties(this,{
+      model: null, // the shape to draw
+      texture: { active:false, image: null } // optional texture
+    });
     // apply variant if called with
     if (instanceProperties != null) patchProperties(this,instanceProperties);
   }

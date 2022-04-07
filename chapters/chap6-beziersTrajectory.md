@@ -1,7 +1,7 @@
 #  More advanced animations 
 # beziers curve 
-We will use quadratic bezier curve (see wikipedia) to design a trajectory from a start point to an end point.  
-Two anchors can be used to pull up the default linear rope.   
+We will use quadratic bezier curves (see wikipedia) to design a trajectory from a start point to an end point.  
+Two anchors can be set to pull up the default linear rope.   
 ## bezier quadratic parameters : 2 x 2 coordinates 
 ```javascript 
  {
@@ -15,7 +15,7 @@ Two anchors can be used to pull up the default linear rope.
 ```
 ### bezier helper 
 The sketch in *bezierHelper* source code can show any Bezier curve.  
-The trajectory designed by the above configuration is :   
+The trajectory designed by the above configuration is the following:   
 <img src = "../img/forDoc/bezier1.png" width = 400> </img>   
 start point is **green**, end point is **red**, inter1 is **yellow** and inter2 is **orange**    
 
@@ -68,21 +68,25 @@ The simplest manner is to use the sketch of BezierHelper :
 ```
 
 -> If no idea , give *inter1* and *inter2* values close to  *start* and *end*.   
--> strike lowercase keyboard keys (be sure that the focus in on canvas, not in console area)   
+#### keyboard helper 
+In the draw function of the sketch, you can see a call to ```  kbHelp();```  
+This allows to use keyboard to move elements on the canvas:  
+ 
 --> key x, y or z to choose an axis to move on  
 --> key 0, 1, 2 or 3 to choose an element to move : 0-start point, 1-end point, 2-inter1 , 3-inter2   
 --> key  > to advance on the choosen axis   
 --> key < to move back on the choosen axis   
---> key *enter* to see on the console the new values of conf :  
+--> key *enter* to see on the console the new coordinates   
+( be aware to strike lowercase keys when focus is onto the canvas )  
   
  <img src = "../img/forDoc/bezier5.png" width = 400> </img>  <img src = "../img/forDoc/bezier6.png" width = 200> </img>  
 
- You can copy/paste this text from the console to the source code in helper to mark the job.    
+ You can copy/paste this text from the console to your source code to mark the job for next time.    
  You can copy/paste this text from the console to the source of your journey parameters.    
  ##### more info in source code of utilKeyboard.js 
  
  ### using a Bezier conf in a journey configuration 
- You just have to add two bezier points into the action of a journey.  
+ You just have to add the coordinates of the two Bezier points into the action of a journey.  
  If you have designed trajectory with the Bezier sketch, you can copy(from console)/paste(to your journey code)    
  ```javascript 
  parameters: [
@@ -113,7 +117,7 @@ The above function is: ```easingOnT: (t)=> -0.2+ (1.4*t)```
 In such a case, the element will not go from start to end but from a place far under start (at -0.2) and terminate far after normal end (at 1.2). A manner to have an escape effect.     
 
 #### view in action 
-The sketch *6-bezierTrajectory* show the following :   
+The sketch *6-bezierTrajectory* shows the following :   
 A travel curve is factorized in order to be reused several times  : 
 ``` javascript 
 var travel = {
@@ -129,18 +133,18 @@ var travel = {
 <img src = "../img/forDoc/bezierSketch0.png" width = 400></img> 
 
 The sketch define 4 reuses for demonstration :    
-- the outward journey , that will use implicit f(t) = t to go from start to end. 
+- the outward journey uses implicit f(t) = t to go from start to end on the white route. 
 ```javascript 
 var travel1 = copyProperties(travel);
 var outWardJourney = { duration_ms: 10000, parameters: [travel1]};
 ```
-- the return journey , that will use  ```f(t) = 1-t``` to go from end to start (white route) 
+- the return journey uses  ```f(t) = 1-t``` to go backward, from end to start on the white route
 ```javascript 
 var travel2 = copyProperties(travel);
 travel2.easingOnT= (t) => 1 - t;
 var returnJourney = { duration_ms: 10000, parameters: [travel2]}
 ```
-- Then the same round trip but far away by overriding the 0..1 limits of Bezier definition 
+- Then the same trip coming and going far away by overriding the 0..1 limits of Bezier definition 
 ```javascript 
 // reuse position movement and use beziers out of range 0..1 from -0.2 to 1.2  
 var travelSpecial1 = copyProperties(travel);
@@ -155,7 +159,8 @@ travelSpecial2.easingOnT = (t) => 1 - (-0.2 + 1.4 * t);
 
 For pleasure, it will inflate the baloon at destination before going back and add some variation of colors and size.   
 ##### more 
-Using *kbHelp()* in the draw loop, it can show the debug grid or the axis.  
+Using *kbHelp()* in the draw loop, you can show/hide the debug grid(g) or the axis(a) like above.  
+
 <img src = "../img/forDoc/keys_h_g.png" height = 160></img>
 
 

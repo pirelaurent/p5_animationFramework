@@ -2,10 +2,9 @@
 
 "use strict";
 var can;
-var obj_1;
 var liberty, libertyObj;
 var enlight;
-var pointBlue, pointWhite, pointRed;
+var spotBlue, spotWhite, spotRed;
 var threeLightsGroup;
 let scenarioThreeLights 
 
@@ -16,15 +15,8 @@ function preload() {
 
 function setup() {
   can = createCanvas(800, 800, WEBGL);
-  angleMode(DEGREES);
-  // used for doc only 
-  // obj_1 = new GraphicObject({
-  //   name: "ball",
-  //   fill: { color: "white" },
-  //   stroke: { color: "grey", weight: 0.5 },
-  // });
-  // obj_1.drawModel = () => sphere(50);
-  //
+  //angleMode(DEGREES);
+
   liberty = new GraphicObjectModel({
     name: "liberty",
     model: libertyObj, //// from a free obj on turbosquid.com author rozenkrantz
@@ -33,25 +25,29 @@ function setup() {
     position: [0, 300, 0],
   });
 
-  pointBlue = new MoveablePointLight({
+  spotBlue = new MoveableSpotLight({
     name: "blue light",
     lit: true,
-    color: "blue",
-    position: [-300, -100, -250], 
+    color: "lightblue",
+    position : [-230,50,250] ,
+    direction: [1,0,-1],   // left side 
     visible: true,
   });
-  pointWhite = new MoveablePointLight({
+  spotWhite = new MoveableSpotLight({
     name: "white light",
     lit: true,
     color: "white",
-    position: [100, 100, 250], 
+    // leave default direction [0,0,-1] ie in front 
+    position: [0,-30,230], 
+
     visible: true,
   });
-  pointRed = new MoveablePointLight({
+  spotRed = new MoveableSpotLight({
     name: "red light",
     lit: true,
     color: "red",
-    position: [300, 0, 0], 
+    position: [120,-200,140], 
+    direction: [-1,1,-1],  // from right upper side 
     visible: true,
   });
 
@@ -62,39 +58,38 @@ function setup() {
 
   threeLightsGroup = {
     name: "3 lights",
-    blue: pointBlue,
-    red: pointRed,
-    white: pointWhite,
+    blue: spotBlue,
+    red: spotRed,
+    white: spotWhite,
   };
- // be aware to create scenario once all the objects are well instanciated. In setup is a good place 
+console.log(threeLightsGroup);//PLA
   scenarioThreeLights = new Scenario(
     { scenarioName: "move three lights", trace: true },
     [  // array of scripts for this scenario . Here just one 
       { scriptName: " 3 lights", generator: scriptJourney, arguments: [journeyFor3Lights,threeLightsGroup] }
     ] )
 
+
+
   // can lights as default :  enlight = () =>lights;
   enlight = threeSpots;
   // to facilitate life set in advance for kbHelper
-  kb.objectsToMove = [pointBlue, pointWhite, pointRed];
+  kb.objectsToMove = [spotBlue, spotWhite, spotRed];
 }
 
 function draw() {
   orbitControl(1, 1, 1);
-  background(80);
+  background(40);
   kbHelp();
   enlight();
-  // only for doc
-  // obj_1.draw();
-  // if (frameCount == 200) enlight = red_atmosphere;
   liberty.draw();
 }
 
 // light 3 the spots
 function threeSpots() {
-  pointBlue.enlight();
-  pointWhite.enlight();
-  pointRed.enlight();
+  spotBlue.enlight();
+  spotWhite.enlight();
+  spotRed.enlight();
 }
 
 // for first sample code in doc

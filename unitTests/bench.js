@@ -15,10 +15,10 @@ let config = {
  console.log('--------- nb of run : '+tours+ ' ------------')
  var start = millis();
  for (i=1; i<tours;i++){
- resu = config.fill.color[2];
+ resu = fill.color[2];
 }
 var elapsed = millis()-start;
-console.log(elapsed+'ms with config.fill.color[2]; result is :'+ resu)
+console.log(elapsed+'ms with fill.color[2]; result is :'+ resu)
 console.log('---------------------:')
 
 var start = millis();

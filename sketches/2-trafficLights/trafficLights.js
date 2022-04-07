@@ -23,12 +23,12 @@ class TrafficLight {
       },
     });
     
-    //add on for example traffic_3 
+    //add on in constructor only for example traffic_3 
     this.lightsScenario = new Scenario(
       { scenarioName: "lightsScenario3", trace: true },
       { scriptName: "european ligths 3", generator: this.internalEuropeanScript, arguments:[this]}
     );
-    //add on for example traffic_4 
+    //add on in constructor only for example traffic_4 
       this.lightsScenarioBis = new Scenario(
         { scenarioName: "lightsScenario4", trace: true },
         { scriptName: "european ligths 4", generator: this._internalEuropeanScript_.bind(this)}

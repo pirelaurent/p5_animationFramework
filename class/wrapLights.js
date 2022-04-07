@@ -50,21 +50,19 @@ class MoveablePointLight extends MoveableObject {
 
 
 */
-class MoveableSpotLight extends MoveableObject {
-  // specific for this level
-  static defaultProperties = {
-    name:"Spot Light no name",
-    direction: [0, 0, -1], //  define a vector x,y,z for light direction . default for z to -z
-    angle: 60, // DEGREES
-    concentration: 100,
-  };
-
+class MoveableSpotLight extends MoveablePointLight {
   constructor(instanceProperties) {
     super();
     // add local default extension
-    this.extendProperties(copyProperties(MoveableSpotLight.config));
+    extendProperties(this, 
+      {
+        name:"Spot Light no name",
+        direction: [0, 0, -1], //  define a vector x,y,z for light direction . default for z to -z
+        angle:  PI/3 , // spot works with Radians 
+        concentration: 100,
+      });
     // apply variant if called with
-    if (instanceProperties != null) this.patchProperties(instanceProperties);
+    if (instanceProperties != null) patchProperties(this, instanceProperties);
   }
 
   enlight() {
@@ -72,17 +70,12 @@ class MoveableSpotLight extends MoveableObject {
     var c = this.color;
     var p = this.position;
     var d = this.direction;
-    spotLight(color(c), p[0], p[1], p[2], d[0],d[1],d[2], this.angle, this.concentration);
-    if (this.visible) this.visible();
+    // Both angle and concentration are optional, 
+    //but if you want to provide concentration, you will also have to specify the angle.
+    if (this.concentration!= null) 
+       spotLight(color(c), p[0], p[1], p[2], d[0],d[1],d[2], this.angle, this.concentration);
+       else spotLight(color(c), p[0], p[1], p[2], d[0],d[1],d[2]);
+    if (this.visible) this.draw();
   }
-
-  // setData : standard
-  // getData : leave standard
-
-  logInfo() {
-    super.logInfo();
-    console.log(this.config); //@ todo
-  }
-
 }
 
