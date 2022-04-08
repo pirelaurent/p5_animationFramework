@@ -122,6 +122,18 @@ function keyTyped() {
             "]"
         );
       break;
+
+    //--------- chrome  Command Shift F pour virer le haut
+    case "-": {
+      hideCursorAndScrollBar();
+      break;
+    }
+    case "+": {
+      restoreCursorAndScrollBar();
+      break;
+    }
+
+
     // help
     case "h":
       var help = `
@@ -139,4 +151,14 @@ function keyTyped() {
         console.log("         " + i + ":" + kb.toMove.name);
       }
   }
+}
+
+function hideCursorAndScrollBar(){
+  document.body.style.cursor = 'none';
+  document.body.style.overflow= 'hidden';
+}
+
+function restoreCursorAndScrollBar() {
+  document.body.style.cursor = 'default';
+  document.body.style.overflow= 'visible';
 }

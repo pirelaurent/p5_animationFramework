@@ -76,3 +76,5 @@ See and move your lights, see where they are, choose right places with keyboard,
 sketches/8-ligthingObject   
 sketches/8-ligthingObjectSpot
  
+### Annexes: <a href = "./chapters/chap999-Environt.md">Environment and some technical stuff </a>
+### Gallery: <a href = "./gallery/terresRares.md">images from p5 animation for cyber Opera Terres Rares </a>

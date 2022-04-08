@@ -45,7 +45,7 @@ function draw() {
   pointLight(color('white'),100,100, 250);
   pointLight(color('red'),300,0, 0);
   liberty.draw();
-
+pointLight()
 }
 /* 
 create a beltOfTripods of tripods around liberty 

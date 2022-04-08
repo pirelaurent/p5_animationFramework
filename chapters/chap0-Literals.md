@@ -94,12 +94,12 @@ var myObject = new MyClass({
   stroke: {color:"blue"}
 })
 ``` 
-In order to respect the class definition internally defined, we use a mmodified utility function :  
+In order to respect the class definition internally defined, we use a modified utility function :  
 #### function patchProperties (literalToPatch, patchToApply )
 This will patch a literal with another literal in a controled way:    
 You can change any values of the initial literal, but **cannot add new keys**.   
 This mechanism allows to be sure **to respect the internal definition** of the class in the instances.   
-In particular, this avoids typo errors in the instanceProperties literal.  
+In particular, this avoids typo errors in the *instanceProperties* literal.  
 
 #### controls done by *patchProperties* 
 In case of an **unknown key, an error is raised** and the patch stopped.   

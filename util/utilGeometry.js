@@ -1,11 +1,9 @@
 
 /*
  rectify a Geometry 
- useful for .obj as P5 uses y down and others use y up : 
-  multiply by 1,-1,1
-  can also reverse x and y : -1,-1,1 
-  To scale once after load  : 2,2,2 
-  ( obj rectified can be saved with )
+ useful for .obj as P5 uses y down and others use y up :   multiply by 1,-1,1
+  can also reverse x and y : multiply by -1,-1,1 
+  To scale model once loaded  : multiply by 2,2,2 
 */
 function multiplyGeometry(someGeo, aVector){
  for (let v of someGeo.vertices){
@@ -14,8 +12,8 @@ function multiplyGeometry(someGeo, aVector){
 }
 
 /*
- p5 inverse y when reading vt 0, 0.2  , it creates uvs 0,0.8
- This function rectify the right values to display texture 
+ p5 reverses y when reading  vt 0, 0.2, it creates uvs 0,0.8
+ The following function rectify the right values to display texture 
  Do it in setup, once .obj is fully loaded
  ( Can save result with saveGraphicsOnFileObj)
 */
@@ -24,6 +22,7 @@ function rectifyObjUvsForP5AfterLoad(forme) {
       forme.uvs[i][1] = 1 - forme.uvs[i][1];
     }
   }
+
 /*
  help to center a .obj after loading 
  ( Can save result with saveGraphicsOnFileObj)
