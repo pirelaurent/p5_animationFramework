@@ -9,7 +9,6 @@ This is a review of what was learned in this adventure.
 
 
 ## [chapter 0](./chapters/chap0-Literals.md): Literals and class properties
-[Contribution guidelines for this project](docs/CONTRIBUTING.md)
 Properties in a class are hold as a literal object.  
 Mechanisms are provided to control class definition and instance variations.  
 
@@ -65,7 +64,7 @@ Learn to design a Bezier with an helper using keyboard.
 sketches/6-bezierTrajectory    
 sketches/991-bezierHelper   
 
-## [chapter 7] (./chapters/chap7-cameradeplacement.md) : move a camera using a tripod 
+## [chapter 7](./chapters/chap7-cameradeplacement.md) : move a camera using a tripod 
 
 Defining a tripod as a moveable element and mounting a camera on this tripod allows to set it in any scenario to apply movements to the camera.
 Sample shows a jump tripod to tripod  then a **smooth camera movement** using a Bezier curve.      
@@ -75,7 +74,7 @@ Sample shows a jump tripod to tripod  then a **smooth camera movement** using a 
 #### code example
 sketches/7-cameraLiberty    
 
-## [chapter 8](./chapters/chap8-specificLighting.md): enlightments  
+## [chapter 8](./chapters/chap8-specificLighting.md) : enlightments  
 See and move your lights, see where they are, choose right places with keyboard, organize trajectories, etc.  
 <img src = "./img/forDoc/pointWhereMove0.png" height= "200">
 <img src = "./img/forDoc/pointWhereNotShowMe.png" height= "200">
@@ -85,4 +84,4 @@ sketches/8-ligthingObject
 sketches/8-ligthingObjectSpot
  
 ### [Annexes](./chapters/chap999-Environt.md):Environment and some technical stuff 
-### [Gallery](./gallery/terresRares.md) : images from p5 animation for cyber Opera Terres Rares
+### [Gallery](./Gallery/terresRares.md) : images from p5 animation for cyber Opera Terres Rares

@@ -30,7 +30,7 @@ Just have to type the command in the terminal of vsc.
 
 ### git 
 of course. 
-### navigators for P5 webgl: Chrome, Brave, Firefox
+### navigators for P5 webgl: Chrome, Brave, Firefox, edge 
 I use mainly **Chrome** or **Brave**, two similar chromium based navigators.   
 My code runs well on all three navigators, but definitively **avoid *Safari*** not able to work with p5 in webgl.  
 #### some tips 
@@ -95,6 +95,9 @@ function rectifyObjUvsForP5AfterLoad(forme) {
   I use a few percent to rectify **.obj** files for p5 sketches:    
   *import obj - scale /move/ rotate / center  - export obj*   
 
+## known problems 
+The js files are not organized with controled dependancies...  
+Sometimes a full reload fails (chrome command shit r) with errors. Just have to retry one or two times. All the samples were verified.   
 
 
   

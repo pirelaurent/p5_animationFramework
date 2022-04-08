@@ -48,7 +48,7 @@ If you have a look in the previous chapter sample code (*7-cameraLiberty*), you'
 ``` 
 ### using moveablePointLight
 We do the same enlightment but with moveable objects.  
-First we create the points in setup  : 
+First we create the moveable points in setup  : 
 ```javascript 
  pointBlue = new MoveablePointLight({
     name: "blue light",
@@ -84,7 +84,7 @@ First we create the points in setup  :
 ``` 
 #### *visible* property defined in config 
 In the constructor, we give a variant with the property ```visible: true ``` .     
-This allows the pointLights to show where they are currently in the 3D space :   
+This allows the *pointLights* to show where they are currently in the 3D space :   
 <img src = "../img/forDoc/pointLightShowMe.png">   
 #### using console and keyboard helper 
 With keyboard helper, we can move any moveable object with x,y,z and > <    

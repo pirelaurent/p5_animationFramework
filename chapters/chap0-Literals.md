@@ -42,20 +42,21 @@ var myObject = new MyClass();
     myLiteral.stroke.color;
     myLiteral["stroke"]["color"] 
 ```
-### Initialize all the class properties given a literal in constructor
+### Initialize all properties of a class whith a literal in constructor
 First, we cannot do *```this = myLiteral```* as we will try to destroy ourself.  
 But **we can spell the literal recursively** and create new *key-values* in the current object.       
 ####  function extendProperties ( aLiteralToExtend, aLiteralOfNewKeyValue)   
 This function extends a first Literal with the key-values of another. If a key was already defined, its value is replaced by the new one.    
-In place of *aliteralToExtend*, we can extend the current instance **this** :
+In place of *aliteralToExtend* parameter, we can extend the current instance ```this``` :
 
-##### constructor with literal to define and initialize properties 
+##### external literal to initialize properties of a class 
 ```javascript 
 class MyClass{
 constructor(someLiteral) {
    extendProperties(this,someLiteral)
  }
 }
+// give a literal inline at instanciation time 
 var myObject = new MyClass(
   {
       name: "some graphic", 
@@ -65,10 +66,9 @@ var myObject = new MyClass(
     }
 )
 ``` 
-All this works but stay weak as looking at the class we don't know what are its properties to create methods. 
+This works but stay weak as class definition is empty and can be filled by anything.   
 
-#### better: set a default literal in the class definition  
-The previous usage can inject any literal in *MyClass*, e.g. omitting some property used in a method, etc.    
+#### A better way: set a default literal in the class definition   
 It is better to have **the initial structure inside the constructor** :  
 ```javascript 
 class myClass  {
@@ -110,8 +110,8 @@ Later an error as the key 'pouet' is not in the class config:
 
 ### framework architecture 
 All constructors in the framework classes will be on the same model :
-- internally defined by an inline literal structure  
-- initialized by constructor with an instance literal to apply only controled changes   
+- internally defined by an inline literal structure.  
+- initialized by constructor with an instance literal to apply only controled changes.   
 ```javascript 
 constructor(instanceProperties){
     extendProperties(this,

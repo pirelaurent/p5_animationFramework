@@ -338,10 +338,8 @@ We could have used the exact elapsed time since the scenario was started :
 ```if( millis() - europeanScenario1.startGlobalMs > 60000 )  ```     
 
 #### trace of scenario  
-As we start scenarios with *{trace: true}* , we can follow the story on the console: 
+As we start scenarios with *{trace: true}* , we can follow the story on the console:    
 <img src= "../img/forDoc/lightsTrace.png" width=300></img>
-
-
 
 
 # summary 
