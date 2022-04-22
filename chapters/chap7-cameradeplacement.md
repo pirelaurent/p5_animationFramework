@@ -171,5 +171,4 @@ or , if we aim to change quickly between camera and liberty, we can add Liberty 
  ```kb.objectsToMove.push(liberty);```     
 Now, you can quickly swap :    
  <img src = "../img/forDoc/cameraKbConsole.png" width = 300>   
- 
-HTH 
+  

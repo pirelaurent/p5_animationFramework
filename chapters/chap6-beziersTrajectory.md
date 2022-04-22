@@ -68,7 +68,7 @@ The simplest manner is to use the sketch of BezierHelper :
 ```
 
 -> If no idea , give *inter1* and *inter2* values close to  *start* and *end*.   
-#### keyboard helper 
+### keyboard helper 
 In the draw function of the sketch, you can see a call to ```  kbHelp();```  
 This allows to use keyboard to move elements on the canvas:  
  
@@ -116,7 +116,7 @@ You can give a special *easingOnT* function that goes outside 0..1.
 The above function is: ```easingOnT: (t)=> -0.2+ (1.4*t)```  
 In such a case, the element will not go from start to end but from a place far under start (at -0.2) and terminate far after normal end (at 1.2). A manner to have an escape effect.     
 
-#### view in action 
+#### View in action 
 The sketch *6-bezierTrajectory* shows the following :   
 A travel curve is factorized in order to be reused several times  : 
 ``` javascript 

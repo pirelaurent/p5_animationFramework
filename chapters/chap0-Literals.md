@@ -56,7 +56,7 @@ constructor(someLiteral) {
    extendProperties(this,someLiteral)
  }
 }
-// give a literal inline at instanciation time 
+// give a literal inline at instantiation time 
 var myObject = new MyClass(
   {
       name: "some graphic", 

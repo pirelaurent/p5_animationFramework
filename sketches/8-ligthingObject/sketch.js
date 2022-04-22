@@ -66,7 +66,7 @@ function setup() {
     red: pointRed,
     white: pointWhite,
   };
- // be aware to create scenario once all the objects are well instanciated. In setup is a good place 
+ // be aware to create scenario once all the objects are well instantiated. In setup is a good place 
   scenarioThreeLights = new Scenario(
     { scenarioName: "move three lights", trace: true },
     [  // array of scripts for this scenario . Here just one 

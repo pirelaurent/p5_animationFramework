@@ -2,7 +2,7 @@
 Some classes to develop more quickly in p5. 
 (In *graphicObject.js* source code )
 ## class MoveableObject 
-A simple class to hold properties with a **literal object** as a default properties: 
+A simple class to hold properties with a **literal object** as default properties: 
 ``` javascript 
 class MoveableObject extends BasicObject{
   constructor(instanceProperties) {
@@ -18,12 +18,12 @@ class MoveableObject extends BasicObject{
     if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
   ```   
-   **angleMode** : in some case (reuse of components) the expected *angleMode* for object to draw itself is not the current one. One can change it on the fly only for this object and restore default after.    
-  In the examples, i use to set *angleMode(DEGREES)* in the setup* (and don't use *angleMode*.) 
+   **angleMode** : in some case (reuse of components) the expected *angleMode* for object to draw itself is not the current one. One can change it on the fly only for this object by setting value here. It will be restored to default after usage.
+  In the examples, i use to set *angleMode(DEGREES)* in the setup* (and don't use *angleMode* in properties) 
 
 ## class GraphicObject
-An inherited class with new properties to be able to draw itself.  
-The default properties to be added are also given as a literal object:    
+An inherited class with new properties and methods to be able to draw itself.  
+The default properties to be added at this level are given as a literal object:    
 ```javascript 
 class GraphicObject extends MoveableObject {
   constructor(instanceProperties) {
@@ -39,13 +39,13 @@ class GraphicObject extends MoveableObject {
     if (instanceProperties != null) patchProperties(this,instanceProperties);
   }
 ``` 
-The class has a default method *drawModel* for debug to see something
+The class has a default method *drawModel* for debug to see something:
 ``` javascript   
   drawModel() {
     box(100, 150, 50);
   }   
 ```
-This method will be overwritten as required
+This method can be overwritten as required
 ### simplest sample 
   
 <img src = "../img/forDoc/threeObjects.png"  width = 160></img>   
@@ -99,7 +99,7 @@ class GraphicObjectModel extends GraphicObject {
   }
 }
 ```
-In these default properties, *model* and *image* are just placeholders to be filled later at object instanciation.   
+In these default properties, *model* and *image* are just placeholders to be filled later at object instantiation.   
 ##### p5 good practice  
 With p5, some problems can occur if *loadModel* or *loadImage* are called outside of *preload*.   
   - code all *loadModel* and *loadImage* in **preload** 

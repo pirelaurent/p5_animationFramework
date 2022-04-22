@@ -55,26 +55,24 @@ First we create the moveable points in setup  :
     visible: true,
     color: "blue",
     position: [-300, -100 ,-250],  
-    visible: true
   })
   pointWhite = new MoveablePointLight({
     name: "white light",
     visible: true,
     color: "white",
     position: [100,100, 250],   
-    visible: true
   })
   pointRed = new MoveablePointLight({
     name: "red light",
     visible: true,
     color: "red",
     position: [300,0, 0],   
-    visible: true
   })
-  // replace default enlightment by our
+
+  // replace default enlightment by our new function below
   enlight = threeSpots;
   ```  
-  Notice the enlight function used in draw is now the following  *threeSpots* function : 
+  Notice the enlight() function call used in draw loop is now the following  function : 
   ```javascript 
   function threeSpots(){
    pointBlue.enlight();
@@ -84,7 +82,7 @@ First we create the moveable points in setup  :
 ``` 
 #### *visible* property defined in config 
 In the constructor, we give a variant with the property ```visible: true ``` .     
-This allows the *pointLights* to show where they are currently in the 3D space :   
+This allows the *pointLights* to show  where they are currently in the 3D space :   
 <img src = "../img/forDoc/pointLightShowMe.png">   
 #### using console and keyboard helper 
 With keyboard helper, we can move any moveable object with x,y,z and > <    
@@ -96,8 +94,8 @@ To mark the object to move, one can use the repl (read-eval-print-loop) javascri
 
 ##### traces of kbHelper 
 In the previous, we set the object to move by :   
-```kb.toMove = pointWhite```   The cursor is on the console area. 
-Then the cursor is set on the canvas area (clic on):    
+```kb.toMove = pointWhite```  ( for repl, the cursor must be on the console area.)    
+Then put the cursor on the **canvas** area (clic on):    
 We move the light on (y) , we show axis (a), we move on (z) and (x) .   
 Once happy, we use *enter* to get coordinates of the object and set it in the code.        
 Finally, we change a property with the console : *visible* property to see only final result.   
@@ -108,12 +106,12 @@ We can set in console (or have set in your setup code) the catalog of objects to
 With that, striking 0, 1 or 2 helps to change quickly of object to move.    
 <img src = "../img/forDoc/pointObjectsToMove.png" height= "300">
  
-# Moving several objects in a journey
-We can define a journey for a *pointLight* as for any object with reachable properties. 
-But it seems more interesting to design a common journey for several objects.    
+# Moving several objects in a same journey
+We can define a journey for a *pointLight* as for any object with reachable properties.   
+But it seems more interesting to design a common journey to organize a ballet of lights.    
 
 ## Grouping objects  
-To be able to access properties of several objects in a same journey definition, it's enough to create a group :    
+To be able to access properties of several objects in a same journey definition, it's enough to create a group, a literal of literals:    
 ```javascript 
    /*
    create a group with the three lights to move them easily in a same journey. 
@@ -126,7 +124,7 @@ To be able to access properties of several objects in a same journey definition,
     white: pointWhite,
   };
 ```   
-Notice that the objects *pointBlue, pointRed, pointLight* must be known when the group is created.   
+Notice that the objects *pointBlue, pointRed, pointLight* must be already set when the group is created.   
 ### parameters of an element in a higher level group   
 Using a group, a journey can move in a same run several Objects.   
 ### sample 
@@ -181,8 +179,8 @@ Look at code : we reuse the Bezier curve of camera movement for white light and 
       },
     },
 ```  
-(if you don't see the white ball, think to set pointWhite.visible = true )
-#### Tips for journey parameters 
+(if you don't see the white ball, think to set ```pointWhite.visible = true``` )
+### Tips for journey parameters 
 As scriptJourney uses a dot notation to access parameters, you can stack as many groups as you want , group of groups, etc.  You just have to give the right path to the parameter you want to see evolving in time:  
 *name: "humanGroup.John.eyeLeft.fill.color "*
  
@@ -239,7 +237,7 @@ Using *kbHelp()* you can move any light in any direction to observe result.
 With *REPL* of the console, you can change immediately any property of any light and see the result.   
 
 
-HTH 
+ 
 
 
 

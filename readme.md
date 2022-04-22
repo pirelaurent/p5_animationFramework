@@ -56,7 +56,7 @@ You can give more precise timing to your parameters inside a same journey so tha
 #### code example
 sketches/5-advanceMovement   
 
-## [chapter 6](./chapters/chap6-bezierTrajectory.md): use Beziers curves in space 
+## [chapter 6](./chapters/chap6-beziersTrajectory.md): use Beziers curves in space 
 Design easily and use Bezier trajectories for your parameters.  
 Learn to design a Bezier with an helper using keyboard.  
 <img src = "./img/forDoc/bezier2.png" height = 160> </img><img src = "./img/forDoc/bezier3.png" height = 160> </img>

@@ -19,7 +19,7 @@ function setup() {
   // rectify coordinates m ust be done in setup to ensure geo is loaded
   // here  y=-y as P5 is yDown and obj was designed yUp
   multiplyGeometry(cola_cup, createVector(1, -1, 1));
-  // instanciate with modifier and associate preloaded model
+  // instantiate with modifier and associate preloaded model
   let aCup = new GraphicObjectModel({
     model: cola_cup,
     texture: { active: true, image: textureWater },

@@ -53,11 +53,11 @@ class Scenario {
   }
 
   createInstanceGenerator() {
-    // instanciate this script generator with optional arguments using spread operator
+    // instantiate this script generator with optional arguments using spread operator
     if (!this.script.arguments) this.script.arguments = [];
     if (this.trace) {
       console.log(
-        "instanciate:" +
+        "instantiate:" +
           this.script.scriptName +
           " with " +
           this.script.arguments.length +
