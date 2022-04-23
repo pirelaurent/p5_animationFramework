@@ -6,7 +6,7 @@ This time *t* is calculated as a linear fraction between 0 and 1 : *elapsed time
 and this proportion is applied to the distance to travel *(end - start)* to calculate exact new position. 
 ### give to journey an estimated time different of the elapsed time 
 Let see the following plottings:   
-<img src = "../img/forDoc/sevenPlots.png" width = 300></img>   
+<img src = "../img/forDoc/sevenPlots.png" width = 400></img>   
 The white diagonal is the default linear function : **estimated time = elapsed time** :  **(t) => t**  
 Estimated time is the time used to calculate the ratio of the position along the trajectory.    
 The green curves are obtained with the following functions (from left to right: power of 2,3,4):    
@@ -63,7 +63,7 @@ The following function names are predefined in *scriptJourney.js* code to facili
 ##### back in the middle of the trip
 (supposed your default anglemode is ```angleMode(DEGREES)``` )   
 You can try the function ```(t)=> sin(t*180)``` :  
-<img src = "../img/forDoc/sinusPlot.png" width = 200></img>      
+<img src = "../img/forDoc/sinusPlot.png" width = 300></img>      
 As the estimated time is used to calculate the distance from start, using this function will reach the end in half time then go back to origin in the second half of time.
 
 ##### way back trajectory 
@@ -74,7 +74,7 @@ you can define the exact way back using  **1-f(t)** . The interpolation will go 
 
 As the rotation is applied to the vertical y in the example journey with dragon, it can do *No No No No No* with head by   
 ``` easingOnT:  (t) =>  abs(sin(t*180*5)) ``` for the rotation parameter (here degrees).    
-<img src = "../img/forDoc/nonono.png" width = 200></img>  
+<img src = "../img/forDoc/nonono.png" width = 300></img>  
 
 ### sample 
 the sketch in *advanceMovement* is the same as the sketch in *basicMovement*, except the use of function on time *easingOnT*.You can observe some subtiles differences.   
