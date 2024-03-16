@@ -4,3 +4,5 @@
 open -a /Applications/"Google Chrome.app" "http://localhost:8081" 
 # start module http. Be aware port # be the same as chrome. I use to have a different port per projects. 
 python3 -m http.server 8081
+
+

@@ -7,6 +7,14 @@ This is a review of what was learned in this adventure.
 - Usage of **literals** to hold properties of objects  
 - A tandem between **generators** in charge of actions and **scenario** responsible for restarting generators in time. 
 
+## how to start examples
+Some examples will work directly by loading the html from the directory,   
+***BUT*** some examples needs to load resources only available through http.   
+
+### micro web server in python 
+from your terminal launch the *./py.command* that will start a web server and open a chrome navigator.   
+If no chrome *load http://8081*  then open the /sketches/ dir 
+
 
 ## [chapter 0](./chapters/chap0-Literals.md): Literals and class properties
 Properties in a class are hold as a literal object.  
