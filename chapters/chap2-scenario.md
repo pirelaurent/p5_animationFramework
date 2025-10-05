@@ -1,8 +1,10 @@
 # Scenarios 
+
 A *scenario* takes care of timing & scheduling to start, stop or wait for parts of your code.   
 (Samples are coded as p5.js sketches, but scenario can be used in any js environment. )   
 
 ## scenario 
+
 A **scenario** plays a **script**, or a series of **scripts**.    
 Once a script is finished, the scenario runs the next one.    
 ### script vs  generator
@@ -19,6 +21,7 @@ We call a **step** a part of generator's code that run without being interrupted
 *beginning*-----step 0-----**yield**--step 1---**yield**--- etc---**yield**--- last step ---*end*
 
 ## how a scenario interacts with the underlaying generators
+
 When a scenario starts, it get the first *generator* of its list and creates an instance.   
 Once started, scenario call the generator to run a *next step* through its *advance* method.    
 The generator executes the step then returns either by : 
@@ -43,11 +46,15 @@ When the script returns to the scenario *advance* method, **this method push its
  ```  
 This code loops until the end of the script, step by step.    
 **Notice the *.bind(this)* to relate the future with the current scenario.**  
+
 ## how it stops 
+
 A script stops when the end of its code is reached or when its scenario is stopped.   
 A scenario can be stopped at any time with the method ```scenario.stop()```    
-A scenario ends naturally when the last script of its array of scripts is ended.   
+A scenario ends naturally when the last script of its array of scripts is ended.  
+
 ## miscellaneous about scenarios 
+
 - Once a scenario is ended, one can restart it from beginning by **myScenario.restart()**.  
 => *start* or *restart* will create a fresh instance of the generator allowing to reuse it several times.     
 - Several scenarios can be started and can run in parallel with their own scheduling.  
@@ -56,8 +63,9 @@ A scenario ends naturally when the last script of its array of scripts is ended.
 ```while (!theOther.isEnded) yield 100```
 
 # Simple example : a p5 sketch traffic_lights  
+
 The goal is to enlight a (european) traffic lights with defined durations  
-<img src = "../img/forDoc/traffic_lights4.png" width = 200></img>   
+<img src = "../img/forDoc/traffic_lights4.png" width = 200 />   
 ## TrafficLight class
 A class to hold infos as a literal object *config*.   
 
@@ -82,6 +90,7 @@ class TrafficLight {
  }
   ```   
 ### script to animate lights and scenario to run the script
+
 First, be aware of the special notation ```function*``` which means this is a *generator* not a simple function.     
 Each yield can return a number of <u>milliseconds</u> to wait before coming back.   
 As we want a full time animation, the script has an infinite loop inside ```while(true)```    
@@ -108,7 +117,9 @@ function* europeanScript(oneTrafficLight) {
 }
 ```
 ## create the scenario  
+
 ### Scenario class 
+
 The constructor of a scenario has two parameters:  
 - specific properties  
 - an array of generators ( list of scripts to be created ).    
@@ -129,7 +140,9 @@ The constructor of a scenario has two parameters:
     if (!(this.generatorsToUse instanceof Array))
       this.generatorsToUse = [this.generatorsToUse];
   ```  
+
   ### scenario instance 
+
   When creating an instance, one can give all or part of properties :   
    ``` javascript   
  let europeanScenario1 = new Scenario(
@@ -138,7 +151,9 @@ The constructor of a scenario has two parameters:
       { scriptName: " lights 1", generator: europeanScript, arguments: [traffic_1] });
     ]
 ```
+
 ### Array of scripts   
+
 To have a generic scenario , the generators are described in two separated entries : 
 - the generator: only the **function name**  DON'T PUT ANY PARENTHESIS AFTER : *europeanScript*   
 - an optional array of argument's values (if any).  
@@ -148,6 +163,7 @@ This way allows to keep an agnostic scenario engine with any kind of generators,
 The generators can be reused several times are they are instantiated *inside* the scenario in *start* or *restart*.   
 
 ## external scenario vs scenario internal to the class 
+
 In the sketch example, we draw 4 traffic lights.    
 The first traffic_light is animated by the scenario seen above: *europeanScenario1*.  
 The second one has a similar scenario using the same generator but with other properties: 
@@ -157,12 +173,15 @@ The second one has a similar scenario using the same generator but with other pr
     { scriptName: " lights 2", generator: europeanScript, arguments: [traffic_2] });
   ```   
 Any scenario can be established this way. 
+
 ### for example : create a scenario internal to a class 
+
 When thinkink about, the blinking red-green-orange is a dedicated traffic light behavior.    
 It can be a better idea to make the scenario and the script part of the *TrafficLights class*.   
 We will do that and explore two slighty different ways, one for *traffic_3* , another for *traffic_4*:    
 
 ### generator as a class method 
+
 For traffic_3 we use an exact copy of the previous *europeanScript* except the declaration:   
 As a method we omit the *function* keyword but keep the **star** to indicate a generator : 
 ``` javascript 
@@ -208,13 +227,16 @@ Notice that there is no more *arguments* entry in literal as this generator has 
 traffic_4.lightsScenarioBis.start()
 ```  
 #### Tips: .bind (this)
+
  **a generator is detached of the context** ( as will be any anonymous function).    
 Without indication, *this* is not known inside the generator.  
 Binding the function with *this* allows to use *this* inside the script.   
 
 
 # Now the results 
+
 ## using p5 to draw in 3D 
+
 In the main prog, in the *setup* function of P5, we create the lights, all with default properties except the name.  
 We create also the two external scenarios to animate 1 and 2.( for 3 and 4 already we will use the internal scenario examples.)        
 Later, in the *draw* method, we ask the traffic lights to draw themselves at a given position.   
@@ -260,7 +282,9 @@ function draw() {
      traffic_4.draw();
 }
 ```   
+
 ### starting the lights  
+
 If we start the lights'scenarios directly, this will work for each one, but they will not be synchronized.   
 We need a launcher to start in time the pairs of lights : another scenario .    
 This master scenario is also **created and started** in setup : 
@@ -278,6 +302,7 @@ function setup() {
 ``` 
 
 #### master scenario script 
+
 First we set all lights to red using a literal as a multi parameters configuration: 
 ```javascript 
 function* launchScript() {
@@ -314,9 +339,10 @@ We wait a bit before launching the other pair in order to be synchronized :
 ```
 The master scenario will end but the others are running:   
 Traffic lights are synchronized and run for ever   
-<img src= "../img/forDoc/FourLightsOnRoad.png" width = 400></img>
+<img src= "../img/forDoc/FourLightsOnRoad.png" width = 400 />
 
 ### stop the scenarios
+
 Lights scenarios run for ever as they have an infinite loop in their scripts.  
 We can check a scenario's status with two properties:
 -  **isStarted**
@@ -342,21 +368,27 @@ In the code example, we stop brutally all lights after 60s (if not yet stopped) 
   }
 ```
 ####  scenario.startGlobalMs
+
 In the code above, we have used ```millis()```which is the elapsed time since **the sketch** is running.   
 We could have used the exact elapsed time since **the scenario** was started :   
 ```if( millis() - europeanScenario1.startGlobalMs > 60000 )  ```     
 
 #### trace of scenarios  
 As we start scenarios with *{trace: true}* , we can follow the story on the console:    
-<img src= "../img/forDoc/lightsTrace.png" width=300></img>
+<img src= "../img/forDoc/lightsTrace.png" width=400 />
+
 
 
 # summary 
+
 A *scenario* cooperates with a *generator* to advance code automatically under a controlled schedule.  
 A generator can execute any js code in its current context (whole app, object instance,..) or through its own function parameters. 
+
 ### next chapter : a shared generator  *scriptJourney*   
+
 We design a generator to automatically change the value of a property in time, according to a trajectory.   
-This can be used for ***any property of any kind of object***, as long as the property is calculable ( simple numeric value or array of numeric values )    
+This can be used for ***any property of any kind of object***, as long as the property is calculable ( simple numeric value or array of numeric values )  
+
 See **chap3-basicMovement.md** 
 
 

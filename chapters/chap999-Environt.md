@@ -5,7 +5,7 @@ No comment good product.
 For P5 syntax, i added the intellisense models .ts ( see under p5/intellisense) and set in source code the following control line at top : 
 ```///<reference path="../../p5/intellisense/p5.global-mode.d.ts" />```  
 This allows to have inline help :   
-<img src = "../img/forDoc/intellisense.png" width = 500>
+<img src = "../img/forDoc/intellisense.png" width = 500 />
 
 #### a little drawback 
 VSC counts this line as line 1. As the line in not in the js code, the line numbers given by the console in case of errors are shifted of 1 relative to VSC. 

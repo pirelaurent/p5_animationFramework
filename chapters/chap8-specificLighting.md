@@ -1,4 +1,5 @@
 # Specific ligthing 
+
 p5 has several ways to set lights :  
 - **ambientLight** :  the global diffused light without direction 
 - **directionalLight**  : a light that comes from afar and stays afar and is oriented in one direction. 
@@ -6,6 +7,7 @@ p5 has several ways to set lights :
 - **spotLight** : a moveable light with settings for direction of light.   
 
 ## using preset functions for facilitate general enlightment
+
 How i do in my sketches:      
  Define a global variable    ```var enlight; ```   that will hold a function.   
  Setup *enlight* with a default anonymous function  ```  enlight= () =>lights;``` *lights* is a standard light function in p5   
@@ -31,14 +33,18 @@ function draw() {
   if (frameCount == 200) enlight = red_atmosphere; 
 }
 ```
-<img src = "../img/forDoc/light0.png"><img src = "../img/forDoc/light1.png">   
+<img src = "../img/forDoc/light0.png"/><img src = "../img/forDoc/light1.png"/>   
 This way, you can set and change enligthment dynamically in your scenarios. 
 
 # pointLight
+
 ## working with pointLight wrapped into MoveablePointLight 
+
 PointLights are localized and it's a bit more difficult to develop a good enlightment.   
 The class *MoveablePointLight* allows to wrap the *pointLight* function of p5 in a moveable object.    
+
 ### sample with Liberty
+
 If you have a look in the previous chapter sample code (*7-cameraLiberty*), you'll find a fixed enlightment for Liberty with three pointLight calls: 
 ``` javascript 
   ambientLight(50)
@@ -46,7 +52,9 @@ If you have a look in the previous chapter sample code (*7-cameraLiberty*), you'
   pointLight(color('white'),100,100, 250);
   pointLight(color('red'),300,0, 0); 
 ``` 
+
 ### using moveablePointLight
+
 We do the same enlightment but with moveable objects.  
 First we create the moveable points in setup  : 
 ```javascript 
@@ -80,19 +88,24 @@ First we create the moveable points in setup  :
    pointRed.enlight();
 }
 ``` 
+
 #### *visible* property defined in config 
+
 In the constructor, we give a variant with the property ```visible: true ``` .     
 This allows the *pointLights* to show  where they are currently in the 3D space :   
-<img src = "../img/forDoc/pointLightShowMe.png">   
+<img src = "../img/forDoc/pointLightShowMe.png">  
+
 #### using console and keyboard helper 
+
 With keyboard helper, we can move any moveable object with x,y,z and > <    
 To mark the object to move, one can use the repl (read-eval-print-loop) javascript console to set the object to move with keyboard: 
  
-<img src = "../img/forDoc/pointWhereConsole.png" height= "300">
-<img src = "../img/forDoc/pointWhereMove0.png" height= "300">
-<img src = "../img/forDoc/pointWhereNotShowMe.png" height= "300">
+<img src = "../img/forDoc/pointWhereConsole.png" height= "300" />
+<img src = "../img/forDoc/pointWhereMove0.png" height= "300" />
+<img src = "../img/forDoc/pointWhereNotShowMe.png" height= "300" />
 
 ##### traces of kbHelper 
+
 In the previous, we set the object to move by :   
 ```kb.toMove = pointWhite```  ( for repl, the cursor must be on the console area.)    
 Then put the cursor on the **canvas** area (clic on):    
@@ -101,16 +114,22 @@ Once happy, we use *enter* to get coordinates of the object and set it in the co
 Finally, we change a property with the console : *visible* property to see only final result.   
 
 ##### Tip : use the kb catalog to switch quickly 
+
 We can set in console (or have set in your setup code) the catalog of objects to move with :   
+
 ```kb.objectsToMove = [pointBlue, pointWhite, pointRed] ```    
-With that, striking 0, 1 or 2 helps to change quickly of object to move.    
-<img src = "../img/forDoc/pointObjectsToMove.png" height= "300">
+
+Once set, striking 0, 1 or 2 helps to change quickly of object to move.  
+
+<img src = "../img/forDoc/pointObjectsToMove.png" height= "400" />
  
 # Moving several objects in a same journey
+
 We can define a journey for a *pointLight* as for any object with reachable properties.   
 But it seems more interesting to design a common journey to organize a ballet of lights.    
 
 ## Grouping objects  
+
 To be able to access properties of several objects in a same journey definition, it's enough to create a group, a literal of literals:    
 ```javascript 
    /*
@@ -125,9 +144,13 @@ To be able to access properties of several objects in a same journey definition,
   };
 ```   
 Notice that the objects *pointBlue, pointRed, pointLight* must be already set when the group is created.   
+
 ### parameters of an element in a higher level group   
+
 Using a group, a journey can move in a same run several Objects.   
+
 ### sample 
+
 ``` javascript 
 var journeyFor3Lights = {
   duration_ms: 10000, // duration of the journey
@@ -150,13 +173,19 @@ Now define the scenario :
       { scriptName: " 3 lights", generator: scriptJourney, arguments: [journeyFor3Lights,threeLightsGroup] }
     ] )
 ``` 
+
 #### tip: running a scenario with console 
+
 To test quickly, as long as your scenario is a global variable, you can access it directly in the console and start it: ```scenarioThreeLights.start() ```   
-<img src = "../img/forDoc/pointLightConsole.png">   
-<img src = "../img/forDoc/pointLightStart.png" width = 250> 
-<img src = "../img/forDoc/pointLightMiddle.png" width = 250> 
-<img src = "../img/forDoc/pointLightEnd.png" width = 250>     
-Look at code : we reuse the Bezier curve of camera movement for white light and red light. The red one will take the exact inverse trajectory by using and *easingOnT* function :   
+
+<img src = "../img/forDoc/pointLightConsole.png" />   
+<img src = "../img/forDoc/pointLightStart.png" width = 250 /> 
+<img src = "../img/forDoc/pointLightMiddle.png" width = 250 /> 
+<img src = "../img/forDoc/pointLightEnd.png" width = 250 />     
+
+Look at code :   
+we reuse the Bezier curve of camera movement for white light and red light.  
+The red one will take the exact inverse trajectory by using and *easingOnT* function :   
 
 ``` javascript 
     {
@@ -180,12 +209,17 @@ Look at code : we reuse the Bezier curve of camera movement for white light and 
     },
 ```  
 (if you don't see the white ball, think to set ```pointWhite.visible = true``` )
+
 ### Tips for journey parameters 
-As scriptJourney uses a dot notation to access parameters, you can stack as many groups as you want , group of groups, etc.  You just have to give the right path to the parameter you want to see evolving in time:  
+
+As scriptJourney uses a dot notation to access parameters, you can stack as many groups as you want , group of groups, etc.   
+You just have to give the right path to the parameter you want to see evolving in time:  
 *name: "humanGroup.John.eyeLeft.fill.color "*
  
 # spotLight 
+
 ## working with spotLight wrapped into MoveableSpotLight
+
 This is quite the same class that previously with some new properties :   
 ```javascript 
   constructor(instanceProperties) {
@@ -214,11 +248,13 @@ As previously we create three lights with position and direction like the first 
   });
   ...
   ``` 
+
   The code is similar to previous with pointLights.   
   I use the keyboard helper to move the spotlights, up to have a first result :    
- <img src = "../img/forDoc/spotPositionning.png" height = 300 > <img src = "../img/forDoc/spotPositioned.png" height = 300 >   
+ <img src = "../img/forDoc/spotPositionning.png" height = 300 /> <img src = "../img/forDoc/spotPositioned.png" height = 300 />   
 
 #### feedback 
+
 I do not master spotlight on parameters *angle and concentration*.  
 I set the default values of P5 in the default properties of the class: 
 
@@ -230,9 +266,10 @@ These default values was used to create the previous images.
 
 I observe that minimizing *concentration* maximize the circle of lights.  
 Below same code with a *concentration:20* for the lights.   
- <img src = "../img/forDoc/spotConcentration20.png" height = 300 > 
+ <img src = "../img/forDoc/spotConcentration20.png" height = 300 /> 
 
 ### Use all capacities of the framework  
+
 Using *kbHelp()* you can move any light in any direction to observe result.   
 With *REPL* of the console, you can change immediately any property of any light and see the result.   
 

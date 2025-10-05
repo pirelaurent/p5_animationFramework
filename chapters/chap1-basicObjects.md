@@ -1,7 +1,10 @@
 # Developing graphic objects 
+
 Some classes to develop more quickly in p5. 
 (In *graphicObject.js* source code )
+
 ## class MoveableObject 
+
 A simple class to hold properties with a **literal object** as default properties: 
 ``` javascript 
 class MoveableObject extends BasicObject{
@@ -22,6 +25,7 @@ class MoveableObject extends BasicObject{
   In the examples, i use to set *angleMode(DEGREES)* in the setup* (and don't use *angleMode* in properties) 
 
 ## class GraphicObject
+
 An inherited class with new properties and methods to be able to draw itself.  
 The default properties to be added at this level are given as a literal object:    
 ```javascript 
@@ -46,9 +50,11 @@ The class has a default method *drawModel* for debug to see something:
   }   
 ```
 This method can be overwritten as required
+
 ### simplest sample 
   
-<img src = "../img/forDoc/threeObjects.png"  width = 160></img>   
+<img src = "../img/forDoc/threeObjects.png"  width = 160 />   
+
 See *sketches/ 1-basicObject/sketch.js* :   
 
 ```javascript 
@@ -77,6 +83,7 @@ function draw() {
 }
 ``` 
 ## class GraphicModelObject 
+
 This inherited class has new properties to draw itself with a model and a texture.  
 A default configuration is also given as a  literal object:  
 ```javascript
@@ -100,7 +107,9 @@ class GraphicObjectModel extends GraphicObject {
 }
 ```
 In these default properties, *model* and *image* are just placeholders to be filled later at object instantiation.   
+
 ##### p5 good practice  
+
 With p5, some problems can occur if *loadModel* or *loadImage* are called outside of *preload*.   
   - code all *loadModel* and *loadImage* in **preload** 
   - construct *GraphicsObject* in **setup** with variables set previously in *preload*. 
@@ -141,10 +150,14 @@ function draw() {
   for (let aCup of myCups) aCup.draw();
 }
 ```
-<img src = "../img/forDoc/twoCups.png" width = "300"></img>   
+<img src = "../img/forDoc/twoCups.png" width = "300" />   
+
 *see sketches/ 2-cupOfCoke/sketch.js*  
 Notice that the obj model (which results in an internal *p5.Geometry*) will be shared by all instances.   
 The same for texture image.  
+
 #### for debug 
+
 Some messages are thrown at the **debug level** on console to follow what happens for the two object's construction through the hierarchical extensions and replacement of properties :    
-<img src = "../img/forDoc/verboseSample.png" width = "400"></img>   
+<img src = "../img/forDoc/verboseSample.png" width = "450"/>   
+

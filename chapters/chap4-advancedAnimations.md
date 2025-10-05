@@ -1,12 +1,17 @@
 # Advanced animation
+
 ## speed variation for smoother movements 
+
 ### elapsed time vs estimated time 
+
 The *scriptJourney* interpolates values based on *elapsed time* in order to be at *end* after the defined duration.  
 This time *t* is calculated as a linear fraction between 0 and 1 : *elapsed time / duration*  
 and this proportion is applied to the distance to travel *(end - start)* to calculate exact new position. 
+
 ### give to journey an estimated time different of the elapsed time 
+
 Let see the following plottings:   
-<img src = "../img/forDoc/sevenPlots.png" width = 400></img>   
+<img src = "../img/forDoc/sevenPlots.png" width = 400 />   
 The white diagonal is the default linear function : **estimated time = elapsed time** :  **(t) => t**  
 Estimated time is the time used to calculate the ratio of the position along the trajectory.    
 The green curves are obtained with the following functions (from left to right: power of 2,3,4):    
@@ -22,6 +27,7 @@ These one starts all at 0 and end at 1.
 Any function staying between 0 and 1 can be used for other funny effects.    
 
 ## what are the effects ? 
+
 Look at the 0.5 vertical line when half time is elapsed :  
 For standard, estimated = elapsed : at half time, half the distance.    
 For the green curves, the estimated time is below, not yet at the half:   
@@ -60,13 +66,16 @@ The following function names are predefined in *scriptJourney.js* code to facili
   function easingOnT_flip_t4(t) {var flip = 1-t; return 1 - flip*flip*flip*flip};
   ```
 #### more funny effects 
+
 ##### back in the middle of the trip
+
 (supposed your default anglemode is ```angleMode(DEGREES)``` )   
 You can try the function ```(t)=> sin(t*180)``` :  
-<img src = "../img/forDoc/sinusPlot.png" width = 300></img>      
+<img src = "../img/forDoc/sinusPlot.png" width = 300 />      
 As the estimated time is used to calculate the distance from start, using this function will reach the end in half time then go back to origin in the second half of time.
 
 ##### way back trajectory 
+
 if you have defined a trajectory from start to end with your function time **f(t)** going from 0 to 1,  
 you can define the exact way back using  **1-f(t)** . The interpolation will go from end(1) to start(0).       
 
@@ -74,7 +83,8 @@ you can define the exact way back using  **1-f(t)** . The interpolation will go 
 
 As the rotation is applied to the vertical y in the example journey with dragon, it can do *No No No No No* with head by   
 ``` easingOnT:  (t) =>  abs(sin(t*180*5)) ``` for the rotation parameter (here degrees).    
-<img src = "../img/forDoc/nonono.png" width = 300></img>  
+<img src = "../img/forDoc/nonono.png" width = 300 />  
 
 ### sample 
+
 the sketch in *advanceMovement* is the same as the sketch in *basicMovement*, except the use of function on time *easingOnT*.You can observe some subtiles differences.   

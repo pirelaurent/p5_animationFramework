@@ -1,10 +1,13 @@
 # Organizing properties with Literal Objects 
+
 A **Literal object** can hold properties in a structured manner, avoiding to create many independant variables.( In sfotware architecture it is a *DataObject* )  
 This is useful to exchange a bundle of properties in one shot.  
 Literal objects are the bricks of this framework.   
 
-  ### initialize an instance of any class with a Literal 
+### initialize an instance of any class with a Literal 
+
 #### classical constructor 
+
 Below is a classical way to declare properties of a Class. 
 ```javascript 
 class MyClass{
@@ -26,6 +29,7 @@ var myObject = new MyClass();
  ...
  ```  
  #### literal object 
+
  We can do exactly the same structure and the same access with a literal object: 
 ```javascript
  var myLiteral = {
@@ -42,14 +46,19 @@ var myObject = new MyClass();
     myLiteral.stroke.color;
     myLiteral["stroke"]["color"] 
 ```
+
 ### Initialize all properties of a class whith a literal in constructor
+
 First, we cannot do *```this = myLiteral```* as we will try to destroy ourself.  
 But **we can spell the literal recursively** and create new *key-values* in the current object.       
+
 ####  function extendProperties ( aLiteralToExtend, aLiteralOfNewKeyValue)   
+
 This function extends a first Literal with the key-values of another. If a key was already defined, its value is replaced by the new one.    
 In place of *aliteralToExtend* parameter, we can extend the current instance ```this``` :
 
 ##### external literal to initialize properties of a class 
+
 ```javascript 
 class MyClass{
 constructor(someLiteral) {
@@ -68,7 +77,8 @@ var myObject = new MyClass(
 ``` 
 This works but stay weak as class definition is empty and can be filled by anything.   
 
-#### A better way: set a default literal in the class definition   
+#### A better way: set a default literal in the class definition  
+
 It is better to have **the initial structure inside the constructor** :  
 ```javascript 
 class myClass  {
@@ -88,6 +98,7 @@ With this code, any new object of the class will have automatically the default 
 var myObject = new MyClass(); 
 ``` 
 ### give other values for a specific instance  
+
  we can provide more information to constructor for the instance to create with a literal : 
 ```javascript 
 var myObject = new MyClass({
@@ -96,19 +107,22 @@ var myObject = new MyClass({
 ``` 
 In order to respect the class definition internally defined, we use a modified utility function :  
 #### function patchProperties (literalToPatch, patchToApply )
+
 This will patch a literal with another literal in a controled way:    
 You can change any values of the initial literal, but **cannot add new keys**.   
 This mechanism allows to be sure **to respect the internal definition** of the class in the instances.   
 In particular, this avoids typo errors in the *instanceProperties* literal.  
 
 #### controls done by *patchProperties* 
+
 In case of an **unknown key, an error is raised** and the patch stopped.   
 If the key exists but the new value is not of the same kind of the existing (simple value , collection {...}, array [...], function, etc.)patch will **inform at the *verbose* level** of the console that the type has changed, as a reminder before problems arise.    
 Below, a debug message : color was an array and is now a string,  
 Later an error as the key 'pouet' is not in the class config:   
-<img src = "../img/forDoc/control0.png" height = 80></img><img src = "../img/forDoc/verboseChrome.png" height = 100></img> 
+<img src = "../img/forDoc/control0.png" height = 80 /><img src = "../img/forDoc/verboseChrome.png" height = 100 /> 
 
 ### framework architecture 
+
 All constructors in the framework classes will be on the same model :
 - internally defined by an inline literal structure.  
 - initialized by constructor with an instance literal to apply only controled changes.   
@@ -125,6 +139,7 @@ constructor(instanceProperties){
 # a class hierarchy to animate things 
 
  ## *BasicObject*
+
  **BasicObject** do quite nothing:  
 It initialises a hierarchy with a single property *name*   
 It defines two ancester methods to access properties of the class by their path givent as string  :  
@@ -140,6 +155,7 @@ This will allow a scenario to catalog which data of an object will move over tim
 ```   
   
  #### BasicObject full code 
+
 ``` javascript 
 class BasicObject{
   constructor(instanceProperties) {
@@ -160,6 +176,7 @@ class BasicObject{
 
 
 ### Mechanism of inheritance with literal properties
+
 Sample with a extension of BasicObject :  
 ```javascript  
 class MoveableObject extends BasicObject{
@@ -181,12 +198,14 @@ class MoveableObject extends BasicObject{
 
  
 #### constructor sequence
+
 A call to ***super()*** will initialize the object with the properties defined in the ancester.  
 These properties are ***extended*** with the properties of literal defined in **this constructor**.    
 Finally, the configuration is ***patched*** by the specific given for the new instance.   
 *(Be aware to call super() without parameters)*
 
 ####  name reservation  in literal of class definition
+
 If a property cannot have a default definition, don't omit to declare it to avoid later a unknown key error with instance patch..   
 The good way is to have a *key with null* in the default properties and to change it with the  instance properties literal. 
 ```javascript 
@@ -200,4 +219,5 @@ The good way is to have a *key with null* in the default properties and to chang
 You can see examples in the next chapter.   
 
 #### more  
-see source code in *util/utilProperties.js*
+
+[source code in /util/utilProperties.js](../util/utilProperties.js)

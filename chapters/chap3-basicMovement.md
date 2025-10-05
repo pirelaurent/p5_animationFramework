@@ -1,14 +1,19 @@
 # Basic animations 
+
 ## scriptJourney
+
 The generator *scriptJourney* can change **any property of any kind of object** in time, according to a trajectory from a *start value* to an *end value*.   
 Applied to a position this can move an object in space.  
 Applied to an alpha part of a color, this can make an object appear and disappear
 etc. 
+
 ### scriptJourney parameters 
+
 The scriptJourney waits for a **journey definition as a literal**  and a **owner of data** ( literal object or instance of a class )
 
 
 ##  journey definition  
+
 Each parameter can "travel" from one value to another in a certain amount of time.    
 This can be a position, a rotation, a color, everything you want to see changing along time.   
 Below a basic journey whith several parameters to change in time  :   
@@ -36,14 +41,17 @@ var journey = {
 };
   ```
 This 'journey' will make a move, a rotation and a variation of color and brightness in 10 s.   
-It can be used with any kind of objects, as long as they have the named properties.   
+It can be used with any kind of objects, as long as they have the named properties.  
+
 #### about parameters in journey 
+
 Changing a value from  *start* to *end* suppose that the values are numbers.   
 These can be simple values like  *radius:20* , or arrays like *position: [10,20,30]*   
 A common error can come for color's values: you can't go from '*green*' to '*blue*', but you can go from *[0,255,0]* to *[0,0,255]* (or from [100,255,255,50] to [255,100,255,250] including alpha).   
 => For any array of any size, interpolations are applied for all elements of the array. 
 
 ### default calculation : linear interpolation 
+
 Without more information, the trajectory will be a **linear interpolations** from start to end in the defined duration : 
 - linear interpolation of values : **value = (end - start)/duration \* estimated elapsed time**. 
 - linear interpolation of the time : **estimated elapsed time = effective elapsed time** 
@@ -55,6 +63,7 @@ We will also see later interpolation using beziers curves for better trajectorie
 
 
 ### applying our journey to an object
+
 Below, we use a dragon model (of class *GraphicObjectModel*) with initial properties:    
 ```javascript 
 dragon = new GraphicObjectModel({
@@ -67,8 +76,11 @@ dragon = new GraphicObjectModel({
     rotation: [150, 90, 0],
   });
   ``` 
+
 #### a scenario to pilot the journey  
+
 To apply the *journey* to the *dragon*, we define a scenario with the generic script *scriptJourney* which takes as arguments: [**the definition of the journey** , **the object to move**] :  
+
 ```javascript 
  scenario_0 = new Scenario(
    {scenarioName: 'movement0 sample', interval_ms: 100, trace: true},
@@ -76,12 +88,12 @@ To apply the *journey* to the *dragon*, we define a scenario with the generic sc
   ) 
   ```
 And that goes from start to end on each parameter :   
-<img src = '../img/forDoc/dragonStart.png' width = 200></img>
-<img src = '../img/forDoc/dragonEnd.png' width = 200></img>   
-
+<img src = '../img/forDoc/dragonStart.png' width = 200 />
+<img src = '../img/forDoc/dragonEnd.png' width = 200 />   
 
 
 ## Technical details on the  generic script for journeys 
+
 The following is simplified to see only main blocks : 
 ```  javascript 
 function* scriptJourneyBase(journey, anObject) {
@@ -107,6 +119,7 @@ function* scriptJourneyBase(journey, anObject) {
 In the current example, *duration_ms* is 10000 and default yield from scenario is *interval_ms: 100* : the travel will be splitted in 10000/100 = 100 small steps.You can adjust the *duration_ms* and the *yield value* to have coarser or smoother trips if necessary.      
 
 #### using generator scriptJourney 
+
 As this generator is agnostic about values or objects, it will be helpfull for cameras, lights, sounds, etc.   
 
 Next chapter : **advanced animations** 

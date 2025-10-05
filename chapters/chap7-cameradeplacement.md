@@ -1,7 +1,10 @@
 # camera movements 
+
 Another use of journeys can be camera effects.    
 As *camera* is already a component of p5, not usable as is, so we define a class **Tripod** to hold cameras. 
+
 ## Tripod4Camera class 
+
 A tripod is a component localized in space like any other *MoveableObject* with some specific methods  and a *setData* overwritten : 
 
 ```javascript 
@@ -36,6 +39,7 @@ class Tripod4Camera extends MoveAbleObject {
 ```
 
 ### sample 
+
 The sketch **cameraLiberty** uses several tripods:  
 First, a belt of 6 tripods is set up around  Liberty :      
 ```javascript 
@@ -57,7 +61,7 @@ function createTripods(){
 }
 ```
 A scenario and a generator animate the story by jumping from a tripod to another.   
-<img src = "../img/forDoc/lib0.png" width = 100></img><img src = "../img/forDoc/lib1.png" width = 100></img><img src = "../img/forDoc/lib2.png" width = 100></img><img src = "../img/forDoc/lib3.png" width = 100></img> <img src = "../img/forDoc/lib4.png" width = 100></img>  <img src = "../img/forDoc/lib5.png" width = 100></img>   
+<img src = "../img/forDoc/lib0.png" width = 100 /> <img src = "../img/forDoc/lib1.png" width = 100 /><img src = "../img/forDoc/lib2.png" width = 100 /> <img src = "../img/forDoc/lib3.png" width = 100 /> <img src = "../img/forDoc/lib4.png" width = 100 />  <img src = "../img/forDoc/lib5.png" width = 100 />   
 At the end of each tour, the tripods climb a bit (-200 on y axis ) to change their points of view.   
 **The generator** : 
 
@@ -90,9 +94,13 @@ scenarioTurnAround = new Scenario(
 }
 ```  
 Just have to start it : ```  scenarioTurnAround.start(); ```  
+
 ### so what ? 
-For now, using Tripod4Camera is not a big step up from the native camera capabilities in p5.   
+
+For now, using Tripod4Camera is not a big step up from the native camera capabilities in p5. 
+
 ##### move tripod with keyboard  
+
 As a first tip, a tripod is a *moveableObject* so it can be moved with the keyboard helper functionalities. You can search a good point of view for your camera by moving it around.   
 How to do:   
 Add the keyboard helper in your draw loop.   
@@ -108,16 +116,18 @@ Key 0 will select this tripod.
 Another way is to use console *repl* and type at the console prompt: ```kb.toMove = initialTripod```
    
 Using the keys x,y,z, <, > , you can move the tripod to find a good place and strike key "enter" to get values :    
-<img src = "../img/forDoc/libTripodGoosPlace.png" width = 250 ></img> 
-<img src = "../img/forDoc/libCameraLog.png" width = 250 ></img> 
+<img src = "../img/forDoc/libTripodGoosPlace.png" width = 250 /> 
+<img src = "../img/forDoc/libCameraLog.png" width = 250 /> 
 
 ## a journey for a tripod holding the camera 
+
 But the better for using a tripod holding a camera is to use the journey framework to move along any route, from linear to beziers curves.  
+
 ### sample 
 
 First (with the help of *6.1-bezierHelper*) we design a curve and pick the values in console: 
-<img src = "../img/forDoc/cameraBezier0.png" width = 400>
-</img><img src = "../img/forDoc/cameraBezier0Console.png" width = 200>   
+<img src = "../img/forDoc/cameraBezier0.png" width = 400 />
+<img src = "../img/forDoc/cameraBezier0Console.png" width = 200 />   
 Then we set a journey (for any moveable object) with these values:  
 
 ```javascript 
@@ -150,25 +160,31 @@ Before starting the scenario, don't forget to mount the camera that films on the
   ```
 Here images at beginning and at the end of the tripod bezier journey.
 
-<img src = "../img/forDoc/cameraStart.png" width = 160>   
-<img src = "../img/forDoc/cameraEnd.png" width = 160>    
+<img src = "../img/forDoc/cameraStart.png" width = 160 />   
+<img src = "../img/forDoc/cameraEnd.png" width = 160 />    
 
-At the end, the script set also the *debugTripod* at the last position of camera:    
+At the end, the script set also the *debugTripod* at the last position of camera:  
+  
 ``` javascript 
  console.log(' set camera on debugTripod for keyboard movements') 
  debugTripod.mountUnderCamera(camera1)
 ```   
 This allows you to search a better position if needed with keyboard. 
+
 #### tips:  using keyboard keys 
+
 *debugTripod* have been set as first element in the kb stack at position 0   
 ```kb.objectsToMove.push(debugTripod);```  
 This imply that key "0" will select the tripod .     
-<img src = "../img/forDoc/cameraAxisGrid.png" width = 300>   
+<img src = "../img/forDoc/cameraAxisGrid.png" width = 300 />   
 
    
 If we prefer moving *liberty*, we can set it directly in the console:  ``` kb.toMove = liberty ```    
+
 or , if we aim to change quickly between camera and liberty, we can add Liberty to the kb list :  
+
  ```kb.objectsToMove.push(liberty);```     
+
 Now, you can quickly swap :    
- <img src = "../img/forDoc/cameraKbConsole.png" width = 300>   
+ <img src = "../img/forDoc/cameraKbConsole.png" width = 300 />   
   
