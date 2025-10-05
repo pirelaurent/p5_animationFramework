@@ -49,9 +49,11 @@ This code loops until the end of the script, step by step.
 
 ## how it stops 
 
-A script stops when the end of its code is reached or when its scenario is stopped.   
-A scenario can be stopped at any time with the method ```scenario.stop()```    
-A scenario ends naturally when the last script of its array of scripts is ended.  
+A script will stop at the end of its code or when its scenario is stopped.  
+
+A scenario can be stopped at any time by ***scenario.stop()***.
+
+A scenarion ends naturally when the last script of its scripts array finishes.  
 
 ## miscellaneous about scenarios 
 
